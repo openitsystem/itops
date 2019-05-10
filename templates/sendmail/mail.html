@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>邮件通知</title>
+
+    <style type="text/css">
+        .ListTable {  border :1px solid #BDBCBC;border-collapse: collapse; width:100%;}
+        .ListTable td{ height:50px;font-size:12px;width:16.6%;border:1px  #BDBCBC ;  border-bottom-style:dashed; letter-spacing:1px; line-height:20px;}
+        .recordTable {  border :1px solid #BDBCBC;border-collapse: collapse; width:100%;  table-layout:fixed}
+        .recordTable td{ height:30px;  font-size:12px;border:1px solid #BDBCBC ;  letter-spacing:1px; text-align:center; }
+        .wordbreak{WORD-BREAK: break-all;word-wrap: break-word;}
+    </style>
+</head>
+
+<body>
+<div>
+    <h3> 您的账号 {{ sAMAccountName }} 密码还有<span style="size: 8px; color: darkorange" >{{ passwordday }}天 </span> 过期，请及时更改密码</h3>
+
+    <div style=" margin-top:20px;">
+        <table class="recordTable">
+            <tr>
+                <td style="width:80px;background:#EFEFEF;" align="center" valign="middle">账号</td>
+                <td style="width:80px;background:#EFEFEF;" align="center" valign="middle">显示名称</td>
+                <td style="width:80px;background:#EFEFEF;" align="center" valign="middle">过期时间</td>
+                <td style="width:80px;background:#EFEFEF;" align="center" valign="middle">邮箱地址</td>
+            </tr>
+            <tr>
+                <td>{{ sAMAccountName }}</td>
+                <td>{{ displayName }}</td>
+                <td>{{ passwordtime }}</td>
+                <td>{{ mail }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+<table>
+    <tr>
+        <td background="http://manage.17usoft.com/basemanage/CEReceiveCount/Index?taskid=16090511051048687730&amp;account=B1C8FB16-E824-4735-9666-A1CC00955BC9" bgcolor="#ffffff" width="1" height="1" valign="top">
+        </td>
+    <tr>
+</table>

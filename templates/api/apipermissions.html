@@ -1,0 +1,1030 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>Api权限管理</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <!--jquery steps-->
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+
+    <link href="/static/easyfrom/easyform.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Api权限管理</h4>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <!--start page content-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <code><label for="userName">API用户管理</label></code>
+                    </div>
+                    <div class="col-sm-12">
+                        <div id="toolbar_user">
+                            <button id="btn_delete" type="button" class="btn btn-teal btn-border btn-sm" data-toggle="modal" data-target="#addapiusermodel">
+                                <span class="fa fa-check" aria-hidden="true"></span>&nbsp;新建
+                            </button>
+                            <button id="btn_delete" type="button" class="btn btn-warning btn-border btn-sm" onclick="deluser()">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
+                            </button>
+                            <label>勾选<label id="usercount"></label>个对象</label>
+                        </div>
+                        <table id="tb_apiuser"></table>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <div id="toolbar_attributeslevel">
+                            {#                            <button id="btn_delete" type="button" class="btn btn-primary btn-border btn-sm" data-toggle="modal" data-target="#addapiattributeslevemodel">#}
+                            {#                                <span class="fa fa-check" aria-hidden="true"></span>&nbsp;修改#}
+                            {#                            </button>#}
+                            {#                            <button id="btn_delete" type="button" class="btn btn-warning btn-border btn-sm" onclick="delattributesleve()">#}
+                            {#                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除#}
+                            {#                            </button>#}
+                        </div>
+                        <table id="tb_apiattributeslevel"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page content-->
+    <!--Start footer-->
+    <footer class="footer">
+        <span>IT &copy; 2019</span>
+    </footer>
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+    <div class="modal fade" id="addapiusermodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建API用户
+                    </h4>
+                </div>
+                <form id="form_add_user" class="form-horizontal" method="post" action="/addapiuser/">
+                    <p></p>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*用户名：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_username" name="add_api_username" placeholder="" type="text" value="" data-easyform="char-normal;length:8 15"
+                                   data-message="只能为8-15位英文、数字、下划线"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*密码：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_password" name="add_api_password" placeholder="" type="text" value=""
+                                   data-easyform="regex:^(?!([A-Z]*|[a-z]*|[0-9]*|[!-/:-@\[-`{-~]*|[A-Za-z]*|[A-Z0-9]*|[A-Z!-/:-@\[-`{-~]*|[a-z0-9]*|[a-z!-/:-@\[-`{-~]*|[0-9!-/:-@\[-`{-~]*)$)[A-Za-z0-9!-/:-@\[-`{-~]{8,20}$"
+                                   data-message="密码必须为8—20位且符合复杂性要求"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">使用人</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_name" name="add_api_name" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">部门</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_department" name="add_api_department" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">描述</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_description" name="add_api_description" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <input class="btn btn-primary" value="确定" type="submit">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="apipasswordmodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改API用户密码
+                    </h4>
+                </div>
+                <div id="form_modifyapipassword" class="form-horizontal" method="post">
+                    <p></p>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">用户id：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="apiuserid" name="apiuserid" placeholder="" type="text" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*密码：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="modify_api_password" name="modify_api_password" placeholder="" type="text" value=""
+                                   data-easyform="regex:^(?!([A-Z]*|[a-z]*|[0-9]*|[!-/:-@\[-`{-~]*|[A-Za-z]*|[A-Z0-9]*|[A-Z!-/:-@\[-`{-~]*|[a-z0-9]*|[a-z!-/:-@\[-`{-~]*|[0-9!-/:-@\[-`{-~]*)$)[A-Za-z0-9!-/:-@\[-`{-~]{8,20}$"
+                                   data-message="密码必须为8—20位且符合复杂性要求"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <button type="submit" class="btn btn-primary" onclick="modifyapipassword()">&nbsp确定</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="apimodifymodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        API权限
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 600px">
+                    <div class="col-sm-12" style="height: auto">
+                        <div id="toolbar_apiuserpermissions">
+                            <button id="btn_delete" type="button" class="btn btn-teal btn-border btn-sm" onclick="addapipermissionsmodel()">
+                                <span class="fa fa-check" aria-hidden="true"></span>&nbsp;添加
+                            </button>
+                            <button id="btn_delete" type="button" class="btn btn-warning btn-border btn-sm" onclick="deluserpermissions()">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
+                            </button>
+                            <label>勾选<label id="apiusercount"></label>个对象</label>
+                        </div>
+                        <input class="form-control" id="api_username_id" name="api_username_id" placeholder="" type="text" value="" style="display: none"/>
+                        <table id="tb_apiuserpermissions"></table>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="addapipermissionsmodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加API权限
+                    </h4>
+                </div>
+                <div class="form-horizontal" method="post">
+                    <p></p>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">用户id：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_username_id" name="add_username_id" placeholder="" type="text" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*方法名：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_apiname" name="add_apiname" placeholder="可以填写多个用 , 分隔" type="text" value=""/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <button type="submit" class="btn btn-primary" onclick="addapipermissions()">&nbsp确定</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="modifyapiattributeslevemodel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        接口属性分配(会覆盖现有<code>可修改属性</code>)
+                    </h4>
+                </div>
+                <div class="form-horizontal">
+                    <p></p>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*id：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_api_apiname" name="add_api_apiname" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName"><code>可修改属性：</code></label>
+                        <div class="col-sm-6">
+                            <textarea cols="60" rows="20" id="add_api_attributes" name="add_api_attributes" value="" style="margin: 0px -87.2969px 0px 0px; width: 375px; height: 275px;"/>
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <button type="submit" class="btn btn-primary" onclick="modifyapiattributesleve()">&nbsp确定</button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <!--Common plugins-->
+    <script src="/static/js/pace.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <!--导出xlsx-->
+    <script src="/static/js/Blob.js"></script>
+    <script src="/static/js/FileSaver.min.js"></script>
+    <script src="/static/js/xlsx.core.min.js"></script>
+    <script src="/static/js/xlsx.full.min.js"></script>
+
+    <script src="/static/js/tableexport.min.js"></script>
+
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-export.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <!--编辑bootstrap-->
+    <script src="/static/js/bootstrap-editable.min.js"></script>
+    <script src="/static/js/bootstrap-table-editable.js"></script>
+
+    <script src="/static/easyfrom/easyform.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+
+
+    <script>
+        function getapiuser() {
+            $.ajax({
+                url:{% url "getapiuser" %},
+                type: 'POST',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    $('#tb_apiuser').bootstrapTable(
+                            "refreshOptions",
+                            {
+                                toolbar: '#toolbar_user',                //工具按钮用哪个容器
+                                striped: true,                      //是否显示行间隔色
+                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                pagination: true,                   //是否显示分页（*）
+                                sortable: true,                     //是否启用排序
+                                sortOrder: "asc",                   //排序方式
+                                sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                                editable: true,
+                                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                pageSize: 10,                       //每页的记录行数（*）
+                                pageList: [10, 25, 50, 100, 'ALL'],        //可供选择的每页的行数（*）
+                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                strictSearch: true,
+                                //queryParams: oTableInit.queryParams,//传递参数（*）
+                                showColumns: true,                  //是否显示所有的列
+                                showRefresh: false,                  //是否显示刷新按钮
+                                minimumCountColumns: 2,             //最少允许的列数
+                                clickToSelect: true,                //是否启用点击选中行
+                                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                                cardView: false,                    //是否显示详细视图
+                                detailView: false,                   //是否显示父子表
+                                showExport: true,                     //是否显示导出按钮
+                                exportTypes: ['json', 'xlsx'],           //导出文件类型
+                                exportDataType: "all",             //basic当前页', 'all所有, 'selected'.
+                                exportOptions: {
+                                    //ignoreColumn: [0, 1],  //忽略某一列的索引
+                                    fileName: 'API用户',  //文件名称设置
+                                    worksheetName: 'sheet1',  //表格工作区名称
+                                    tableName: 'API用户',
+                                    excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                                },
+                                onClickRow: function () {   //当用户点击某一行的时候触发
+                                    getcheckcount()
+                                },
+                                onCheck: function () {   //当用户选择某一行时触发
+                                    getcheckcount()
+                                },
+                                onUncheck: function () {   //当用户反选某一行时触发
+                                    getcheckcount()
+                                },
+                                onCheckAll: function () {   //当用户全选所有的行时触发
+                                    getcheckcount()
+                                },
+                                onUncheckAll: function () {   //当用户反选所有的行时触发
+                                    getcheckcount()
+                                },
+                                onCheckSome: function () {   //当用户选择某些行时触发
+                                    getcheckcount()
+                                },
+                                onUncheckSome: function () {   //当用户反选某些行时触发
+                                    getcheckcount()
+                                },
+                                onDblClickRow: function (row, $element) {   //当用户双击某一行的时候触发
+                                    getcheckcount();
+                                },
+                                columns: [
+                                    {
+                                        checkbox: true
+                                    },
+                                    {
+                                        field: 'id',
+                                        title: 'id'
+                                    },
+                                    {
+                                        field: 'username',
+                                        title: '账号',
+                                        editable: true
+                                    },
+                                    {
+                                        field: 'is_active',
+                                        title: '账号状态',
+                                        formatter: isactiveFormatter
+                                    },
+                                    {
+                                        field: 'name',
+                                        title: '使用人',
+                                        editable: true
+                                    },
+                                    {
+                                        field: 'department',
+                                        title: '部门',
+                                        editable: true
+                                    },
+                                    {
+                                        field: 'description',
+                                        title: '描述',
+                                        editable: true
+                                    }, {
+                                        field: 'operate',
+                                        title: '操作',
+                                        formatter: operateFormatter  //自定义方法，添加操作按钮
+                                    }
+
+                                ],
+                                data: data['rows'],
+                            },
+                    );
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            getapiuser();
+            getattributeslevel();
+        });
+        //按钮
+        function operateFormatter(value, row, index) {
+            var result = "";
+            result += "<button type='button' class='btn btn-primary btn-border btn-sm' onclick='openapipw(" + row.id + ")'><span class='fa fa-vine' aria-hidden='true'></span> 修改密码</button>"
+            result += "<button type='button' class='btn btn-primary btn-border btn-sm' onclick='openapimodify(" + row.id + ")'><span class='fa fa-plus-square-o' aria-hidden='true'></span> 修改权限</button>"
+            return result;
+        }
+        function operateAttributes(value, row, index) {
+            var result = "";
+            result += "<button type='button' class='btn btn-primary btn-border btn-sm' onclick='modifyapiattributeslevemodel(" + row.id + ")'> 修改 </button>"
+            return result;
+        }
+        //账号状态 栏位变成按键
+        function isactiveFormatter(value, row, index) {
+            if (value == 0) {
+                var result = "<button type='button' class='btn btn-primary btn-border btn-sm' onclick='modifyactive(" + row.id + ",0)'> 当前状态:禁用</button>"
+                return result;
+            } else {
+                var result = "<button type='button' class='btn btn-primary btn-border btn-sm' onclick='modifyactive(" + row.id + ",1)'> 当前状态:启用</button>"
+                return result;
+            }
+        }
+        //修改账户状态
+        function modifyactive(id, vaules) {
+            if (vaules == 0) {
+                var title = "是否启用这个账号";
+                var new_active = 1;
+            } else {
+                var title = "是否禁用这个账号";
+                var new_active = 0;
+            }
+            swal({
+                title: title,
+                text: '',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: '是(Y)',//使用此选项可更改“确认”按钮上的文本。
+                cancelButtonText: '否(N)',//使用此选项可更改“取消”按钮上的文本。
+                closeOnConfirm: false,
+                showLoaderOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: {% url "modifyapiuser" %},
+                    type: 'POST',
+                    dataType: "json",
+                    //async:false,
+                    traditional: true,
+                    data: {'field': 'is_active', 'row': id, 'new_active': new_active},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            swal({
+                                title: "",
+                                text: data['message'],
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                            getapiuser();
+                        } else {
+                            swal(data['message']);
+                        }
+                    }
+                });
+            })
+
+        }
+        // 打开重置密码的model
+        function openapipw(id) {
+            document.getElementById('apiuserid').value = id;
+            document.getElementById('modify_api_password').value = '';
+            $('#apipasswordmodel').modal({
+                keyboard: true,
+                backdrop: false
+            });
+        }
+        //修改api用户密码
+        function modifyapipassword() {
+            var id = document.getElementById('apiuserid').value;
+            var modify_api_password = document.getElementById('modify_api_password').value;
+            if (modify_api_password) {
+                $.ajax({
+                    url: {% url "modifyapiuser" %},
+                    type: 'POST',
+                    dataType: "json",
+                    //traditional:true,
+                    data: {'field': 'password', 'row': id, 'password': modify_api_password},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            $('#apipasswordmodel').modal("hide");
+                            swal({
+                                title: "",
+                                text: '修改成功',
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                        } else {
+                            swal("修改失败：" + data['message']);
+                        }
+
+                    }
+                })
+            } else {
+                swal("密码未填写")
+
+            }
+            ;
+            return false;
+
+        }
+        ;
+        //打开api权限表
+        function openapimodify(id) {
+            document.getElementById('api_username_id').value = id;
+            $.ajax({
+                url:{% url "getapiuserpermissions" %},
+                type: 'POST',
+                dataType: 'json',
+                data: {'username_id': id},
+                success: function (data) {
+                    $('#tb_apiuserpermissions').bootstrapTable(
+                            "refreshOptions",
+                            {
+                                toolbar: '#toolbar_apiuserpermissions',                //工具按钮用哪个容器
+                                striped: true,                      //是否显示行间隔色
+                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                pagination: true,                   //是否显示分页（*）
+                                sortable: true,                     //是否启用排序
+                                sortOrder: "asc",                   //排序方式
+                                sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                                editable: true,
+                                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                pageSize: 10,                       //每页的记录行数（*）
+                                pageList: [10],        //可供选择的每页的行数（*）
+                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                strictSearch: true,
+                                //queryParams: oTableInit.queryParams,//传递参数（*）
+                                showColumns: true,                  //是否显示所有的列
+                                showRefresh: false,                  //是否显示刷新按钮
+                                minimumCountColumns: 2,             //最少允许的列数
+                                clickToSelect: true,                //是否启用点击选中行
+                                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                                cardView: false,                    //是否显示详细视图
+                                detailView: false,                   //是否显示父子表
+                                onClickRow: function () {   //当用户点击某一行的时候触发
+                                    getapicheckcount()
+                                },
+                                onCheck: function () {   //当用户选择某一行时触发
+                                    getapicheckcount()
+                                },
+                                onUncheck: function () {   //当用户反选某一行时触发
+                                    getapicheckcount()
+                                },
+                                onCheckAll: function () {   //当用户全选所有的行时触发
+                                    getapicheckcount()
+                                },
+                                onUncheckAll: function () {   //当用户反选所有的行时触发
+                                    getapicheckcount()
+                                },
+                                onCheckSome: function () {   //当用户选择某些行时触发
+                                    getapicheckcount()
+                                },
+                                onUncheckSome: function () {   //当用户反选某些行时触发
+                                    getapicheckcount()
+                                },
+                                onDblClickRow: function (row, $element) {   //当用户双击某一行的时候触发
+                                    getapicheckcount()
+                                },
+                                columns: [
+                                    {
+                                        checkbox: true
+                                    },
+                                    {
+                                        field: 'id',
+                                        title: 'id',
+                                        visible: false
+                                    },
+                                    {
+                                        field: 'username_id',
+                                        title: '用户id',
+                                    },
+                                    {
+                                        field: 'apiname',
+                                        title: '方法名',
+                                    },
+                                ],
+                                data: data['rows'],
+                            },
+                    );
+                    $('#apimodifymodel').modal({
+                        keyboard: true,
+                        backdrop: false
+                    });
+                }
+            });
+
+        }
+        //删除api 权限
+        function deluserpermissions() {
+            var ids = $.map($('#tb_apiuserpermissions').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+            if (ids.length > 0) {
+                swal({
+                    title: "是否删除这些权限",
+                    text: '',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: '是(Y)',//使用此选项可更改“确认”按钮上的文本。
+                    cancelButtonText: '否(N)',//使用此选项可更改“取消”按钮上的文本。
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: {% url "deluserpermissions" %},
+                        type: 'POST',
+                        dataType: "json",
+                        //async:false,
+                        traditional: true,
+                        data: {'ids': ids},
+                        success: function (data) {
+                            if (data['isSuccess']) {
+                                swal({
+                                    title: "",
+                                    text: data['message'],
+                                    type: "success",
+                                    showConfirmButton: "true",
+                                    confirmButtonText: "好的",
+                                    animation: "slide-from-top"
+                                });
+                                $('#tb_apiuserpermissions').bootstrapTable('remove', {
+                                    field: 'id',
+                                    values: ids
+                                });
+                            } else {
+                                swal(data['message']);
+                            }
+                        }
+                    });
+                })
+
+            } else {
+                swal("请勾选一个对象");
+            }
+
+        }
+
+        //打开新建api 权限model
+        function addapipermissionsmodel() {
+            document.getElementById('add_username_id').value = document.getElementById('api_username_id').value;
+            document.getElementById('add_apiname').value = '';
+            $('#addapipermissionsmodel').modal({
+                keyboard: true,
+                backdrop: false
+            });
+
+        }
+        //添加api 权限
+        function addapipermissions() {
+            var add_username_id = document.getElementById('add_username_id').value;
+            var add_apiname = fixXss(document.getElementById('add_apiname').value);
+            if (add_username_id && add_apiname) {
+                $.ajax({
+                    url: "/addapipermissions/",
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    data: {"username_id": add_username_id, "apiname": add_apiname},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            $("#addapipermissionsmodel").modal("hide");
+                            swal({
+                                title: "",
+                                text: data['message'],
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                            openapimodify(add_username_id);
+                        } else {
+                            swal("添加失败:" + data['message']);
+                        }
+                    }
+                });
+
+            } else {
+                swal('方法名栏位未填写，或其他')
+            }
+
+        }
+
+        $(function () {
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+        });
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_apiuser').bootstrapTable();
+                $('#tb_apiuserpermissions').bootstrapTable();
+                $('#tb_apiattributeslevel').bootstrapTable();
+            };
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    departmentname: $("#txt_search_departmentname").val(),
+                    statu: $("#txt_search_statu").val()
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+            return oInit;
+        };
+        $(document).ready(function () {
+            $('.chat-room,.chat-contacts').slimScroll({
+                color: '#eee',
+                size: '5px',
+                height: '490px',
+                alwaysVisible: true
+            });
+        });
+        //新建Api 用户
+        $(document).ready(function () {
+            $('#form_add_user').easyform();
+        });
+        function form_beforeSubmit() {
+            return true
+        }
+        ;
+        $(function () {
+            var optionsaddapiuser = {
+                beforeSubmit: form_beforeSubmit,
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        $("#addapiusermodel").modal("hide");
+                        swal({
+                            title: "",
+                            text: data['message'],
+                            type: "success",
+                            showConfirmButton: "true",
+                            confirmButtonText: "好的",
+                            animation: "slide-from-top"
+                        });
+                        getapiuser();
+                    } else {
+                        swal("新建失败:" + data['message']);
+                    }
+                }
+            }
+            $("#form_add_user").ajaxForm(optionsaddapiuser);
+        });
+
+        //删除
+        function deluser() {
+            var ids = $.map($('#tb_apiuser').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+            if (ids.length > 0) {
+                swal({
+                    title: "是否删除这些用户",
+                    text: '',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: '是(Y)',//使用此选项可更改“确认”按钮上的文本。
+                    cancelButtonText: '否(N)',//使用此选项可更改“取消”按钮上的文本。
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: {% url "deletcapiuser" %},
+                        type: 'POST',
+                        dataType: "json",
+                        //async:false,
+                        traditional: true,
+                        data: {'ids': ids},
+                        success: function (data) {
+                            if (data['isSuccess']) {
+                                swal({
+                                    title: "",
+                                    text: data['message'],
+                                    type: "success",
+                                    showConfirmButton: "true",
+                                    confirmButtonText: "好的",
+                                    animation: "slide-from-top"
+                                });
+                                $('#tb_apiuser').bootstrapTable('remove', {
+                                    field: 'id',
+                                    values: ids
+                                });
+                            } else {
+                                swal(data['message']);
+                            }
+                        }
+                    });
+                })
+
+            } else {
+                swal("请勾选一个对象");
+            }
+
+        }
+        ;
+        {#        修改api用户属性#}
+        $('#tb_apiuser').bootstrapTable({
+            onEditableSave: function (field, row, oldValue, $el) {
+                if (field == 'username') {
+                    var username = row['username'];
+                    reg = /^[a-zA-Z0-9_]{8,15}$/;
+                    if (reg.test(username)) {
+                        $.ajax({
+                            url: {% url "modifyapiuser" %},
+                            type: 'POST',
+                            dataType: "json",
+                            //traditional:true,
+                            data: {'field': field, 'row': JSON.stringify(row), 'oldValue': oldValue,},
+                            success: function (data) {
+                                if (data['isSuccess']) {
+                                    swal({
+                                        title: "",
+                                        text: "更新完成",
+                                        type: "success",
+                                        showConfirmButton: "true",
+                                        confirmButtonText: "好的",
+                                        animation: "slide-from-top"
+                                    });
+                                } else {
+                                    swal("修改失败：" + data['message']);
+                                }
+
+                            }
+                        })
+                    } else {
+                        swal("账号只能为8-15位英文、数字、下划线");//请将“字符串类型”要换成你要验证的那个属性名称！
+                        getapiuser();
+                    }
+                }else {
+                    $.ajax({
+                            url: {% url "modifyapiuser" %},
+                            type: 'POST',
+                            dataType: "json",
+                            //traditional:true,
+                            data: {'field': field, 'row': JSON.stringify(row), 'oldValue': oldValue,},
+                            success: function (data) {
+                                if (data['isSuccess']) {
+                                    swal({
+                                        title: "",
+                                        text: "更新完成",
+                                        type: "success",
+                                        showConfirmButton: "true",
+                                        confirmButtonText: "好的",
+                                        animation: "slide-from-top"
+                                    });
+                                } else {
+                                    swal("修改失败：" + data['message']);
+                                    getapiuser();
+                                }
+
+                            }
+                        })
+                }
+
+
+            }
+        });
+        function getcheckcount() {
+            var getAllSelections = $('#tb_apiuser').bootstrapTable('getAllSelections');
+            document.getElementById('usercount').innerHTML = getAllSelections.length;
+        }
+        ;
+        function getapicheckcount() {
+            var Selections = $('#tb_apiuserpermissions').bootstrapTable('getAllSelections');
+            document.getElementById('apiusercount').innerHTML = Selections.length;
+        }
+        //AD属性权限
+        function getattributeslevel() {
+            $.ajax({
+                url:{% url "getattributeslevel" %},
+                type: 'POST',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    $('#tb_apiattributeslevel').bootstrapTable(
+                            "refreshOptions",
+                            {
+                                toolbar: '#toolbar_attributeslevel',                //工具按钮用哪个容器
+                                striped: true,                      //是否显示行间隔色
+                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                pagination: true,                   //是否显示分页（*）
+                                sortable: true,                     //是否启用排序
+                                sortOrder: "asc",                   //排序方式
+                                sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                                editable: true,
+                                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                pageSize: 10,                       //每页的记录行数（*）
+                                pageList: [10],        //可供选择的每页的行数（*）
+                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                strictSearch: true,
+                                //queryParams: oTableInit.queryParams,//传递参数（*）
+                                showColumns: true,                  //是否显示所有的列
+                                showRefresh: false,                  //是否显示刷新按钮
+                                minimumCountColumns: 2,             //最少允许的列数
+                                clickToSelect: true,                //是否启用点击选中行
+                                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                                cardView: false,                    //是否显示详细视图
+                                detailView: false,                   //是否显示父子表
+                                columns: [
+                                    {#                                    {#}
+                                    {#                                        checkbox: true#}
+                                    {#                                    },#}
+                                    {
+                                        field: 'id',
+                                        title: 'id',
+                                    },
+                                    {
+                                        field: 'operate',
+                                        title: '操作',
+                                        formatter: operateAttributes  //自定义方法，添加操作按钮
+                                    },
+                                    {
+                                        field: 'apiname',
+                                        title: '方法名',
+                                    },
+                                    {
+                                        field: 'attributes',
+                                        title: '可修改属性',
+                                    },
+                                ],
+                                data: data['rows'],
+                            },
+                    );
+                }
+            });
+        }
+        ;
+
+        // 打开 修改属性权限的model
+        function modifyapiattributeslevemodel(id) {
+            document.getElementById('add_api_apiname').value = id;
+            $.ajax({
+                url:{% url "getattributeslevel" %},
+                type: 'POST',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    var rows = data['rows']
+                    for(var attributeslevel in rows){
+                        if (rows[attributeslevel]['id'] == id){
+                            document.getElementById('add_api_attributes').value = rows[attributeslevel]['attributes'];
+                            $('#modifyapiattributeslevemodel').modal({
+                keyboard: true,
+                backdrop: false
+            });
+                        }
+                    }
+                }
+            });
+
+
+        }
+        //
+        function modifyapiattributesleve() {
+            var add_api_apiname = document.getElementById('add_api_apiname').value;
+            var add_api_attributes = fixXss(document.getElementById('add_api_attributes').value);
+            if (add_api_apiname && add_api_attributes) {
+                $.ajax({
+                    url: "/modifyapiattributesleve/",
+                    type: 'POST',
+                    dataType: 'json',
+                    async: true,
+                    data: {"add_api_apiname": add_api_apiname, "add_api_attributes": add_api_attributes},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            $("#modifyapiattributeslevemodel").modal("hide");
+                            swal({
+                                title: "",
+                                text: data['message'],
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                            getattributeslevel()
+                        } else {
+                            swal("修改失败:" + data['message']);
+                        }
+                    }
+                });
+
+            } else {
+                swal('可修改属性栏位未填写，或其他')
+            }
+
+        }
+    </script>
+{% endblock %}

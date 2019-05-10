@@ -1,0 +1,202 @@
+{% extends 'home.html' %}
+{% block title %}
+    <title>故障回溯</title>
+{% endblock %}
+<!-- Mirrored from www.zi-han.net/theme/hplus/projects.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:44 GMT -->
+{% block custom_css %}
+    <style type="text/css">
+        .mytable {
+            table-layout: fixed;
+        }
+
+        .mytable tr td {
+            text-overflow: ellipsis; /* for IE */
+            -moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+    {#    <link rel="shortcut icon" href="favicon.ico">#}
+    {#    <link href="/static/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">#}
+    {#    <link href="/static/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">#}
+    <link href="/static/document/css/animate.min.css" rel="stylesheet">
+    {#    <link href="/static/css/style.min862f.css?v=4.1.0" rel="stylesheet">#}
+    {#    <link href="/static/js/sweetalert-master/dist/sweetalert.css" rel="stylesheet">#}
+    <link href="/static/document/css/footable.standalone.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>故障查看</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="ibox">
+                <div class="ibox-title" >
+                    <a style="font-weight: 700;color:#777">所有项目</a>
+                    <div  style="float:right;display:inline-block;text-align:left;" >
+                        <a href="/faultproject/" class="btn btn-primary btn-xs">创建新项目</a>
+                    </div>
+                </div>
+                <hr>
+                <div class="ibox-content">
+                    <div class="row m-b-sm m-t-sm">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <input type="text" placeholder="请输入项目主题" class="input-sm form-control" id="findsubject"> <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="project-list holder" id="showtablediv">
+
+                        <table class="table table-hover mytable" id="showtable">
+                            <thead>
+                            <tr>
+                                <td style="display: none">ID</td>
+                                <td width='50%'>主题</td>
+                                <td>创建时间</td>
+                                <td>处理人</td>
+                                <td>标签</td>
+                                <td>操作</td>
+                            </tr>
+                            </thead>
+                            <tbody id="showtody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    {#<script src="/static/js/jquery.min.js?v=2.1.4"></script>#}
+    {#<script src="/static/js/bootstrap.min.js?v=3.3.6"></script>#}
+    <script src="/static/document/js/footable.all.min.js"></script>
+    <script src="/static/document/js/content.min.js?v=1.0.0"></script>
+    {#<script src="/static/document/js/laydate.js"></script>#}
+    <script src="/static/document/js/footable.min.js"></script>
+
+    {#<script>#}
+    {#    laydate({elem: "#hello", event: "focus"});#}
+    {#    var start = {#}
+    {#        elem: "#start", format: "YYYY/MM/DD hh:mm:ss", min: "2004-01-01 00:00:00", max: "2199-06-16 23:59:59", istime: true, istoday: false, choose: function (datas) {#}
+    {#            end.min = datas;#}
+    {#            end.start = datas#}
+    {#        }#}
+    {#    };#}
+    {#    var end = {#}
+    {#        elem: "#end", format: "YYYY/MM/DD hh:mm:ss", min: "2004-01-01 00:00:00", max: "2199-06-16 23:59:59", istime: true, istoday: false, choose: function (datas) {#}
+    {#            start.max = datas#}
+    {#        }#}
+    {#    };#}
+    {#    laydate(start);#}
+    {#    laydate(end);#}
+    {#</script>#}
+    <script>
+        $(document).ready(function () {
+            $("#loading-example-btn").click(function () {
+                btn = $(this);
+                simpleLoad(btn, true);
+                simpleLoad(btn, false)
+            })
+        });
+        function simpleLoad(btn, state) {
+            if (state) {
+                btn.children().addClass("fa-spin");
+                btn.contents().last().replaceWith(" Loading")
+            } else {
+                setTimeout(function () {
+                    btn.children().removeClass("fa-spin");
+                    btn.contents().last().replaceWith(" Refresh")
+                }, 2000)
+            }
+        }
+    </script>
+
+    <script>
+
+        $("#findsubject").bind("input propertychange", function () {
+            var storeId = document.getElementById('showtable');//获取table的id标识
+            var rowsLength = storeId.rows.length;//表格总共有多少行
+            var key = document.getElementById('findsubject').value;//获取输入框的值
+            var searchCol = 1;//要搜索的哪一列，这里是第一列，从0开始数起
+            var searchCol1 = 2;//要搜索的哪一列，这里是第一列，从0开始数起
+            var searchCol2 = 3;//要搜索的哪一列，这里是第一列，从0开始数起
+            var searchCol4 = 4;//要搜索的哪一列，这里是第一列，从0开始数起
+            for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+                var searchText1 = storeId.rows[i].cells[searchCol].innerHTML;//取得table行，列的值
+                var searchText2 = storeId.rows[i].cells[searchCol1].innerHTML;//取得table行，列的值
+                var searchText3 = storeId.rows[i].cells[searchCol2].innerHTML;//取得table行，列的值
+                var searchText4 = storeId.rows[i].cells[searchCol4].innerHTML;//取得table行，列的值
+                if (searchText1.match(key) ||searchText2.match(key) ||searchText3.match(new RegExp(key,'i'))  ||searchText4.match(new RegExp(key,'i'))) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+                    storeId.rows[i].style.display = '';//显示行操作，
+                }
+                else {
+                    storeId.rows[i].style.display = 'none';//隐藏行操作
+                }
+            }
+        });
+        start();
+        function start() {
+            $.ajax({
+                url:{% url "finderroprojects" %},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    $("#showtable tbody").html("");
+                    for (var i = 0; i < data['textvalues'].length; i++) {
+                        var tabletd = "<tr><td style='display:none'>" + data['textvalues'][i]['id'] + "</td><td  width='30%'><a  href='/lookerrmess/?textid=" + data['textvalues'][i]['id'] + "'>" + fixXss(data['textvalues'][i]['title']) + "</a></td><td>" + fixXss(data['textvalues'][i]['creatime']) + "</td><td>" + fixXss(data['textvalues'][i]['userper']) + "</td><td>" + data['textvalues'][i]['tips'] + "</td><td><button class='btn btn-primary ' onclick=hreftxt(\"" + data['textvalues'][i]['id'] + "\")>详情</button><button class='btn btn-danger' onclick=delprojects(\"" + data['textvalues'][i]['id'] + "\",\"" + data['textvalues'][i]['creatuser'] + "\")>删除</button></td></tr>";
+                        $("#showtable").append(tabletd);
+                    }
+                }
+            })
+        }
+
+        function delprojects(id,creatuser) {
+            $.ajax({
+                url:{% url "delerrprojects" %},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {"id": id,'creatuser':creatuser},
+                success: function (data) {
+                    if(data['isSuccess']){
+                            swal({
+                            title: "删除成功",
+                            type: "success",
+                            confirmButtonText: "确定",
+                            closeOnConfirm: true,
+                            showLoaderOnConfirm: true
+                        },
+                        function () {
+                            start();
+                        });
+                    }
+                    else
+                        swal('没有权限')
+
+                }
+            })
+        }
+
+        function hreftxt(id) {
+            location.href="/lookerrmess/?textid=" +id;
+        }
+
+    </script>
+
+{% endblock %}
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/projects.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:44 GMT -->
+

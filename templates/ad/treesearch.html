@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查找</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/simple-line-icons.css" rel="stylesheet">
+    <link href="/static/css/pace.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/metismenu.min.css">
+    <link rel="stylesheet" href="/static/css/nanoscroller.css">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/static/switch/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/static/css/jquery.resizableColumns.css" rel="stylesheet">
+    <link href="/static/contextMenu/jquery.contextMenu.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="/static/select2/select2.min.css" type="text/css">
+    <style>
+
+        .table>thead>tr{
+            background: #edf7ff;
+        }
+
+
+    </style>
+    <style type="text/css">
+
+
+    {#        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: transparent;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}#}
+    #fullbg{position: fixed;}
+    #fullbg {
+        width: 100%;
+        display: none;
+        background-color: Gray;
+        left: 0px;
+        opacity: 0.5;
+        position: absolute;
+        top: 0px;
+        z-index: 100003;
+        filter: alpha(opacity=50); /* IE6 */
+        -moz-opacity: 0.5; /* Mozilla */
+        -khtml-opacity: 0.5; /* Safari */
+    }
+    #dialoga {
+        background-color: transparent;
+        display: none;
+        height: 200px;
+        left: 50%;
+        margin: -100px 0 0 -100px;
+        padding: 12px;
+        position: fixed !important; /* 浮动对话框 */
+        position: absolute;
+        top: 50%;
+        width: 200px;
+        z-index: 100005;
+    }
+    #dialoga p {
+        margin: 0 0 12px;
+    }
+    #dialoga p.close {
+        text-align: right;
+    }
+</style>
+</head>
+<body id="pic1">
+
+
+<section style="margin-left:100px;margin-right: 100px">
+    <div class="modal fade" id="myModamove" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        移动用户OU
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <input style="display: none" id="userdnname">
+                            <input  style="display: none" id="oudnname">
+                            <ul style="text-align: center" id="treemove" class="ztree"></ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="savemovetoou()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="addusretoModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        添加用户到组
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 20%">
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="text-align: right">组名:</label>
+                            <div class="col-sm-9">
+                                <input style="display: none" id="snamsuser">
+                                <select  id="selsgroup" style="width: 100%;" multiple="multiple"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="saveusertogroup()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="addgroupuserModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        添加成员
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 20%">
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="text-align: right">组名:</label>
+                            <div class="col-sm-9">
+                                <input style="display: none" id="snamsusercouny">
+                                <select  id="selsusergroup" style="width: 100%;" multiple="multiple"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="savegroupuseron()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="reset_password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重置密码
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">新密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword1" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">确认密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword2" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="checkbox_password">用户下次登陆时须更改密码(U)</label>
+                            </div>
+                            <label class="control-label" for="UserName">要使更改生效，用户必须注销，然后重新登陆。</label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName" id="label_unlock">此域控制器中账户锁定状态：</label>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="checkbox_unlock">解锁用户的账户(A)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary " onclick="setResetPassword()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Active Directory 搜索</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" >
+            <div class="panel-group accordion">
+                <div class="panel panel-default" >
+                    <div class="panel-heading" >
+                        <span aria-hidden="true" class="fa fa-search"></span>
+                        查找 用户、联系人及组
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="form-horizontal"  >
+                                <div class="form-group" style="margin-top: 30px">
+                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px">查找（D）:</label>
+                                    <div class="col-sm-6">
+                                        <select name="sele" id="sele" class="form-control m-b">
+                                            <option value="user">用户，联系人及组</option>
+                                            <option value="computer">计算机</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 30px">
+                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px">描述（A）:</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <input type="text" id="adaccount" class="form-control">
+                                            <input type="text" value="searc" style="display: none" id="idtype" class="form-control">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" onclick="searchmessage()">搜索</button>
+                                            </span>
+                                        </div>
+                                        <p></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="startchange">
+                        <hr>
+                        <div class="panel-heading">
+                            <h4>搜索结果(S)<sub><span id="counts" style="color: #bb0000"></span></sub></h4>
+                        </div>
+                        <div>
+                            <div class="panel-body " id="paneltable" style="padding:0;padding-left: 80px;padding-right: 80px">
+                                <table class="table table-hover table-bordered"  id="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-bordered" data-resizable-column-id="name" style="width: 150px">账号（sAMAccountName）</th>
+                                        <th class="table-bordered" data-resizable-column-id="name" >显示名称（displayName）</th>
+                                        <th class="table-bordered" data-resizable-column-id="first_name">描述（description）</th>
+                                        <th class="table-bordered" data-resizable-column-id="last_name">类型（objectClass）</th>
+                                        <th class="table-bordered" data-resizable-column-id="username" >路径（distinguishedName）</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="searchuser">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+<script src="/static/js/jquery.nanoscroller.min.js"></script>
+<script src="/static/js/metismenu.min.js"></script>
+<script src="/static/js/float-custom.js"></script>
+<script src="/static/js/fixXss.js"></script>
+<script src="/static/sweetalert/sweetalert.min.js"></script>
+<script src="/static/switch/bootstrap-switch.min.js"></script>
+<script src="/static/js/store.js"></script>
+<script src="/static/js/jquery.resizableColumns.min.js"></script>
+<script src="/static/js/jquery.contextMenu.min.js"></script>
+<script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+<script src="/static/select2/select2.full.min.js"></script>
+<script src="/static/select2/zh-CN.js"></script>
+<script type="text/javascript" src="/static/js/conment.js"></script>
+<!-- jQuery 遮罩层 -->
+<div id="fullbg"></div>
+<!-- end jQuery 遮罩层 -->
+<!-- 对话框 -->
+<div class="sk-spinner sk-spinner-three-bounce" id="dialoga">
+    <div class="sk-bounce1"></div>
+    <div class="sk-bounce2"></div>
+    <div class="sk-bounce3"></div>
+</div>
+<script>
+    function openModle(url) {
+        window.open(url, 'ObjectProperties', 'resizable=yes,width=1010,height=700,scrollbars=yes,left=24,top=50');
+    }
+    function opentreesearch() {
+        window.open('/treesearch/', 'ObjectProperties', 'resizable=yes,width=1010,height=700,scrollbars=yes,left=24,top=50');
+    }
+    var distinguishedName, sAMAccountName, lockoutTime, lockip;
+    function showResetPassword(dn, accountName, outTime) {
+        distinguishedName = dn;
+        sAMAccountName = accountName;
+        $.ajax({
+            url: "/serchLock/",
+            type: 'POST',
+            dataType: 'json',
+            data: {'distinguishedName': distinguishedName, 'sAMAccountName': sAMAccountName,},
+            success: function (data) {
+                if (data['isSuccess']) {
+                    document.getElementById("label_unlock").innerHTML = "此域控制器中账户锁定状态：锁定:"+data['message']['ip'];
+                    lockip = data['message']['ip'];
+                } else {
+                    document.getElementById("label_unlock").innerHTML = "此域控制器中账户锁定状态：未锁定";
+                    lockip = '';
+                }
+            }
+        });
+        lockoutTime = outTime;
+        $("#checkbox_password").removeAttr("checked");
+        $("#checkbox_unlock").removeAttr("checked");
+        document.getElementById("newpassword1").value = '';
+        document.getElementById("newpassword2").value = '';
+        $('#reset_password').modal({
+            keyboard: true,
+            backdrop: false
+        });
+    }
+    function setResetPassword() {
+        var newpassword1 = document.getElementById("newpassword1").value;
+        var newpassword2 = document.getElementById("newpassword2").value;
+        var checkbox_password = $("#checkbox_password").prop('checked');
+        var checkbox_unlock = $("#checkbox_unlock").prop('checked');
+        var _distinguishedName = distinguishedName;
+        var _sAMAccountName = sAMAccountName;
+        var _ip = lockip;
+        if (_distinguishedName.length > 0) {
+            if (newpassword1.length > 0 && newpassword1 == newpassword2) {
+                $.ajax({
+                    url: "/resetUserPassword/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'distinguishedName': _distinguishedName, 'newpassword': newpassword1, 'pwdLastSet': checkbox_password, 'unlock': checkbox_unlock,'ip': _ip},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            swal({
+                                title: "",
+                                text: _sAMAccountName + "修改密码成功",
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                            $("#reset_password").modal("hide");
+                        } else {
+                            swal(data['message']);
+                            $("#reset_password").modal("hide");
+                        }
+                    }
+                });
+            } else {
+                swal('密码不能为空或两个密码不一致');
+            }
+
+        } else {
+            swal('传入空值');
+            $("#reset_password").modal("hide");
+        }
+    }
+    $("#adaccount").keydown(function (e) {
+        if (e.keyCode==13){
+            searchmessage()
+        }
+    });
+</script>
+</body>
+
+
+</html>

@@ -1,0 +1,1 @@
+.scrollbar{position:absolute;width:6px;right:0;top:0;bottom:0;background-color:#fff}.scrollbar>div{height:100%;position:relative;background-color:#fff}.scrollbar>div>span{position:absolute;top:0;left:1px;right:1px;background-color:#ccc;border-radius:4px;cursor:pointer}

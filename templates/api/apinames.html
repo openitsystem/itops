@@ -1,0 +1,213 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>API方法导航</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <!--jquery steps-->
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4>API方法导航</h4>
+                <code><label for="userName">可以点击API方法名称跳转到详情</label></code>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <!--start page content-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <table id="tb_apinames"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page content-->
+    <!--Start footer-->
+    <footer class="footer">
+        <span>IT &copy; 2019</span>
+    </footer>
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+
+{% endblock %}
+
+{% block custom_js %}
+    <!--Common plugins-->
+    <script src="/static/js/pace.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-export.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        $("#findapiname").bind("input propertychange", function () {
+            var storeId = document.getElementById('tb_apinames');//获取table的id标识
+            var rowsLength = storeId.rows.length;//表格总共有多少行
+            var key = document.getElementById('findapiname').value;//获取输入框的值
+            var searchCol = 0;//要搜索的哪一列，这里是第一列，从0开始数起
+            var searchCol1 = 1;//要搜索的哪一列，这里是第一列，从0开始数起
+            for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+                var searchText = storeId.rows[i].cells[searchCol].innerHTML;//取得table行，列的值
+                var searchText1 = storeId.rows[i].cells[searchCol1].innerHTML;//取得table行，列的值
+                if (searchText.match(key) || searchText1.match(key)) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+                    storeId.rows[i].style.display = '';//显示行操作，
+                }
+                else {
+                    storeId.rows[i].style.display = 'none';//隐藏行操作
+                }
+            }
+        });
+        $(function () {
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+        });
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_apinames').bootstrapTable({
+                    toolbar: '#toolbar_user',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: false,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: false,
+                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "apiname",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    columns: [{
+                        field: 'apiname',
+                        title: '方法名',
+                        sortable: true,
+                    }, {
+                        field: 'description',
+                        title: '描述',
+                    }],
+                    data: [
+                        {'apiname': '<a target="_blank" href="/docs/itapidocument/">01.API方法调用说明</a>', "description": "API方法调用说明"},
+                        {'apiname': '<a target="_blank" href="/docs/#Api-token-auth-create">Api-token-auth</a>', "description": "通过账户密码获取token"},
+                        {'apiname': '<a target="_blank" href="/docs/#ApiUserViewset-list">ApiUserViewset</a>', "description": "接口权限用户"},
+                        // Exchang
+                        {'apiname': '<a target="_blank" href="/docs/#EXAddADPermission-create">EXAddADPermission</a>', "description": "添加邮箱用户权限，添加代理发送权限"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXAddMailboxPermission-create">EXAddMailboxPermission</a>', "description": "添加邮箱用户权限，添加完全访问权限"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXDisableGroup-create">EXDisableGroup</a>', "description": "禁用邮箱群组"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXEnableGroup-create">EXEnableGroup</a>', "description": "启用邮箱群组"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXEnableMailContact-create">EXEnableMailContact</a>', "description": "开启联系人邮箱"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXEnableMailboxarchive-create">EXEnableMailboxarchive</a>', "description": "启用用户邮箱(启用归档邮箱)"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXEnableMailboxhigh-create">EXEnableMailboxhigh</a>', "description": "启用用户邮箱"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetCasMailboxhight-create">EXGetCasMailboxhight</a>', "description": "获取pop mapi信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetDistributionGroup-create">EXGetDistributionGroup</a>', "description": "获取邮箱群组信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetExchangeServer-create">EXGetExchangeServer</a>', "description": "获取邮箱服务器"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetMailContact-create">EXGetMailContact</a>', "description": "获取邮箱联系人信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetMailbox-create">EXGetMailbox</a>', "description": "用户邮箱信息，获取用户邮箱容量数据库等信息"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetMailboxStatistics-create">EXGetMailboxStatistics</a>', "description": "用户邮箱信息，一般用作获取用户邮箱大小使用情况"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXGetMailboxdatabase-create">EXGetMailboxdatabase</a>', "description": "获取所有数据库名称/获取单一数据库信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXNewMailContact-create">EXNewMailContact</a>', "description": "新建联系人"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXNewMoveRequest-create">EXNewMoveRequest</a>', "description": "迁移用户邮箱和存档数据库"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXRemoveADPermission-create">EXRemoveADPermission</a>', "description": "删除邮箱用户权限 代理发送权限"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXRemoveMailboxPermission-create">EXRemoveMailboxPermission</a>', "description": "删除邮箱用户权限，一般用作删除用户完全访问权限"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXRemoveMoveRequest-create">EXRemoveMoveRequest</a>', "description": "删除用户邮箱迁移请求"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetCasMailbox-create">EXSetCasMailbox</a>', "description": "设置pop mapi信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetDistributionGroup-create">EXSetDistributionGroup</a>', "description": "设置群组邮箱"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetMailContactvalue-create">EXSetMailContactvalue</a>', "description": "设置联系人邮箱"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetMailbox-create">EXSetMailbox</a>', "description": "设置用户邮箱"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetMailbox1-create">EXSetMailbox1</a>', "description": "设置用户邮箱level1"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetMailbox2-create">EXSetMailbox2</a>', "description": "设置用户邮箱level2"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXSetMailboxEmailAddresses-create">EXSetMailboxEmailAddresses</a>', "description": "新增/删除 用户smtp地址"},
+                        {'apiname': '<a target="_blank" href="/docs/#EXgetADPermission-create">EXgetADPermission</a>', "description": "获取邮箱用户权限，获取代理发送权限"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#EXgetMailboxPermission-create">EXgetMailboxPermission</a>', "description": "获取邮箱用户权限"},
+
+                        //ldap AD
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddComputer-create">Ldap3AddComputer</a>', "description": "新建计算机"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddContact-create">Ldap3AddContact</a>', "description": "新建联系人"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddGroup-create">Ldap3AddGroup</a>', "description": "新建组"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddMembers-create">Ldap3AddMembers</a>', "description": "批量添加用户(组)到组"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddOU-create">Ldap3AddOU</a>', "description": "新建组织单位"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3AddUser-create">Ldap3AddUser</a>', "description": "新建用户"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3CanObject-create">Ldap3CanObject</a>', "description": "判断对象是否 勾选 防止对象被意外删除(P)"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3CheckObject-create">Ldap3CheckObject</a>', "description": "勾选 防止对象被意外删除(P)"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteComputer-create">Ldap3DeleteComputer</a>', "description": "删除计算机"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteContact-create">Ldap3DeleteContact</a>', "description": "删除联系人"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteGroup-create">Ldap3DeleteGroup</a>', "description": "删除组"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteOU-create">Ldap3DeleteOU</a>', "description": "删除组织单位"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteObject-create">Ldap3DeleteObject</a>', "description": "删除对象"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DeleteUser-create">Ldap3DeleteUser</a>', "description": "删除用户"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3DnMoveToOu-create">Ldap3DnMoveToOu</a>', "description": "多dn移动到新OU"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3ReMembers-create">Ldap3ReMembers</a>', "description": "批量删除用户(组)到组"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3RenameObject-create">Ldap3RenameObject</a>', "description": "重命名对象"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3ResetPassword-create">Ldap3ResetPassword</a>', "description": "修改用户密码"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3Search-create">Ldap3Search</a>', "description": "ldap3搜索"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3SearchDN-create">Ldap3SearchDN</a>', "description": "ldap3 根据sAMAccountName属性 搜索对象"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3GetUser-create">Ldap3GetUser</a>', "description": "获取用户信息"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3SerchLock-create">Ldap3SerchLock</a>', "description": "查找用户是否被锁定"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3SetAccount-create">Ldap3SetAccount</a>', "description": "ldap3 修改对象属性 attributesName:必须传入对应的属性值"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3SetAccountLevel1-create">Ldap3SetAccountLevel1</a>', "description": "ldap3 修改对象属性 attributesName:必须传入对应的属性值"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3SetAccountLevel2-create">Ldap3SetAccountLevel2</a>', "description": "ldap3 修改对象属性 attributesName:必须传入对应的属性值"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3UncheckObject-create">Ldap3UncheckObject</a>', "description": "去除勾选防止对象被意外删除(P)"},
+
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3UnlockUser-create">Ldap3UnlockUser</a>', "description": "解锁用户锁定"},
+                        {'apiname': '<a target="_blank" href="/docs/#Ldap3inspectObject-create">Ldap3inspectObject</a>', "description": " 判断容器或OU内是否有对象"},
+                    ]
+                });
+            };
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    departmentname: $("#txt_search_departmentname").val(),
+                    statu: $("#txt_search_statu").val()
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+            return oInit;
+        };
+    </script>
+{% endblock %}

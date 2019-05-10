@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:18:23 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>IT运维平台</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.step.css" />
+    <link href="/static/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/static/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+
+    <link href="/static/css/animate.min.css" rel="stylesheet">
+    <link href="/static/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <style>
+        button {
+            display: inline-block;
+            padding: 6px 20px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #5bc0de;
+        }
+
+        .main {
+            width: 1000px;
+            margin: 100px auto;
+        }
+
+        #step {
+            margin-bottom: 60px;
+        }
+        .info {
+            float: left;
+            height: 34px;
+            line-height: 34px;
+            margin-left: 40px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #928787;
+        }
+
+        .info span {
+            color: red;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="gray-bg">
+<input style="display: none" id="useame">
+<input style="display: none" id="disname">
+<div class="middle-box text-center loginscreen  animated fadeInDown" id="logapp">
+    <div>
+        <div>
+            <h1 class="logo-name">IT</h1>
+        </div>
+        <div >
+            <h3>欢迎使用 IT运维平台</h3>
+            {#            <form class="m-t" method="post" action="/userlogin/">#}
+            <form class="m-t" method="post" onsubmit="return loginuser()">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="Username" name="Username" placeholder="用户名" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="Password" name="Password" placeholder="密码" required="">
+                </div>
+                <div class="checkbox">
+                    <div class="errorinfo-field" id="restatus" style="display: none">
+
+                            <span id="spantips" style="color:red; font-size:10px" class="warn"></span>
+
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="middle-box text-center loginscreen  animated fadeInDown" style="display: none" id="yangoltok">
+    <div  class="ibox-content">
+        <div>
+            <span class="font-bold text-center" style="font-size: 24px; font-family: inherit; margin-left: 20px">MFA认证</span>
+        </div>
+        <div class="m-t">
+
+            <div class="form-group">
+                <p style="margin:30px auto;" class="text-center"><strong style="color:#000000">账号保护已开启，请根据提示完成以下操作</strong></p>
+                <div class="text-center">
+                    <img src="/static/images/otp_auth.png" alt="" width="72px" height="117">
+                </div>
+                <p style="margin: 30px auto">&nbsp;请打开手机Google Authenticator应用，输入6位动态码</p>
+            </div>
+
+            <div class="m-t">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="otpcode" name="otp_code" placeholder="6位数字" required="">
+                </div>
+                <button  class="btn btn-primary block full-width m-b" onclick="logingoole()">下一步</button>
+
+                <a href="">
+                    <small>点击此处重置MFA</small>
+                </a>
+                <br>
+            </div>
+        </div>
+        <p class="m-t">
+        </p>
+    </div>
+</div>
+<div class="main" id="golapp" style="visibility: hidden">
+    <div id="step">
+    </div>
+    <div class="verify" id="firstnet" style="text-align: center">
+        <p style="margin: 20px auto;"><strong style="color: #000000">请在手机端下载并安装 Google Authenticator 应用</strong></p>
+        <div style="display: inline-block">
+            <img src="/static/authenticator_android.png" width="128" height="128" alt="">
+            <p>Android手机下载</p>
+        </div>
+        <input type="text" style="display: none" id="nameuser">
+        <input type="text" style="display: none" id="mikey">
+        <div style="display: inline-block;margin-left:60px">
+            <img src="/static/authenticator_iphone.png" width="128" height="128" alt="">
+            <p>iPhone手机下载</p>
+        </div>
+        <p style="margin: 20px auto;"></p>
+        <p style="margin: 20px auto;"><strong style="color: #000000">安装完成后点击下一步进入绑定页面（如已安装，直接进入下一步）</strong></p>
+    </div>
+    <div class="verify" id="secondnet" style="text-align: center;display: none">
+        <p style="margin: 20px auto;"><strong style="color: #000000">使用手机 Google Authenticator 应用扫描以下二维码，获取6位验证码</strong></p>
+        <div style="display: inline-block" id="qrcode"></div>
+        <p style="margin: 20px auto;"></p>
+        <p style="margin: 20px auto;"><strong style="color: #000000">请输入6位数字</strong></p>
+
+        <input type="text" id="sixcount"  placeholder="6位数字" required="">
+
+    </div>
+    <div class="verify" id="thirtnet" style="text-align: center;display: none">
+        <div style="display: inline-block">
+            <h3>验证成功返回重新登录</h3>
+            <p style="color: #bb0000">5秒后自动跳转</p>
+        </div>
+
+        <p style="margin: 20px auto;"></p>
+        <p style="margin: 20px auto;"><strong style="color: #000000">点击下一步直接跳转</strong></p>
+    </div>
+    <div class="btns" style="text-align: center;margin-top: 20px">
+
+        <button id="nextBtn">下一步</button>
+    </div>
+    <div style="display: none" class="info">index：<span id="index"></span></div>
+</div>
+
+<script src="/static/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/js/jquery.step.min.js"></script>
+<script src="/static/js/qrcode.min.js"></script>
+<script src="/static/sweetalert/sweetalert.min.js"></script>
+</body>
+<script type="text/javascript">
+    var $step = $("#step");
+    var $index = $("#index");
+    $step.step({
+        index: 0,
+        time: 500,
+        title: ["安装应用", "绑定MFA", "完成"]
+    });
+
+    $index.text($step.getIndex());
+    $("#prevBtn").on("click", function() {
+        $step.prevStep();
+        $index.text($step.getIndex());
+    });
+
+    $("#nextBtn").on("click", function() {
+        if($step.getIndex()==0){
+            searchvalue =  document.getElementById("nameuser").value;
+            {#document.getElementById("firstnet").style.visibility='hidden';#}
+            $.ajax({
+                url: {% url "gootokenpng" %},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    'searchvalue': searchvalue,
+                },
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        new QRCode(document.getElementById("qrcode"), data['message']);
+                        document.getElementById("firstnet").style.display='none';
+                        document.getElementById("secondnet").style.display='block';
+                        document.getElementById('mikey').value=data['miyue'];
+                        $step.nextStep();
+                        $index.text($step.getIndex());
+                    }
+                    else {
+                        swal('二维码生成失败')
+                    }
+                }
+            });
+        }
+        else if ($step.getIndex()==1){
+            searchvalue =  document.getElementById("nameuser").value;
+            sixcount =  document.getElementById("sixcount").value;
+            mikey =  document.getElementById("mikey").value;
+            $.ajax({
+                url: {% url "verificationtok" %},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    'searchvalue': searchvalue,
+                    'sixcount': sixcount,
+                    'mikey': mikey,
+                },
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        document.getElementById("secondnet").style.display='none';
+                        document.getElementById("thirtnet").style.display='block';
+                        setTimeout("location=location; ", 5000);
+                        $step.nextStep();
+                        $index.text($step.getIndex());
+                    }
+                    else {
+                        swal('验证失败')
+                    }
+                }
+            });
+        }
+        else if ($step.getIndex()==2){
+            window.location.reload()
+        }
+
+    });
+
+    $("#btn1").on("click", function() {
+        $step.toStep(1);
+        $index.text($step.getIndex());
+    });
+
+    $("#btn2").on("click", function() {
+        $step.toStep(2);
+        $index.text($step.getIndex());
+    });
+</script>
+<script>
+    function loginuser() {
+        var Username = document.getElementById("Username").value;
+        var Password = document.getElementById("Password").value;
+        $.ajax({
+            url: {% url "userlogin" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                'Username': Username,
+                'Password': Password,
+            },
+            success: function (data) {
+                if (data['code']==0) {
+                    document.getElementById("logapp").style.display ='none';
+                    document.getElementById("yangoltok").style.display ='block';
+                    document.getElementById('useame').value=data['message']['username'];
+                    document.getElementById('disname').value=data['message']['displayname']
+                }
+                else if (data['code']==2) {
+                    document.getElementById("restatus").style.display = "block";
+                    document.getElementById('spantips').innerHTML=data['message'];
+                }
+                else if(data['code']==1) {
+                    document.getElementById("logapp").style.display ='none';
+                    document.getElementById("golapp").style.visibility='visible';
+                    document.getElementById('nameuser').value=Username
+                }
+                else {
+                     window.location.href=data['message']
+                }
+            }
+        });
+        return false
+    }
+    function logingoole() {
+        var Username = document.getElementById("useame").value;
+        var disname = document.getElementById("disname").value;
+        var otpcode = document.getElementById("otpcode").value;
+        $.ajax({
+            url: {% url "logingotok" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                'Username': Username,
+                'disname': disname,
+                'otpcode': otpcode,
+            },
+            success: function (data) {
+                if (data['isSuccess']) {
+                    window.location.href=data['backurl']
+                }
+                else {
+                    swal('验证失败')
+                }
+            }
+        });
+        return false
+    }
+
+
+    <!--检测是否按下回车键,如果按下回车键触发搜索-->
+    $("#otpcode").keydown(function (e) {
+        if (e.keyCode==13){
+            logingoole()
+        }
+    });
+</script>
+<!-- Mirrored from www.zi-han.net/theme/hplus/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:18:23 GMT -->
+</html>

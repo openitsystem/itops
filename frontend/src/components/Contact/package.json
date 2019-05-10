@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "echarts": "^4.2.0-rc.2"
+  }
+}

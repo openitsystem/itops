@@ -1,0 +1,118 @@
+﻿span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,input,textarea,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,figure,header,hgroup,section,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;background:transparent}
+article,aside,figure,header,hgroup,nav,section{display:block}
+
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+
+hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}
+
+img{border:0;max-width:100%;-ms-interpolation-mode:bicubic}
+ins{background-color:#ff9;color:#000;text-decoration:none}
+mark{background-color:#ff9;color:#000;font-style:italic;font-weight:bold}
+del{text-decoration:line-through}
+abbr[title],dfn[title]{border-bottom:1px dotted #000;cursor:help}
+table{border-collapse:collapse;border-spacing:0}
+hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}
+input,select{vertical-align:middle;font-family:'Microsoft Yahei'}
+input[type=text]::-ms-clear,input[type=tel]::-ms-clear,input[type=number]::-ms-clear{display:none}
+textarea{resize:none}
+
+input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px white inset !important}
+
+.layout:after,.clearfix:after{content:"\0020";display:block;clear:both;height:0}
+.layout,.clearfix{*zoom:1}
+.center{width:1160px;max-width:1160px;margin:0 auto;overflow:hidden}
+.t5o{-webkit-transition:all .5s ease .1s !important;-moz-transition:all .5s ease .1s !important;-o-transition:all .5s ease .1s !important;transition:all .5s ease .1s !important}
+.t8o{-webkit-transition:all .8s ease .1s;-moz-transition:all .8s ease .1s;-o-transition:all .8s ease .1s;transition:all .8s ease .1s}
+.t20o{-webkit-transition:all 20s ease .1s;-moz-transition:all 20s ease .1s;-o-transition:all 20s ease .1s;transition:all 20s ease .1s}
+.t3out{-webkit-transition:all .3s ease-out 0s;-moz-transition:all .3s ease-out 0s;-o-transition:all .3s ease-out 0s;transition:all .3s ease-out 0s}
+.YaHei{font-family:'Microsoft Yahei'}
+.HT{font-family:'SimHei'}
+.ST{font-family:'SimSun'}
+.Cambria{font-family:'Cambria'}
+.Arial{font-family:Arial,Helvetica,sans-serif}
+.fl,#loginModal .col-left,#loginModal .col-right,.header .header-search .topLayerTxt,.d_bubble,.index .slide-box ul li,.index .video_introduce ul li,.index .gold-teacher .gold-slide li,.index .job-path .job-list li,.index .job-path .course-list li,.index .king-course .job-list li,.index .king-course .course-list li,.index .cooperate .col_left1,.index .media_reports .col_left1,.index .media_reports ul li,.index .cooperate .cooperate-slide li{float:left}
+.fr,.index .application_download .warp,.index .cooperate .col_right1,.index .media_reports .col_right1{float:right}
+.bodyiphone{font-size:66.6%}
+.body{background:#f3f3f3}
+.uppercase{text-transform:uppercase}
+.textShadow{text-shadow:0 1px 0 #345a49}
+.marginB10{margin-bottom:10px}
+.textIndent{margin-bottom:8px;text-indent:1em}
+.show{display:block}
+.hide{display:none}
+.pt15{padding-top:15px}
+.d-ib{display:inline-block}
+.bold{font-weight:bold}
+.textR{text-align:right}
+.textC{text-align:center}
+body{	font-family: "Microsoft YaHei","Segoe UI", "Lucida Grande", Helvetica, Arial,sans-serif;}
+.globalLoginBtn{display:block;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    opacity: .9;
+    filter: alpha(opacity=90);}
+#KFLOGO,#iconDivMain2{overflow:hidden;width:0 !important;height:0 !important}
+#iconDivMain1{width:0 !important;height:0 !important}
+#div_company_mini{right:0 !important}
+#loginModal .modal-content{border-radius:0}
+#loginModal .col-left{width:225px;height:319px;background:url(../images/sprite.png) 0 -717px no-repeat}
+#loginModal .col-right{width:313px;height:319px;color:#b2b2b2}
+#loginModal .form-group{margin-bottom:10px}
+#loginModal .modal-body{height:263px}
+#loginModal #btnRegister{color:#ff9600}
+#loginModal .tips-error{padding:2px 10px;margin-top:10px;display:none}
+#loginModal .globalLogin{height:47px;background:#01c26f;color:#fff;font-size:14px;background:-webkit-linear-gradient(#1fd783,#1fd06b);background:-o-linear-gradient(#1fd783,#1fd06b);background:-moz-linear-gradient(#1fd783,#1fd06b);background:linear-gradient(#1fd783,#1fd06b)}
+#loginModal .threeLogin{position:absolute;left:30px;bottom:15px}
+#loginModal .threeLogin span{color:#b3c3c0;float:left;font-size:14px}
+#loginModal .threeLogin a{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-left:15px;cursor:pointer}
+#loginModal .threeLogin .nqq{background-position:0 0}
+#loginModal .threeLogin .nqq:hover{background-position:0 -20px}
+#loginModal .threeLogin .nwx{background-position:-20px 0}
+#loginModal .threeLogin .nwx:hover{background-position:-20px -20px}
+#loginModal .threeLogin .nwb{background-position:-40px 0}
+#loginModal .threeLogin .nwb:hover{background-position:-40px -20px}
+.v5-input-txt{padding:0 15px 10px}
+.v5-input-txt .form-control{height:42px;line-height:normal;padding-bottom:10px;padding-top:10px}
+.v5-input-txt #id_mobile_code_f,.v5-input-txt .send-verify{float:left}
+.v5-input-txt #id_mobile_code_f{width:170px;border-radius:0;margin-right:24px}
+.v5-input-txt .send-verify{width:144px;height:42px;line-height:30px;background:#5ecfb5;color:#fff;text-align:center;padding:0;cursor:pointer;border:0}
+.v5-input-txt .btn{padding-bottom:8px;padding-top:8px}
+.btn{background:#5ecfba;border-color:#5ecfba;color:#fff}
+.btn-micv5{background-color:#5ecfba;color:#fff;padding:8px 12px}
+.modal-header{color:#5ecfba}
+.tips-box{width:100%;display:inline-block;position:relative}
+.tips{position:absolute;left:0;top:-40px;color:#fff;font-size:12px;line-height:32px;background-color:#ff9600;border-radius:100px;padding:0 15px;box-sizing:border-box}
+.tips:after{content:'';position:absolute;bottom:-12px;left:25px;border-top:6px solid #ff9600;border-right:4px solid transparent;border-bottom:6px solid transparent;border-left:4px solid transparent}
+.zy_email{text-align:center;color:#5f5f5f}
+.zy_email p{padding:0 35px}
+.zy_email p.i{padding:40px 0 30px}
+.zy_email p.i img{vertical-align:top}
+.zy_email p.a{padding:30px 0;text-align:center}
+.zy_email p.a > a{display:inline-block;width:148px;height:34px;line-height:34px;text-align:center;color:#fff;background:#5ecfbb;border:1px solid #68c8b6;border-radius:2px}
+.zy_email p.a > a:hover{opacity:.7}
+.zy_success{margin-bottom:20px}
+.zy_success img{vertical-align:middle;margin-right:10px}
+.sendE{margin-bottom:20px}
+.sendE a{text-decoration:underline;cursor:pointer}
+.sendE2{margin-bottom:20px}
+.jspContainer{overflow:hidden;position:relative}
+.jspVerticalBar{opacity:0;transition:.3s;position:absolute;top:0;right:2px;width:8px;height:100%;z-index:20}
+.jspDrag{background:#1abc9c;position:relative;top:0;left:0;cursor:pointer;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px}
+.jspPane{position:absolute}
+.vam,.header .data-search,.header .search-btn,.header .hot-words a,.header .topRight .a,.top_meg,.top_user .ai,.top_user .nick_name,.topSreachDiv,.index .slide-tab li,.index .common h2:before,.index .good-lesson .warp .more-lesson:after,.index .good-lesson .warp .consult:after,.index .gold-teacher .warp .more-lesson:after,.index .gold-teacher .warp .consult:after,.index .king-course .warp .more-lesson:after,.index .king-course .warp .consult:after,.index .good-lesson .tab_menu li,.index .gold-teacher .gold-tab li,.index .job-path .job-tab span,.index .king-course .job-tab span,.index .community_news ul > li h3:before,.index .community_news ol li a,.index .community_news ol li:before,.index .application_download ul li{display:inline-block;vertical-align:middle}
+.CLEARFIX,#loginModal .modal-content:before,#loginModal .modal-content:after,.header .wrap:before,.header .wrap:after,.index .video_introduce ul:before,.index .video_introduce ul:after,.index .good-lesson .tab_menu:before,.index .good-lesson .tab_menu:after,.index .gold-teacher .gold-slide ul:before,.index .gold-teacher .gold-slide ul:after,.index .job-path .job-list:before,.index .job-path .job-list:after,.index .job-path .course-list:before,.index .job-path .course-list:after,.index .king-course .job-list:before,.index .king-course .job-list:after,.index .king-course .course-list:before,.index .king-course .course-list:after,.index .cooperate:before,.index .cooperate:after,.index .media_reports:before,.index .media_reports:after,.index .media_reports ul:before,.index .media_reports ul:after,.index .cooperate .slide-lists:before,.index .cooperate .slide-lists:after,.index .company_medal:before,.index .company_medal:after,.v5-footer-links:before,.v5-footer-links:after{content:'';display:table;clear:both}
+.substr{text-overflow:ellipsis;-o-text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.word-break{word-break:break-all;word-wrap:break-word}
+.transition{-webkit-transition:all .3s ease-out 0s;-moz-transition:all .3s ease-out 0s;-o-transition:all .3s ease-out 0s;transition:all .3s ease-out 0s}
+.W1160{width:1160px;margin:0 auto}
+.index .video_introduce ul li,.index .good-lesson,.index .gold-teacher,.index .king-course,.index .job-path,.index .community_news,.index .cooperate .col_left,.index .cooperate .col_right,.index .media_reports .col_left,.index .media_reports .col_right{background-color:#fff}

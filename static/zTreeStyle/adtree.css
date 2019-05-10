@@ -1,0 +1,125 @@
+#rightMenu ul,#rMenudataTree ul {
+    list-style-type: none;
+    font: 12px/1.5 \5fae\8f6f\96c5\9ed1;
+}
+
+#rightMenu,#rMenudataTree {
+    position: absolute;
+    display: none;
+}
+
+#rightMenu ul,#rMenudataTree ul {
+    float: left;
+    border: 1px solid #979797;
+    background: url(/static/images/line.png) 24px 0 repeat-y #f1f1f1;
+    padding: 2px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, .6);
+}
+
+#rightMenu ul li,#rMenudataTree ul li {
+    float: left;
+    clear: both;
+    height: 24px;
+    cursor: pointer;
+    line-height: 24px;
+    white-space: nowrap;
+    padding: 0 30px;
+}
+
+#rightMenu ul li.sub,#rMenudataTree ul li.sub {
+    background-repeat: no-repeat;
+    background-position: right 9px;
+    background-image: url(/static/images/arrow.png);
+}
+
+#rightMenu ul li.active,#rMenudataTree ul li.active {
+    background-color: #f1f3f6;
+    border-radius: 3px;
+    border: 1px solid #aecff7;
+    height: 22px;
+    line-height: 22px;
+    background-position: right -8px;
+    padding: 0 29px;
+}
+
+#rightMenu ul ul,#rMenudataTree ul ul {
+    display: none;
+    position: absolute;
+}
+
+.ztree.ztreetable * {
+    font-family: "微软雅黑", "宋体", Arial, "Times New Roman", Times, serif;
+}
+
+.ztree.ztreetable {
+    padding: 0;
+    border-left: 1px solid #E3E3E3;
+    border-right: 1px solid #E3E3E3;
+    border-bottom: 1px solid #E3E3E3;
+}
+
+.ztree.ztreetable li a {
+    vertical-align: middle;
+    height: 32px;
+    padding: 0px;
+}
+
+.ztree.ztreetable li > a {
+    width: 100%;
+}
+
+.ztree.ztreetable li a.curSelectedNode {
+    padding-top: 0px;
+    background-color: #FFE6B0;
+    border: 1px #FFB951 solid;
+    opacity: 1;
+    height: 32px;
+}
+
+.ztree.ztreetable li ul {
+    padding-left: 0px
+}
+
+.ztree.ztreetable div.divTd span {
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+.ztree.ztreetable div.divTd {
+    height: 100%;
+    line-height: 30px;
+    border-top: 1px solid #E3E3E3;
+    border-left: 1px solid #E3E3E3;
+    text-align: center;
+    display: inline-block;
+    color: #6c6c6c;
+    overflow: hidden;
+}
+
+.ztree.ztreetable div.divTd:first-child {
+    text-align: left;
+    text-indent: 10px;
+    border-left: none;
+}
+
+.ztree.ztreetable .head {
+    background: #E8EFF5;
+}
+
+.ztree.ztreetable .head div.divTd {
+    color: #393939;
+    font-weight: bold;
+}
+
+.ztree.ztreetable .ck {
+    padding: 0 5px;
+    margin: 2px 3px 7px 3px;
+}
+
+.ztree li:nth-child(odd) {
+    background-color: #F5FAFA;
+}
+
+.ztree li:nth-child(even) {
+    background-color: #FFFFFF;
+}

@@ -1,0 +1,389 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>邮箱流查询</title>
+{% endblock %}
+
+{% block custom_css %}
+
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/static/switch/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/static/css/blue.css" rel="stylesheet">
+    <link href="/static/easyfrom/easyform.css" rel="stylesheet">
+    <link href="/static/laydate/theme/default/laydate.css" rel="stylesheet">
+    <link href="/static/footable/footable.standalone.min.css" rel="stylesheet">
+
+    <!--template css-->
+{% endblock %}
+
+{% block content %}
+    <div class="page-header" >
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>邮件流搜索</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    邮件跟踪参数
+                </div>
+                <div class="panel-body">
+                    <form id="mailfindfor" class="form-horizontal" method="post" action="/mailvlafind/">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">收件人：
+                                    <input type="checkbox" id="resiveid" class="i-checks">
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpresive" placeholder="user@contoso.com" name="inpresive" data-easyform="email"  data-message="请填写正确的邮箱地址"  disabled="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">发件人：
+                                    <input type="checkbox" id="senderid" class="i-checks" >
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpsender" name="inpsender" placeholder="mail@contoso.com" data-easyform="email"  data-message="请填写正确的邮箱地址" disabled=""  class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">EventID：
+                                    <input type="checkbox" id="selevenid" class="i-checks" >
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <select class="form-control m-b" id="inptselevenid"  disabled name="inptselevenid">
+                                    <option value="RECEIVE">RECEIVE(邮件已接收并提交到数据库)</option>
+                                    <option value="SEND">SEND((SMTP) 将邮件发送到不同的服务器)</option>
+                                    <option value="FAIL">FAIL(邮件传递失败)</option>
+                                    <option value="DSN">DSN(已生成发送状态通知)</option>
+                                    <option value="DELIVER">DELIVER(邮件已传递到邮箱)</option>
+                                    <option value="BADMAIL">BADMAIL(分拣目录或重播目录提交的邮件无法传递或退回)</option>
+                                    <option value="RESOLVE">RESOLVE(邮件收件人被解析为一个不同的电子邮件地址)</option>
+                                    <option value="EXPAND">EXPAND(已扩展通讯组)</option>
+                                    <option value="REDIRECT">REDIRECT(邮件被重定向到一个备选收件人)</option>
+                                    <option value="TRANSFER">TRANSFER(收件人被移动到分支的邮件)</option>
+                                    <option value="SUBMIT">SUBMIT(角色生成的邮件跟踪日志仅包含 SUBMIT 事件)</option>
+                                    <option value="POISONMESSAGE">POISONMESSAGE( 邮件被放入带毒邮件队列或从带毒邮件队列中删除)</option>
+                                    <option value="DEFER">DEFER(邮件传递延迟)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">MessagID：
+                                    <input type="checkbox" id="messagidmail" class="i-checks">
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpmessagidmail" placeholder="<887b1d1b-6e72-4364-8b22-a938990935cf@contso.mail.loacl>" name="inpmessagidmail" disabled class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">InternalMessageID：
+                                    <input type="checkbox" id="nternaMessage" class="i-checks" >
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpnternaMessage" name="inpnternaMessage" placeholder="49316345" disabled class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">主题：
+                                    <input type="checkbox" id="subjtcdid" class="i-checks">
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpsubjtcdid" placeholder="主题" name="inpsubjtcdid" disabled class="form-control">
+                            </div>
+                        </div>
+                        {#                        <div class="form-group">#}
+                        {#                            <label class="col-lg-2 control-label" style="margin-top: -5px">#}
+                        {#                                <div class="checkbox">开始：#}
+                        {#                                    <input type="checkbox" id="starttimeid" class="i-checks">#}
+                        {#                                </div>#}
+                        {#                            </label>#}
+                        {#                            <div class="col-lg-8">#}
+                        {#                                <input type="text" id="inpstarttimeid" name="inpstarttimeid" placeholder="Disabled input here..." disabled class="form-control">#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label" style="margin-top: -5px">
+                                <div class="checkbox">时间范围：
+                                    <input type="checkbox" id="endtimeid" class="i-checks" >
+                                </div>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="inpendtimeid" name="inpendtimeid" placeholder="2019-03-11 00:00:00 到 2019-03-12 00:00:00" disabled class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-5">
+                                <input class="btn btn-primary" id="tijiao"  value="搜索" type="submit" >
+                            </div>
+                        </div>
+                    </form>
+                    <hr  id="tablehr">
+                    <table id="table111" class="findmailvaluetable table table-stripped toggle-arrow-tiny">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <script src="/static/switch/bootstrap-switch.min.js"></script>
+    <script src="/static/js/icheck.min.js"></script>
+    <script src="/static/easyfrom/easyform.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script src="/static/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+    {#    <script src="/static/footable/footable.all.min.js"></script>#}
+    <script src="/static/footable/footable.min.js"></script>
+    <!-- jQuery 遮罩层 -->
+    <script>
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#inpendtimeid' //指定元素
+            ,type: 'datetime'
+            ,range: '到'
+
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue'
+            });
+        });
+        $(document).ready(function() {
+            $("#senderid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpsender").disabled="";
+                }
+                else {
+                    document.getElementById("inpsender").disabled="disabled";
+                }
+            });
+            $("#resiveid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpresive").disabled="";
+                }
+                else {
+                    document.getElementById("inpresive").disabled="disabled";
+                }
+            });
+            $("#selevenid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inptselevenid").disabled="";
+                }
+                else {
+                    document.getElementById("inptselevenid").disabled="disabled";
+                }
+            });
+            $("#messagidmail").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpmessagidmail").disabled="";
+                }
+                else {
+                    document.getElementById("inpmessagidmail").disabled="disabled";
+                }
+            });
+            $("#nternaMessage").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpnternaMessage").disabled="";
+                }
+                else {
+                    document.getElementById("inpnternaMessage").disabled="disabled";
+                }
+            });
+            $("#subjtcdid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpsubjtcdid").disabled="";
+                }
+                else {
+                    document.getElementById("inpsubjtcdid").disabled="disabled";
+                }
+            });
+            $("#starttimeid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpstarttimeid").disabled="";
+                }
+                else {
+                    document.getElementById("inpstarttimeid").disabled="disabled";
+                }
+            });
+            $("#endtimeid").on('ifChecked ifUnchecked', function(event){
+                if (event.type=='ifChecked'){
+                    document.getElementById("inpendtimeid").disabled="";
+                }
+                else {
+                    document.getElementById("inpendtimeid").disabled="disabled";
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#mailfindfor').easyform();
+        });
+
+        function dataCheck() {
+            inpnleng=$("#mailfindfor").find("input").not(':disabled').length;
+
+            if(inpnleng==8){
+                swal('至少选择一项');
+                return false
+            }
+            else {
+                var bh = $("body").height();
+                var bw = $("body").width();
+                $("#fullbg").css({
+                    height: bh+350,
+                    width: bw,
+                    display: "block"
+                });
+                $("#dialoga").show();
+                return true
+            }
+        }
+        $(function () {
+            var options = {
+                beforeSubmit:dataCheck,
+                dataType:"json",
+                async:true,
+                success:function (data) {
+                    $("#table111").html('');
+                    if(data['isSuccess']==false){
+                        tbody = "<tr><th>暂无信息！</th></tr>";
+                        $("#table111 ").append(tbody);
+                    }
+                    else {
+                        document.getElementById("tablehr").style.display = "block";
+                        var serverrows = [];
+                        for(var i=0;i<data['result'].length;i++){
+                            if(data['result'][i].EventID=='BADMAIL'){
+                                zhEventID='邮件无法传递或退回'
+                            }
+                            else if (data['result'][i].EventID=='SEND') {
+                                zhEventID='邮件发送到服务器'
+                            }
+                            else if (data['result'][i].EventID=='DELIVER') {
+                                zhEventID='邮件已传递到邮箱'
+                            }
+                            else if (data['result'][i].EventID=='DEFER') {
+                                zhEventID='邮件传递延迟'
+                            }
+                            else if (data['result'][i].EventID=='DSN') {
+                                zhEventID='已生成发送状态通知'
+                            }
+                            else if (data['result'][i].EventID=='EXPAND') {
+                                zhEventID='已扩展通讯组'
+                            }
+                            else if (data['result'][i].EventID=='FAIL') {
+                                zhEventID='邮件传递失败'
+                            }
+                            else if (data['result'][i].EventID=='POISONMESSAGE') {
+                                zhEventID='邮件进人病毒队列或被删除'
+                            }
+                            else if (data['result'][i].EventID=='RECEIVE') {
+                                zhEventID='邮件已从邮箱提交至邮箱传输提交服务'
+                            }
+                            else if (data['result'][i].EventID=='REDIRECT') {
+                                zhEventID='邮件被重定向到一个备选收件人'
+                            }
+                            else if (data['result'][i].EventID=='RESOLVE') {
+                                zhEventID='收件人被解析为不同的电子邮件地址'
+                            }
+                            else if (data['result'][i].EventID=='SUBMITDEFER') {
+                                zhEventID='已延迟将邮件传输到传输服务'
+                            }
+                            else if (data['result'][i].EventID=='SUBMIT') {
+                                zhEventID='邮件已传输至传输服务'
+                            }
+                            else if (data['result'][i].EventID=='NOTIFYMAPI') {
+                                zhEventID='发件箱内检测到邮件'
+                            }
+                            else if (data['result'][i].EventID=='DUPLICATEEXPAND') {
+                                zhEventID='检测重复收件人'
+                            }
+                            else {
+                                zhEventID=data['result'][i].EventID
+                            }
+                            var newRow = {"id":i+1 , "MessageSubject": data['result'][i].MessageSubject,"Timestamp":data['result'][i].Timestamp,"ClientIp":data['result'][i].ClientIp,"ClientHostname":data['result'][i].ClientHostname,
+                                "EventID":zhEventID,
+                                "RunspaceId": data['result'][i].RunspaceId,
+                                "ServerIp": data['result'][i].ServerIp,
+                                "ServerHostname": data['result'][i].ServerHostname,
+                                "SourceContext": data['result'][i].SourceContext,
+                                "ConnectorId": data['result'][i].ConnectorId,
+                                "Source": data['result'][i].Source,
+                                "InternalMessageId": data['result'][i].InternalMessageId,
+                                "MessageId": data['result'][i].MessageId,
+                                "Recipients": data['result'][i].Recipients,
+                                "RecipientStatus": data['result'][i].RecipientStatus,
+                                "TotalBytes": data['result'][i].TotalBytes,
+                                "RecipientCount": data['result'][i].RecipientCount,
+                                "RelatedRecipientAddress": data['result'][i].RelatedRecipientAddress,
+                                "Reference": data['result'][i].Reference,
+                                "Sender": data['result'][i].Sender,
+                                "ReturnPath": data['result'][i].ReturnPath,
+                                "MessageInfo": data['result'][i].MessageInfo,
+                                {#"MessageLatency": data['result'][i].MessageLatency,#}
+                                "MessageLatencyType": data['result'][i].MessageLatencyType,
+                                {#"EventData": data['result'][i].EventData#}
+                            };
+                            serverrows.push(newRow);
+                        }
+                        $('.findmailvaluetable').footable({
+                            "expandFirst": false,
+                            "columns": [
+                                { "name": "id", "visible": false },
+                                { "name": "EventID", "title": "邮件事件类型" },
+                                { "name": "MessageSubject", "title": "主题" },
+                                { "name": "Timestamp", "title": "时间" },
+                                { "name": "ClientIp", "title": "客户端IP" },
+                                { "name": "ClientHostname", "title": "客户端主机名" },
+                                { "name": "Source", "title": "来源", "breakpoints": "all" },
+                                { "name": "Sender", "title": "发件人地址", "breakpoints": "all" },
+                                { "name": "Recipients", "title": "收件人地址", "breakpoints": "all" },
+                                { "name": "InternalMessageId", "title": "InternalMessageId", "breakpoints": "all" },
+                                { "name": "MessageId", "title": "Message-Id", "breakpoints": "all" },
+                                { "name": "ClientHostname", "title": "客户端主机名", "breakpoints": "all"  },
+                                { "name": "ServerIp", "title": "服务器IP", "breakpoints": "all" },
+                                { "name": "ServerHostname", "title": "服务器主机名", "breakpoints": "all" },
+                                { "name": "ConnectorId", "title": "接收连接器的名称", "breakpoints": "all" },
+                                { "name": "RecipientStatus", "title": "收件人状态", "breakpoints": "all" },
+                                { "name": "TotalBytes", "title": "邮件大小", "breakpoints": "all" },
+                                { "name": "RecipientCount", "title": "收件人总数", "breakpoints": "all" },
+                                {#{ "name": "SourceContext", "title": "与源字段相关联的额外信息", "breakpoints": "all" },#}
+                                {#{ "name": "RelatedRecipientAddress", "title": "RelatedRecipientAddress", "breakpoints": "all" },#}
+                                { "name": "Reference", "title": "Reference", "breakpoints": "all" },
+                                { "name": "ReturnPath", "title": "返回电子邮件地址", "breakpoints": "all" },
+                                { "name": "MessageInfo", "title": "邮件起始日期", "breakpoints": "all" },
+                                { "name": "MessageLatencyType", "title": "MessageLatencyType", "breakpoints": "all" },
+                            ],
+                            "rows": serverrows
+                        });
+                    }
+                    $("#fullbg,#dialoga").hide();
+                },
+                error:function (e) {
+                    swal("出错了");
+                }
+            };
+            $("#mailfindfor").ajaxForm(options);
+        })
+
+    </script>
+{% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ldap属性</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/simple-line-icons.css" rel="stylesheet">
+    <link href="/static/css/pace.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/metismenu.min.css">
+    <link rel="stylesheet" href="/static/css/nanoscroller.css">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-header">
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div id ='toolbar_user'>
+                <code>ldap常用属性</code>
+                <br>
+                <code>导入为xlsx文件时要使用的Active Directory显示名称和Ldap名称。</code>
+            </div>
+            <div class="panel-body">
+                <table id="tb_ldapattributes"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end page content-->
+<!--Start footer-->
+
+</body>
+</html>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jasny-bootstrap.min.js"></script>
+<!--导出xlsx-->
+<script src="/static/js/Blob.js"></script>
+<script src="/static/js/FileSaver.min.js"></script>
+<script src="/static/js/xlsx.core.min.js"></script>
+<script src="/static/js/xlsx.full.min.js"></script>
+
+<script src="/static/js/tableexport.min.js"></script>
+
+<script src="/static/js/bootstrap-table.min.js"></script>
+<script src="/static/js/bootstrap-table-export.min.js"></script>
+<script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url:{% url "getsqlldapattributes" %},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                $('#tb_ldapattributes').bootstrapTable('load', data['row']);
+            }
+        });
+    });
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+
+    });
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_ldapattributes').bootstrapTable({
+                toolbar: '#toolbar_user',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: false,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "LDAPName",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                showExport: true,                     //是否显示导出按钮
+                exportTypes: ['json', 'xlsx'],           //导出文件类型
+                exportDataType: "all",             //basic当前页', 'all所有, 'selected'.
+                exportOptions: {
+                    //ignoreColumn: [0, 1],  //忽略某一列的索引
+                    fileName: 'LDAP属性表',  //文件名称设置
+                    worksheetName: 'sheet1',  //表格工作区名称
+                    tableName: 'LDAP属性表',
+                    excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                }, columns: [{
+                    field: 'LDAPName',
+                    title: 'LDAPName',
+                    sortable: true,
+                }, {
+                    field: 'CNName',
+                    title: 'CNName',
+                    sortable: true,
+                }, {
+                    field: 'type',
+                    title: 'type',
+                    sortable: true,
+                }, {
+                    field: 'typeName',
+                    title: 'typeName',
+                },],
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                departmentname: $("#txt_search_departmentname").val(),
+                statu: $("#txt_search_statu").val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+        };
+        return oInit;
+    };
+</script>

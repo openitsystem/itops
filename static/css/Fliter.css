@@ -1,0 +1,496 @@
+﻿#hotel-filter {
+	padding: 10px 0;
+}
+
+/* 最小高度 */
+.hotel-filter-list-min {
+	height: 50%;
+}
+
+/* 筛选外容器 */
+.hotel-filter-list {
+	position: relative;
+	font-size: 12px;
+	border-bottom: 1px solid #eff2f5;
+	overflow: hidden;
+	zoom: 1;
+	background-color: #fff;
+}
+
+/* 筛选icons */
+.hotel-filter-list i {
+	position: absolute;
+	overflow: hidden;
+	cursor: pointer;
+	background: transparent url("/static/images/list_i.gif") 0 0 no-repeat;
+}
+
+/* reset */
+
+.hotel-filter-list ul, .hotel-filter-list li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: visible;
+
+}
+.hotel-filter-list ul {
+	*width: 700px;/*IE7专用*/
+}
+ .hotel-filter-list li {
+	 *white-space: nowrap;/*IE7专用*/
+ }
+.hotel-filter-list strong {
+	font-weight: 400;
+}
+
+.hotel-filter-list-hidden {
+	display: none;
+}
+
+/* 筛选分类标题 */
+.hotel-filter-list .tit {
+	float: left;
+	width: 40px;
+	height: 24px;
+	color: #8fa0ac;
+	margin-top: 6px;
+	line-height: 24px;
+	padding-left: 3px;
+}
+
+/* 筛选分类列表容器 */
+.hotel-filter-list .con {
+	overflow: hidden;
+	zoom: 1;
+	padding: 0 40px 6px 0;
+}
+
+/* 筛选全局 */
+.hotel-filter-list .con li {
+	float: left;
+	height: 24px;
+	display: inline;
+	margin-top: 6px;
+	line-height: 24px;
+}
+
+.hotel-filter-list .con a {
+	position: relative;
+	float: left;
+	color: #43647f;
+	padding: 0 16px;
+	text-decoration: none;
+}
+
+/* 筛选不限 */
+.hotel-filter-list .con .any {
+	float: left;
+	width: 54px;
+	height: 24px;
+	margin-top: 6px;
+	line-height: 24px;
+}
+
+.hotel-filter-list .con .any li {
+	margin-top: 0;
+}
+
+.hotel-filter-list .con .any a {
+	padding-left: 10px;
+}
+
+.hotel-filter-list .con .any a:hover {
+	background-color: #eff2f5;
+}
+
+.hotel-filter-list .con .any a.selected, .hotel-filter-list .con .any a.selected:hover {
+	color: #fff;
+	cursor: text;
+	background-color: #96a9b5;
+}
+
+/* 单选类型 */
+.hotel-filter-list .radio {
+}
+
+.hotel-filter-list .radio a:hover {
+	background-color: #eff2f5;
+}
+
+.hotel-filter-list .radio a.selected, .hotel-filter-list .radio a.selected:hover {
+	color: #fff;
+	cursor: text;
+	background-color: #96a9b5;
+}
+
+/* 多选类型 */
+.hotel-filter-list .checkbox {
+}
+
+.hotel-filter-list .checkbox a {
+	background-color: transparent;
+}
+
+.hotel-filter-list .checkbox a i {
+	top: 50%;
+	left: 10px;
+	width: 13px;
+	height: 13px;
+	margin-top: -7px;
+	background: transparent url("./images/checkbox.png") 0 -50px no-repeat;
+}
+
+.hotel-filter-list .checkbox a.selected i {
+	background-position: 0 0;
+}
+
+.hotel-filter-list .checkbox a.disabled {
+	color: #999;
+	cursor: not-allowed;
+}
+
+.hotel-filter-list .checkbox a.disabled i {
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	cursor: not-allowed;
+}
+
+/* 更多按钮 */
+.hotel-filter-list .more {
+	position: absolute;
+	top: 6px;
+	right: 0;
+	height: 24px;
+	line-height: 24px;
+	color: #43647f;
+	cursor: pointer;
+	padding-right: 15px;
+}
+
+.hotel-filter-list .more i {
+	top: 50%;
+	right: 0;
+	width: 7px;
+	height: 4px;
+	margin-top: -2px;
+	background-position: 0 0;
+}
+
+/* 已选筛选条件 */
+.hotel-filter-list .selected-query {
+	padding-right: 0;
+}
+
+.hotel-filter-list .selected-query li {
+	width: auto;
+	margin-right: 3px;
+	height: 26px;
+	margin-top: 6px;
+}
+
+.hotel-filter-list .selected-query a{
+	color: #000;
+	cursor: text;
+	white-space: nowrap;
+	padding-right: 23px;
+	border: 1px solid #ddd;
+}
+.hotel-filter-list .selected-query a:hover {
+	color: #000;
+	cursor: text;
+	white-space: nowrap;
+	padding-right: 23px;
+	border: 1px solid red;
+}
+.hotel-filter-list .selected-query a i {
+	top: 50%;
+	right: 5px;
+	width: 14px;
+	height: 13px;
+	cursor: pointer;
+	margin-top: -7px;
+	background-position: 2px -86px;
+}
+
+.hotel-filter-list .selected-query .filter-query-clear {
+}
+
+.hotel-filter-list .selected-query .filter-query-clear a, .hotel-filter-list .selected-query .filter-query-clear a:hover {
+	color: #43647f;
+	padding: 0 10px;
+	cursor: pointer;
+	background-color: transparent;
+}
+
+.hotel-filter-list .selected-query .filter-query-clear a:hover {
+	background-color: #eff2f5;
+}
+
+/* 位置筛选 */
+.hotel-filter-list .location {
+	padding-right: 0;
+}
+
+.hotel-filter-list .location .nav a {
+	padding-right: 20px;
+}
+ul.list li {
+	background: #f3f3f4;
+	border: 1px solid #e7eaec;
+	margin-right:10px;
+
+}
+.hotel-filter-list .location .nav a.selected {
+	color: #fff;
+	cursor: pointer;
+	background-color: #96a9b5;
+}
+
+.hotel-filter-list .location .nav a.selected i {
+	background-position: -9px 0;
+}
+
+.hotel-filter-list .location .nav a i {
+	top: 50%;
+	right: 6px;
+	width: 7px;
+	height: 4px;
+	margin-top: -2px;
+	background-position: 0 0;
+}
+
+.hotel-filter-list .location .nav .location-selected, .hotel-filter-list .location .nav .location-selected:hover {
+	color: #43647f;
+	background-color: #eff2f5;
+}
+
+.hotel-filter-list .location .nav .location-selected i {
+	background-position: 0 -44px;
+}
+
+.hotel-filter-list .location .any .location-selected, .hotel-filter-list .location .any .location-selected:hover {
+	color: #fff;
+	background-color: #96a9b5;
+}
+
+.hotel-filter-list .location-content {
+}
+
+.hotel-filter-list .location-content .location-pannel {
+	padding: 4px 10px 10px;
+	background-color: #eff2f5;
+}
+
+.hotel-filter-list .location-content .location-pannel-empty {
+	height: 0;
+	padding: 0;
+	margin: 0;
+	font-size: 0;
+	overflow: hidden;
+}
+
+.hotel-filter-list .location-content li {
+	width: 130px;
+}
+
+/* 地钱 */
+.hotel-filter-list .subway {
+}
+
+.hotel-filter-list .subway li {
+	width: 84px;
+}
+
+.hotel-filter-list .subway-nav {
+	border-bottom: 1px solid #dfe4e9;
+}
+
+.hotel-filter-list .subway-nav a {
+	height: 22px;
+	line-height: 22px;
+	border-bottom: 2px solid #eff2f5;
+}
+
+.hotel-filter-list .subway-nav .subway-selected {
+	border-bottom-color: #43647f;
+}
+
+/* 机场火车站 */
+.hotel-filter-list .transport {
+	position: relative;
+}
+
+.hotel-filter-list .transport i {
+	top: 10px;
+	left: 10px;
+	width: 16px;
+}
+
+.hotel-filter-list .transport .airport {
+	height: 13px;
+	background-position: 0 -137px;
+}
+
+.hotel-filter-list .transport .train {
+	height: 16px;
+	background-position: 0 -190px;
+}
+
+.hotel-filter-list .transport .bus {
+	height: 15px;
+	background-position: 0 -246px;
+}
+
+.hotel-filter-list .transport ul {
+	position: relative;
+	padding-left: 29px;
+}
+
+/* 自定义价格 */
+.hotel-filter-list .con .filter-custom {
+	width: auto;
+}
+
+.hotel-filter-list .con .filter-custom input {
+	width: 38px;
+	height: 17px;
+	line-height: 17px;
+}
+
+.hotel-filter-list .con .filter-custom .filter-custom-range {
+	display: none;
+}
+
+.hotel-filter-list .con .filter-custom-active .filter-custom-range {
+	display: block;
+}
+
+.hotel-filter-list .con .filter-custom .filter-custom-text {
+	display: block;
+}
+
+.hotel-filter-list .con .filter-custom-active .filter-custom-text {
+	display: none;
+}
+
+.hotel-filter-list .con .filter-custom .filter-custom-range strong {
+	padding: 0 5px;
+}
+
+.hotel-filter-list .con .filter-custom-active a:hover {
+	background-color: transparent;
+}
+
+.hotel-filter-list .con .filter-custom .filter-custom-range * {
+	float: left;
+	line-height: 24px;
+}
+
+.hotel-filter-list .con .filter-custom .filter-custom-range .filter-custom-confirm {
+	width: 45px;
+	height: 23px;
+	line-height: 23px;
+	color: #fff;
+	cursor: pointer;
+	margin-left: 5px;
+	text-align: center;
+	background-color: #7bc2f1;
+}
+
+/* 品牌 */
+.hotel-filter-list .brand .brand-type {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-top: -1px;
+	border-top: 1px solid #dfe4e9;
+}
+
+.hotel-filter-list .brand .brand-type strong {
+	display: none;
+}
+
+.hotel-filter-list-brand .con {
+	padding-right: 0;
+}
+
+.hotel-filter-list-brand .brand {
+	position: relative;
+	margin-top: 6px;
+	padding: 0 20px;
+	background-color: #f0f2f5;
+}
+
+.hotel-filter-list-brand .brand .brand-type {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-top: -1px;
+	padding: 6px 0;
+	border-top: 1px solid #dfe4e9;
+}
+
+.hotel-filter-list-brand .brand .brand-type ul {
+	padding-left: 80px;
+}
+
+.hotel-filter-list-brand .brand .brand-type strong {
+	position: absolute;
+	top: 50%;
+	left: 20px;
+	width: auto;
+	height: 24px;
+	color: #8fa0ac;
+	line-height: 24px;
+	margin-top: -12px;
+	display: block;
+}
+
+/* 更多 */
+.hotel-filter-list .filter-more {
+	position: absolute;
+	top: 6px;
+	right: 5px;
+	width: auto;
+	height: 24px;
+	line-height: 24px;
+	padding-right: 15px;
+	color: #43647f;
+	cursor: pointer;
+	display: none;
+}
+
+.filter-list-has-more .filter-more {
+	display: block;
+}
+
+.hotel-filter-list .filter-more i {
+	top: 50%;
+	right: 0;
+	width: 7px;
+	height: 4px;
+	cursor: pointer;
+	margin-top: -2px;
+	background-position: 0 -44px;
+}
+
+.hotel-filter-list-min .filter-more i {
+	background-position: 0 0;
+}
+
+.hotel-filter-list .filter-more .close {
+	display: block;
+}
+
+.hotel-filter-list .filter-more .open {
+	display: none;
+}
+
+.hotel-filter-list-min .filter-more .close {
+	display: none;
+}
+
+.hotel-filter-list-min .filter-more .open {
+	display: block;
+}

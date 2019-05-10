@@ -1,0 +1,672 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>账号信息查找</title>
+{% endblock %}
+
+{% block custom_css %}
+
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/static/switch/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/static/css/jquery.resizableColumns.css" rel="stylesheet">
+    <link href="/static/contextMenu/jquery.contextMenu.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="/static/select2/select2.min.css" type="text/css">
+
+    <style>
+
+        .table>thead>tr{
+            background: #edf7ff;
+        }
+
+
+    </style>
+
+
+    <!--template css-->
+{% endblock %}
+
+{% block content %}
+    <div class="modal fade" id="myModamove" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        计算机报表导出
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <div class="modal-body" id="appeniput" style="display:none;">
+                                <div class="form-group">
+                                    <label id="labevalue" class="col-lg-3 control-label">天数</label>
+                                    <div class="col-lg-6" style="margin-top: -1px">
+                                        <input class="form-control" id="appendateto" placeholder="" type="text" value=""/>
+                                        <input style="display: none" id="inhtemtype" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="checkbox col-sm-8 control-label" >
+                                    <label  ><input type="checkbox" checked value="" id="export_list_checkbox">导出子树目录</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="expoetrcomputer()" value="导出" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="myModauser" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        用户报表导出
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <div class="modal-body" id="appenuseriput" style="display:none;">
+                                <div class="form-group">
+                                    <label id="labeuservalue" class="col-lg-3 control-label">天数</label>
+                                    <div class="col-lg-6" style="margin-top: -1px">
+                                        <input class="form-control" id="appenusermessage" placeholder="" type="text" value=""/>
+                                        <input style="display: none" id="inhtemusertype" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="checkbox col-sm-8 control-label" >
+                                    <label  ><input type="checkbox" checked value="" id="export_user_checkbox">导出子树目录</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="exportuser()" value="导出" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="myModagroup" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        组报表导出
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <input style="display: none" id="inhtemgrouptype" type="text">
+                            <div class="modal-body">
+                                <div class="checkbox col-sm-8 control-label" >
+                                    <label  ><input type="checkbox" checked value="" id="export_user_checkbox">导出子树目录</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="exportgroup()" value="导出" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="myModamail" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        Exchange报表导出
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <input style="display: none" id="inhtemmailtype" type="text">
+                            <div class="modal-body">
+                                <div class="checkbox col-sm-8 control-label" >
+                                    <label  ><input type="checkbox" checked value="" id="export_user_checkbox">导出子树目录</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="exportmail()" value="导出" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="page-header">
+        <div class="row ">
+            <div class="col-sm-6">
+                <h4>报表管理</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mailbox-sidenav">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    用户报表
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a onclick="UserShow('所有用户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 所有用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('密码已过期的用户')">
+                                <span class="badge badge-teal"></span>
+                                <span>密码已过期的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('密码某些天之内过期')">
+                                <span class="badge badge-info"></span>
+                                <span>密码某些天之内过期的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('下次登陆必须更改密码的用户')">
+                                <span class="badge badge-warning"></span>
+                                <span>下次登录必须更改密码的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('密码永不过期的用户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 密码永不过期的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('禁用的用户')">
+                                <span class="badge badge-teal"></span>
+                                <span>禁用的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('账号某些天之内未登录的账号')">
+                                <span class="badge badge-info"></span>
+                                <span>账号某些天之内未登录的账号</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('账号已过期的用户')">
+                                <span class="badge badge-warning"></span>
+                                <span>账号已过期的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="UserShow('锁定的用户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 锁定的用户</span>
+                            </a>
+                        </li>
+
+                    </ul></div>
+            </div>
+        </div><!--col-md-6-->
+        <div class="col-md-4 mailbox-sidenav">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    组报表
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a onclick="Groupshow('所有组')">
+                                <span class="badge badge-danger"></span>
+                                <span> 所有组</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="Groupshow('通讯组')">
+                                <span class="badge badge-teal"></span>
+                                <span>通讯组</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="Groupshow('安全组')">
+                                <span class="badge badge-info"></span>
+                                <span>安全组</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="Groupshow('没有成员的组')">
+                                <span class="badge badge-warning"></span>
+                                <span>没有成员的组</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已启用邮箱的组')">
+                                <span class="badge badge-teal"></span>
+                                <span>已启用邮箱的组</span>
+                            </a>
+                        </li>
+                    </ul></div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    计算机报表
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a onclick="ComputerShow('所有计算机')">
+                                <span class="badge badge-danger"></span>
+                                <span> 所有计算机</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="ComputerShow('超过N天没有登陆的计算机')">
+                                <span class="badge badge-teal"></span>
+                                <span>超过N天没有登陆的计算机</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="ComputerShow('启用的计算机')">
+                                <span class="badge badge-info"></span>
+                                <span>启用的计算机</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="ComputerShow('禁用的计算机')">
+                                <span class="badge badge-warning"></span>
+                                <span>禁用的计算机</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="ComputerShow('某操作系统的计算机')">
+                                <span class="badge badge-danger"></span>
+                                <span>某操作系统的计算机</span>
+                            </a>
+                        </li>
+                    </ul></div>
+            </div><!--col-md-6-->
+        </div><!--col-md-6-->
+        <div class="col-md-4 mailbox-sidenav">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Exchange报表
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            <a onclick="MailShow('已启用邮箱的用户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 已启用邮箱的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('未启用邮箱的用户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 未启用邮箱的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已启用IMAP的账户')">
+                                <span class="badge badge-info"></span>
+                                <span>已启用IMAP的账户 </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已启用POP3的账户')">
+                                <span class="badge badge-warning"></span>
+                                <span>已启用POP3的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已启用OWA的账户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 已启用OWA的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已启用归档账户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 已启用归档账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已禁用IMAP的账户')">
+                                <span class="badge badge-teal"></span>
+                                <span>已禁用IMAP的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已禁用POP3的账户')">
+                                <span class="badge badge-warning"></span>
+                                <span>已禁用POP3的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已禁用OWA的账户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 已禁用OWA的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('已禁用归档的账户')">
+                                <span class="badge badge-danger"></span>
+                                <span> 已禁用归档的账户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('不显示在Exchange地址薄的用户')">
+                                <span class="badge badge-teal"></span>
+                                <span>不显示在Exchange地址薄的用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a onclick="MailShow('使用默认的数据库存储限制')">
+                                <span class="badge badge-info"></span>
+                                <span>使用默认的数据库存储限制的用户</span>
+                            </a>
+                        </li>
+
+                    </ul></div>
+            </div>
+        </div><!--col-md-6-->
+
+    </div>
+
+
+{% endblock %}
+
+{% block custom_js %}
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <script src="/static/switch/bootstrap-switch.min.js"></script>
+    <script src="/static/js/store.js"></script>
+    <script src="/static/js/jquery.resizableColumns.min.js"></script>
+    <script src="/static/js/jquery.contextMenu.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+    <script src="/static/select2/select2.full.min.js"></script>
+    <script src="/static/select2/zh-CN.js"></script>
+    {#    <script type="text/javascript" src="/static/js/conment.js"></script>#}
+
+
+
+    <script>
+        function ComputerShow(userdnames) {
+            document.getElementById('inhtemtype').value='';
+            document.getElementById('appendateto').value='';
+            document.getElementById("labevalue").innerText='天数';
+            document.getElementById("appeniput").style.display='none';
+            if (userdnames=='超过N天没有登陆的计算机'){
+                document.getElementById("appeniput").style.display='block';
+                document.getElementById('inhtemtype').value='N';
+            }
+            else if(userdnames=='所有计算机'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemtype').value='所有计算机';
+            }
+            else if(userdnames=='启用的计算机'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemtype').value='启用的计算机';
+            }
+            else if(userdnames=='禁用的计算机'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemtype').value='禁用的计算机';
+            }
+            else if(userdnames=='某操作系统的计算机'){
+                document.getElementById("appeniput").style.display='block';
+
+                document.getElementById("labevalue").innerText='系统名称';
+                document.getElementById('inhtemtype').value='某操作系统的计算机';
+            }
+            $('#myModamove').modal({
+                keyboard: true,
+            });
+        }
+        function Groupshow(userdnames) {
+            document.getElementById('inhtemgrouptype').value='';
+            if (userdnames=='所有组'){
+                document.getElementById('inhtemgrouptype').value='所有组';
+            }
+            else if(userdnames=='通讯组'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemgrouptype').value='通讯组';
+            }
+            else if(userdnames=='安全组'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemgrouptype').value='安全组';
+            }
+            else if(userdnames=='没有成员的组'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemgrouptype').value='没有成员的组';
+            }
+            $('#myModagroup').modal({
+                keyboard: true,
+            });
+        }
+        function MailShow(userdnames) {
+            document.getElementById('inhtemmailtype').value='';
+            if (userdnames=='已启用邮箱的用户'){
+                document.getElementById('inhtemmailtype').value='已启用邮箱的用户';
+            }
+            else if(userdnames=='未启用邮箱的用户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='未启用邮箱的用户';
+            }
+            else if(userdnames=='已启用邮箱的组'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已启用邮箱的组';
+            }
+            else if(userdnames=='已启用IMAP的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已启用IMAP的账户';
+            }
+            else if(userdnames=='已启用POP3的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已启用POP3的账户';
+            }
+            else if(userdnames=='已启用OWA的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已启用OWA的账户';
+            }
+            else if(userdnames=='已禁用IMAP的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已禁用IMAP的账户';
+            }
+            else if(userdnames=='已禁用POP3的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已禁用POP3的账户';
+            }
+            else if(userdnames=='已禁用OWA的账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已禁用OWA的账户';
+            }
+            else if(userdnames=='不显示在Exchange地址薄的用户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='不显示在Exchange地址薄的用户';
+            }
+            else if(userdnames=='使用默认的数据库存储限制'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='使用默认的数据库存储限制';
+            }
+            else if(userdnames=='已启用归档账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已启用归档账户';
+            }
+            else if(userdnames=='已禁用归档账户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemmailtype').value='已禁用归档账户';
+            }
+            $('#myModamail').modal({
+                keyboard: true,
+            });
+        }
+
+
+        function UserShow(usertype) {
+            document.getElementById('inhtemusertype').value='';
+            document.getElementById('appenusermessage').value='';
+            document.getElementById("labeuservalue").innerText='天数';
+            document.getElementById("appenuseriput").style.display='none';
+            if (usertype=='所有用户'){
+                document.getElementById("appeniput").style.display='block';
+                document.getElementById('inhtemusertype').value='所有用户';
+            }
+            else if(usertype=='密码已过期的用户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemusertype').value='密码已过期的用户';
+            }
+            else if(usertype=='密码某些天之内过期'){
+                document.getElementById("appenuseriput").style.display='block';
+                document.getElementById('inhtemusertype').value='密码某些天之内过期';
+                document.getElementById("labeuservalue").innerText='过期天数';
+            }
+            else if(usertype=='账号某些天之内未登录的账号'){
+                document.getElementById("appenuseriput").style.display='block';
+                document.getElementById('inhtemusertype').value='账号某些天之内未登录的账号';
+                document.getElementById("labeuservalue").innerText='天数';
+            }
+            else if(usertype=='下次登陆必须更改密码的用户'){
+                {#document.getElementById("appeniput").style.display='block';#}
+                document.getElementById('inhtemusertype').value='下次登陆必须更改密码的用户';
+            }
+            else if(usertype=='密码永不过期的用户'){
+                document.getElementById('inhtemusertype').value='密码永不过期的用户';
+            }
+            else if(usertype=='禁用的用户'){
+                document.getElementById('inhtemusertype').value='禁用的用户';
+            }
+            else if(usertype=='账号已过期的用户'){
+                document.getElementById('inhtemusertype').value='账号已过期的用户';
+            }
+            else if(usertype=='锁定的用户'){
+                document.getElementById('inhtemusertype').value='锁定的用户';
+            }
+            else if(usertype=='密码永不过期的用户'){
+                document.getElementById('inhtemusertype').value='密码永不过期的用户';
+            }
+            $('#myModauser').modal({
+                keyboard: true,
+            });
+        }
+
+        function expoetrcomputer() {
+            $.ajax({
+                url:{% url "userautodow" %},
+                type:'POST',
+                dataType:'json',
+                async:false,
+                success:function (data) {
+                    if (data['isSuccess']) {
+                        idtyes=document.getElementById("inhtemtype").value;
+                        datecount=document.getElementById("appendateto").value;
+                        checkval=($("#export_list_checkbox").is(":checked"));
+                        post_url = '/api/GetDown/?idtyes='+idtyes+'&datecount='+datecount+'&checkval='+checkval;
+                        $("#myModamove").modal("hide");
+                        swal('如数据量过大，请勿刷新页面，耐心等待数据导出')
+                        location.replace(post_url);
+                    }
+                    else {
+                        swal("没有权限导出");
+                    }
+                }
+            });
+        }
+        function exportuser() {
+            $.ajax({
+                url:{% url "userautodow" %},
+                type:'POST',
+                dataType:'json',
+                async:false,
+                success:function (data) {
+                    if (data['isSuccess']) {
+                        idtyes=document.getElementById("inhtemusertype").value;
+                        datecount=document.getElementById("appenusermessage").value;
+                        checkval=($("#export_user_checkbox").is(":checked"));
+                        post_url = '/api/GetUserDown/?idtyes='+idtyes+'&datecount='+datecount+'&checkval='+checkval;
+                        location.replace(post_url);
+                        $("#myModauser").modal("hide");
+                        swal('如数据量过大，请勿刷新页面，耐心等待数据导出')
+                    }
+                    else {
+                        swal("没有权限导出");
+                    }
+                }
+            });
+        }
+        function exportgroup() {
+            $.ajax({
+                url:{% url "userautodow" %},
+                type:'POST',
+                dataType:'json',
+                async:false,
+                success:function (data) {
+                    if (data['isSuccess']) {
+                        idtyes=document.getElementById("inhtemgrouptype").value;
+                        checkval=($("#export_user_checkbox").is(":checked"));
+                        post_url = '/api/GetGroupDown/?idtyes='+idtyes+'&checkval='+checkval;
+                        location.replace(post_url);
+                        $("#myModagroup").modal("hide");
+                        swal('如数据量过大，请勿刷新页面，耐心等待数据导出')
+                    }
+                    else {
+                        swal("没有权限导出");
+                    }
+                }
+            });
+
+        }
+        function exportmail() {
+            $.ajax({
+                url:{% url "userautodow" %},
+                type:'POST',
+                dataType:'json',
+                async:false,
+                success:function (data) {
+                    if (data['isSuccess']) {
+                        idtyes=document.getElementById("inhtemmailtype").value;
+                        checkval=($("#export_user_checkbox").is(":checked"));
+                        post_url = '/api/GetMailDown/?idtyes='+idtyes+'&checkval='+checkval;
+                        location.replace(post_url);
+                        $("#myModamail").modal("hide");
+                        swal('如数据量过大，请勿刷新页面，耐心等待数据导出')
+                    }
+                    else {
+                        swal("没有权限导出");
+                    }
+                }
+            });
+
+        }
+    </script>
+{% endblock %}

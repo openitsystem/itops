@@ -1,0 +1,10 @@
+.easyform-close{background-image: url('close-normal.png'); width:20px !important; height: 20px !important; line-height: 20px !important;}
+.easyform-close:hover{background-image: url('close-over.png');}
+
+.easytip-text, .easytip-text:before, .easytip-text:after{ box-sizing: content-box;}
+.easytip-arrow, .easytip-arrow:before, .easytip-arrow:after{box-sizing: content-box;}
+
+.easy-black{color:rgba(238,238,238,1);background-color:rgba(75,75,75,0.8);border:1px solid rgba(75,75,75,1);border-radius:5px; padding: 10px;}
+.easy-blue{color:rgba(255,255,255,1);background-color:rgba(51,153,204,0.8);border:1px solid rgba(102,153,204,1);border-radius:5px;padding: 10px;}
+.easy-red{color:rgba(255,255,255,1);background-color:rgba(255,102,102,0.9);border:1px solid rgba(204,0,51,1);border-radius:5px;padding: 10px;}
+.easy-white{color:rgba(102,102,102,1);background-color:rgba(255,255,255,0.9);border:1px solid rgba(153,153,153,1);border-radius:5px;padding: 10px;}

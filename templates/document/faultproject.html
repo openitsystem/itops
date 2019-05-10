@@ -1,0 +1,271 @@
+{% extends 'home.html' %}
+{% block title %}
+    <title>故障回溯</title>
+{% endblock %}
+<!-- Mirrored from www.zi-han.net/theme/hplus/projects.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:44 GMT -->
+{% block custom_css %}
+    <link href="/static/dist/summernote.css" rel="stylesheet"/>
+    <link href="/static/css/Fliter.css" rel="stylesheet" />
+    <link href="/static/laydate/theme/default/laydate.css" rel="stylesheet">
+    <style type="text/css">
+
+        *{
+            padding:0;
+            margin:0;
+            border:0;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        .label-selected{
+
+            min-height:38px;
+            margin:10px 0;
+            border:1px solid #ccc;
+            background-color: #fff;
+            position: relative;
+        }
+
+        .label-selected li {
+            display: inline-block;
+            height: 27px;
+            line-height: 27px;
+            font-size: .8rem;
+            padding: 0 1rem;
+            border: 1px solid #e6e6e6;
+            border-radius: 2px;
+            cursor: pointer;
+            margin: 4px 2px;
+            color: #666;
+        }
+        #labelItem{
+            margin-bottom: 10px;
+            display: none;
+        }
+        .label-item {
+            border: 1px solid #e6e6e6;
+            padding: 10px;
+            border-radius: 0 2px 2px 0;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+        .label-item li {
+            display: inline-block;
+            height: 27px;
+            line-height: 27px;
+            font-size: .8rem;
+            padding: 0 1rem;
+            border: 1px solid #e6e6e6;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            margin-left: 2px;
+            color: #666;
+        }
+        .label-item .selected{
+            color:#ccc;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="modal fade" id="addtips" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加标签
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" style="margin-top: 7px">标签名称:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="newtips" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp取消</button>
+                    <button type="submit" class="btn btn-primary " onclick="appendtips()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>新建故障</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 animated fadeInRight">
+            <div class="mail-box">
+                <div class="mail-body">
+                    <div class="form-horizontal" >
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">主题：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="zhutin" placeholder="内容标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">处理人：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="userper" placeholder="处理人">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">影响：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="affect" placeholder="影响">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">时间范围：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="inpendtimeid" name="inpendtimeid" placeholder="选择时间"  class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">故障分类：</label>
+                            <div class="col-sm-10">
+                                <label class="radio checkbox-inline">
+                                    <input type="radio" name="raerro" checked value="Exchange"> Exchange</label>
+                                <label class="checkbox-inline">
+                                    <input  type="radio" name="raerro" value="AD"> AD</label>
+                                <label class="checkbox-inline">
+                                    <input  type="radio" name="raerro" value="DFS">DFS</label>
+                                <label class="checkbox-inline">
+                                    <input  type="radio" name="raerro" value="DHCP"> DHCP</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1" >
+                        <div class="xxxxm">
+                            <div class="summernote">
+                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;">故障原因：</h3>
+                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>故障现象：</h3>
+                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>处理过程：</h3>
+                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>后期改进：</h3>
+                                <div><br></div>
+                                <div><br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary" onclick="savesumon()">保存</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <script src="/static/dist/summernote.js"></script>
+    <script src="/static/dist/lang/summernote-zh-CN.js"></script>
+    <script src="/static/js/Filter.js"></script>
+    <script src="/static/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+    <script>
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#inpendtimeid' //指定元素
+            ,type: 'datetime'
+            ,range: '到'
+
+        });
+    </script>
+    <script>
+        $(function(){
+            $('.summernote').summernote({
+                height: 500,
+                tabsize: 2,
+                lang: 'zh-CN'
+
+            });
+        });
+
+
+    </script>
+    <script>
+        function savesumon() {
+            var titel = document.getElementById('zhutin').value;
+            var userper = document.getElementById('userper').value;
+            var affect = document.getElementById('affect').value;
+            var inpendtimeid = document.getElementById('inpendtimeid').value;
+            var tab1 = $('input[name="raerro"]:checked').val();
+            var markup = $('.summernote').summernote('code');
+            if(tab1 == ""){
+                swal("请选择标签 ！！！！！");
+            }
+            else if (titel==""){
+                swal("请输入主题 ！！！！！");
+            }
+            else if (inpendtimeid==""){
+                swal("请输入时间范围 ！！！！！");
+            }
+            else if (affect==""){
+                swal("请输入影响 ！！！！！");
+            }
+            else if (userper==""){
+                swal("请输入处理人 ！！！！！");
+            }
+            else if(markup=='\n' +
+                '                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;">故障原因：</h3>\n' +
+                '                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>故障现象：</h3>\n' +
+                '                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>处理过程：</h3>\n' +
+                '                                <h3 style="font-family: &quot;open sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height: 1.5; color: rgb(103, 106, 108); margin-top: 10px; font-size: 16px;"><p style="margin-top: 10px; line-height: 1.5;"><span style="font-weight: normal;">​</span><br></p>后期改进：</h3>\n' +
+                '                                <div><br></div>\n' +
+                '                                <div><br>\n' +
+                '                                </div>\n' +
+                '                            '){
+                swal("请输入内容！！！！！")
+            }
+            else {
+                $('.summernote').summernote('destroy');
+                $.ajax({
+                    url:{% url "savemesserro" %},
+                    type:'POST',
+                    dataType:'json',
+                    data:{'titel':titel,'tab1':tab1,'markup':markup,'userper':userper,'affect':affect,'inpendtimeid':inpendtimeid},
+                    async:false,
+                    success:function (data) {
+                        if (data['isSuccess']) {
+                            swal({
+                                    title:"",
+                                    text:"保存成功",
+                                    type:"success",
+                                    showConfirmButton:"true",
+                                    confirmButtonText:"好的",
+                                    animation:"slide-from-top"
+                                },
+                                function () {
+                                    location.reload()
+                                })
+                        }
+                        else {
+                            swal(data['message'])
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/projects.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:44 GMT -->
+

@@ -1,0 +1,300 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>账号信息查找</title>
+{% endblock %}
+
+{% block custom_css %}
+
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/static/switch/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="/static/css/jquery.resizableColumns.css" rel="stylesheet">
+    <link href="/static/contextMenu/jquery.contextMenu.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="/static/select2/select2.min.css" type="text/css">
+
+    <style>
+
+        .table>thead>tr{
+            background: #edf7ff;
+        }
+        #spanvalueid span{
+            display: block;
+        }
+
+    </style>
+
+
+    <!--template css-->
+{% endblock %}
+
+{% block content %}
+
+    <div class="modal fade" id="myModamove" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        移动用户OU
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="modal-form" >
+                            <input style="display: none" id="userdnname">
+                            <input  style="display: none" id="oudnname">
+                            <ul style="text-align: center" id="treemove" class="ztree"></ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="savemovetoou()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="addusretoModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        添加用户到组
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 20%">
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="text-align: right">组名:</label>
+                            <div class="col-sm-9">
+                                <input style="display: none" id="snamsuser">
+                                <select  id="selsgroup" style="width: 100%;" multiple="multiple"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="saveusertogroup()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="addgroupuserModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        添加成员
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 20%">
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="text-align: right">账号:</label>
+                            <div class="col-sm-9">
+                                <input style="display: none" id="snamsusercouny">
+                                <select  id="selsusergroup" style="width: 100%;" multiple="multiple"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="savegroupuseron()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="powershelltoModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel" style="text-align: left">
+                        添加自定义选项
+                    </h4>
+                </div>
+                <div class="modal-body" style="height: 20%">
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            <div id="chakid" class="checkbox">
+                                <label class="radio">
+                                    <input type="radio"  name="opencheck" value="账户禁用/启用的用户">账户禁用的用户
+                                </label>
+                                <div>
+                                    <label class="radio">
+                                        <input type="radio"  name="opencheck" value="密码有过期日期/没有过期日期的用户">密码有过期日期/没有过期日期的用户
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="radio">
+                                        <input type="radio"  name="opencheck" value="对象类型为用户/计算机/组">对象类型为用户/计算机/组
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="radio">
+                                        <input type="radio"  name="opencheck" value="账号已启用但已超过给定天数没有登录的用户">账号已启用但已超过给定天数没有登录的用户
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="radio">
+                                        <input type="radio"  name="opencheck" value="账号已启用但锁定的用户">账号已启用但锁定的用户
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="radio">
+                                        <input type="radio"  name="opencheck" value="密码多少天之内过期的用户">密码多少天之内过期的用户
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <input class="btn btn-primary" onclick="appmessag()" value="保存" type="submit" >
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Active Directory 搜索</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" >
+            <div class="panel-group accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span aria-hidden="true" class="fa fa-search"></span>
+                        查找 用户、联系人及组
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="form-horizontal"  >
+
+                                <div class="form-group" style="margin-top: 30px">
+                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px">搜索（S）:</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <input type="text" id="adaccount" placeholder="可搜索账号，工号或GUID" class="form-control">
+                                            <input type="text" style="display: none" value="leavesearc" id="idtype" class="form-control">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" onclick="searchmessage()">搜索</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="fiescheclid" style="margin-top: 30px">
+                                    <label class="col-sm-2 col-sm-offset-1 control-label" >已选:</label>
+                                    <div id="spanvalueid" class="col-sm-6" style="margin-top: 3px">
+                                        <h5 >对象类型为用户/计算机/组:<select ><option>用户</option><option>计算机</option><option>组</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></h5>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 30px">
+                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px"><a class="btn btn-primary btn-border"  onclick="openpshell()">添加标准</a></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="startchange">
+                        <hr>
+                        <div class="panel-heading">
+                            <h4>搜索结果(S)<sub><span id="counts" style="color: #bb0000"></span></sub></h4>
+                        </div>
+                        <div>
+                            <div class="panel-body " id="paneltable" style="padding:0;padding-left: 80px;padding-right: 80px">
+                                <table class="table table-hover table-bordered"  id="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="table-bordered" data-resizable-column-id="name" style="width: 180px">账号（sAMAccountName）</th>
+                                        <th class="table-bordered" data-resizable-column-id="name" >显示名称（displayName）</th>
+                                        <th class="table-bordered" data-resizable-column-id="first_name"  style="width: 190px">描述（description）</th>
+                                        <th class="table-bordered" data-resizable-column-id="last_name">类型（objectClass）</th>
+                                        <th class="table-bordered" data-resizable-column-id="username" >路径（distinguishedName）</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="searchuser">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <script src="/static/switch/bootstrap-switch.min.js"></script>
+    <script src="/static/js/store.js"></script>
+    <script src="/static/js/jquery.resizableColumns.min.js"></script>
+    <script src="/static/js/jquery.contextMenu.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+    <script src="/static/select2/select2.full.min.js"></script>
+    <script src="/static/select2/zh-CN.js"></script>
+    <script type="text/javascript" src="/static/js/conment.js"></script>
+    <script>
+        function openpshell() {
+            $('#powershelltoModal').modal({
+                keyboard: true,
+            });
+        }
+        function appmessag() {
+            var val = $('input[name="opencheck"]:checked').val();
+            $("#spanvalueid").find("h5").remove();
+            document.getElementById("fiescheclid").style.display='block';
+            if (val=='账户禁用/启用的用户'){
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select ><option>禁用</option><option>启用</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+            }
+            else if(val=='密码有过期日期/没有过期日期的用户'){
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select ><option>无截止日期</option><option>截止日期</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+
+            }
+            else if(val=='对象类型为用户/计算机/组'){
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select ><option>用户</option><option>计算机</option><option>组</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+            }
+            else if(val=='账号已启用但已超过给定天数没有登录的用户'){
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select ><option>15</option><option>30</option><option>60</option><option>90</option><option>120</option><option>180</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+            }
+            else if(val=='密码多少天之内过期的用户'){
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select ><option>1</option><option>2</option><option>3</option><option>7</option><option>14</option><option>28</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+            }
+            else {
+                document.getElementById("spanvalueid").innerHTML = document.getElementById("spanvalueid").innerHTML+'<h5>'+val+' <select style="display:none"><option>'+val+'</option></select>   <i class="fa fa-times-circle" onclick="remospanx(this)"></i></span> ';
+            }
+
+            $("#powershelltoModal").modal("hide");
+        }
+        function remospanx(spandi) {
+            spandi.parentNode.parentNode.removeChild(spandi.parentNode);
+            spanvaluweid = document.getElementById('spanvalueid').getElementsByTagName('span');
+            if (spanvaluweid.length==0){
+                document.getElementById("fiescheclid").style.display='none';
+            }
+        }
+    </script>
+{% endblock %}
+
+<script>
+
+</script>

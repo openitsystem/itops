@@ -1,0 +1,274 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>AD管理</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <!--jquery steps-->
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+
+    <link href="/static/css/jquery-ui.css" rel="stylesheet">
+    <style type="text/css">
+        table {
+            table-layout: fixed;
+            word-break: break-all;
+        }
+
+        table td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        table td:hover {
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>日志</h4>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <!--start page content-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <div id="toolbar_user" class="row">
+                            <div class="col-sm-5">
+                                <label class="control-label" for="UserName">选取日志表:</label>
+                            </div>
+                            <div class="col-sm-3">
+                                <select name="simple" id="simple">
+                                    {% for table in tablelist %}
+                                        <option value='{{ table }}'>{{ table }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <table id="tb_userattributes"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page content-->
+    <!--Start footer-->
+    <footer class="footer">
+        <span>IT &copy; 2019</span>
+    </footer>
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+
+{% endblock %}
+
+{% block custom_js %}
+    <!--Common plugins-->
+    <script src="/static/js/pace.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <!--导出xlsx-->
+    <script src="/static/js/Blob.js"></script>
+    <script src="/static/js/FileSaver.min.js"></script>
+    <script src="/static/js/xlsx.core.min.js"></script>
+    <script src="/static/js/xlsx.full.min.js"></script>
+
+    <script src="/static/js/tableexport.min.js"></script>
+
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-export.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <!--编辑bootstrap-->
+    <script src="/static/js/bootstrap-editable.min.js"></script>
+    <script src="/static/js/bootstrap-table-editable.js"></script>
+
+
+    <!--page script-->
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.ui.custom.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var sqlname = $("#simple").val();
+            $.ajax({
+                url:{% url "getsqllog" %},
+                type: 'POST',
+                dataType: 'json',
+                data: {'sqlname': sqlname},
+                success: function (data) {
+                    $('#tb_userattributes').bootstrapTable('load', data['row']);
+                }
+            });
+        });
+        $(document).ready(function () {
+            $("#simple").selectmenu({
+                change: function () {
+                    var sqlname = $("#simple").val();
+                    $.ajax({
+                        url:{% url "getsqllog" %},
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'sqlname': sqlname},
+                        success: function (data) {
+                            $('#tb_userattributes').bootstrapTable('load', data['row']);
+                            //document.getElementById("showfiltersql").value = '';
+                        }
+                    });
+                }
+            });
+
+        });
+
+        $(function () {
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+        });
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_userattributes').bootstrapTable({
+                    toolbar: '#toolbar_user',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                    editable: true,
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100, 'ALL'],        //可供选择的每页的行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: false,
+                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    escape: true,
+                    showExport: true,                     //是否显示导出按钮
+                    exportTypes: ['json', 'xlsx'],           //导出文件类型
+                    exportDataType: "basic",             //basic当前页', 'all所有, 'selected'.
+                    exportOptions: {
+                        //ignoreColumn: [0, 1],  //忽略某一列的索引
+                        fileName: '日志当前页面',  //文件名称设置
+                        worksheetName: 'sheet1',  //表格工作区名称
+                        tableName: '日志',
+                        excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                    },
+                    onClickRow: function (row, $element, field) {   //当用户点击某一行的时候触发
+                        $($element).children("td").css("overflow","auto");
+                        $($element).children("td").css("white-space","pre-wrap");
+                    },
+{#                    onDblClickRow: function (row, $element, field) {   //当用户双击击某一行的时候触发#}
+{#                        $($element).children("td").css("overflow","hidden");#}
+{#                        $($element).children("td").css("text-overflow","ellipsis");#}
+{#                        $($element).children("td").css("white-space","nowrap");#}
+{#                    },#}
+                    columns: [{
+                        field: 'id',
+                        title: 'id',
+                        sortable: true,
+                    }, {
+                        field: 'ip',
+                        title: 'ip',
+                        sortable: true,
+                    }, {
+                        field: 'apiname',
+                        title: 'api',
+                        sortable: true,
+                    }, {
+                        field: 'username',
+                        title: 'username',
+                        sortable: true,
+                    }, {
+                        field: 'isSuccess',
+                        title: 'isSuccess',
+                        sortable: true,
+                    }, {
+                        field: 'request',
+                        title: 'request',
+                        sortable: true,
+                    }, {
+                        field: 'message',
+                        title: 'message',
+                        sortable: true,
+                    }, {
+                        field: 'other',
+                        title: 'other',
+                        sortable: true,
+                    }, {
+                        field: 'times',
+                        title: 'times',
+                        sortable: true,
+                    },],
+                });
+            };
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    departmentname: $("#txt_search_departmentname").val(),
+                    statu: $("#txt_search_statu").val(),
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+            return oInit;
+        };
+        //日志查询功能
+        function serchsqllog() {
+            var sqlname = $("#simple").val();
+            var vaules = document.getElementById("showfiltersql").value;
+            if (sqlname.length > 0) {
+                $.ajax({
+                    url:{% url "serchsqllog" %},
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'sqlname': sqlname, 'vaules': vaules},
+                    success: function (data) {
+                        $('#tb_userattributes').bootstrapTable('load', data['row']);
+                    }
+                });
+            }
+            else {
+                swal('请选取日志表');
+            }
+
+        }
+
+    </script>
+{% endblock %}

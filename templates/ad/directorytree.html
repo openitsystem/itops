@@ -1,0 +1,918 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>用户和计算机</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="/static/zTreeStyle/adtree.css" type="text/css">
+    <link href="/static/easyfrom/easyform.css" rel="stylesheet">
+
+
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    {#        <div class="page-header">#}
+    {#            <div class="row">#}
+    {#                <div class="col-sm-6">#}
+    {#                    <h4>Active Directory 用户和计算机</h4>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    <!--page header end-->
+    <!--start page content-->
+
+    <div class="panel panel-default">
+        <div class="panel-body no-padding">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="chat-room padding-20">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div><!--chat room-->
+                </div>
+                <div class="col-md-9">
+                    <div class="chat-contacts padding-20 bg-gray">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-9 control-label" for="UserName" id="datetree_count"></label>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="搜索" class="input" id="finddataTree" style="width: 250px;">
+                                </div>
+                            </div>
+                        </form>
+                        <div id="tableMain">
+                            <ul id="dataTree" class="ztree ztreetable"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--end page content-->
+    <!--Start footer-->
+    {#        <footer class="footer">#}
+    {#            <span>IT &copy; 2019</span>#}
+    {#        </footer>#}
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+    <div id="rightMenu">
+        <ul>
+            <a href="#" onclick="rightMenuAll('treeDemo','objectMoveToOu',null);">
+                <li id="treeDemo_move"> 移动(V)...</li>
+            </a>
+            <a href="#" onclick="opentreesearch()">
+                <li id="treeDemo_serch"> 查找(I)...</li>
+            </a>
+            <a href="#">
+                <li id="treeDemo_add"> 新建(N)
+                    <ul>
+                        <a href="#" onclick="rightMenuAll('treeDemo','treeDemo_adds','group');">
+                            <li> 组</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('treeDemo','treeDemo_adds','user');">
+                            <li> 用户</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('treeDemo','treeDemo_adds','contact');">
+                            <li> 联系人</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('treeDemo','treeDemo_adds','computer');">
+                            <li> 计算机</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('treeDemo','treeDemo_adds','organizationalUnit');">
+                            <li> 组织单位</li>
+                        </a>
+                    </ul>
+                </li>
+            </a>
+            <a href="#" onclick="rightMenuAll('treeDemo','renameTreeNode',null);">
+                <li id="treeDemo_rename"> 重命名(M)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('treeDemo','del_object',null);">
+                <li id="treeDemo_del"> 删除(D)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('treeDemo','treeDemoReset',null);">
+                <li id="treeDemo_reset"> 刷新(F)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('treeDemo','exportList',null);">
+                <li id="treeDemo_exportList"> 导出列表(L)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('treeDemo','objectAttribute',null);">
+                <li id="treeDemo_attribute"> 属性(R)</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="rMenudataTree">
+        <ul>
+            <a href="#" onclick="rightMenuAll('dataTree','objectMoveToOu',null);">
+                <li id="dataTree_move"> 移动(V)...</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','dataTree_enable_account',null);">
+                <li id="dataTree_enable_account"> 启用账户(E)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','dataTree_disable_account',null);">
+                <li id="dataTree_disable_account"> 禁用账户(S)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','dataTree_reset_password',null);">
+                <li id="dataTree_reset_password"> 重置密码(E)</li>
+            </a>
+            <a href="#">
+                <li id="dataTree_add"> 新建(N)
+                    <ul>
+                        <a href="#" onclick="rightMenuAll('dataTree','treeDemo_adds','group');">
+                            <li> 组</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('dataTree','treeDemo_adds','user');">
+                            <li> 用户</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('dataTree','treeDemo_adds','contact');">
+                            <li> 联系人</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('dataTree','treeDemo_adds','computer');">
+                            <li> 计算机</li>
+                        </a>
+                        <a href="#" onclick="rightMenuAll('dataTree','treeDemo_adds','organizationalUnit');">
+                            <li> 组织单位</li>
+                        </a>
+                    </ul>
+                </li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','renameTreeNode',null);">
+                <li id="dataTree_rename"> 重命名(M)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','del_object',null);">
+                <li id="dataTree_del"> 删除(D)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','dataTreeReset',null);">
+                <li id="dataTree_reset"> 刷新(F)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','exportList',null);">
+                <li id="dataTree_exportList"> 导出列表(L)</li>
+            </a>
+            <a href="#" onclick="rightMenuAll('dataTree','objectAttribute',null);">
+                <li id="dataTree_attribute"> 属性(R)</li>
+            </a>
+        </ul>
+    </div>
+
+    <div class="modal fade" id="add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建对象 - 用户
+                    </h4>
+                </div>
+                <form id="form_add_user" class="form-horizontal" method="post" action="/addUser/">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">创建于：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_distinguishedName" name="add_user_distinguishedName" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">姓(sn)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_sn" name="add_user_sn" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">名(givenName)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_givenName" name="add_user_givenName" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">*姓名(cn)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_cn" name="add_user_cn" placeholder="" type="text" value="" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*用户登陆名(userPrincipalName)</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="add_user_userPrincipalName1" name="add_user_userPrincipalName1" placeholder="" type="text" value="" data-message="不能为空"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="add_user_userPrincipalName2" name="add_user_userPrincipalName2" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">*用户登陆名(sAMAccountName)</label>
+                        <div class="col-md-4">
+                            <input class="form-control" id="add_user_sAMAccountName1" name="add_user_sAMAccountName1" type="text" value="" readonly="readonly"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="add_user_sAMAccountName2" name="add_user_sAMAccountName2" type="text" value="" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">显示名称(displayName)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_displayName" name="add_user_displayName" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">描述(description)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_description" name="add_user_description" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*密码：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_user_password" name="add_user_password" placeholder="" type="text" value="" data-easyform="regex:^(?!([A-Z]*|[a-z]*|[0-9]*|[!-/:-@\[-`{-~]*|[A-Za-z]*|[A-Z0-9]*|[A-Z!-/:-@\[-`{-~]*|[a-z0-9]*|[a-z!-/:-@\[-`{-~]*|[0-9!-/:-@\[-`{-~]*)$)[A-Za-z0-9!-/:-@\[-`{-~]{8,20}$"
+                                   data-message="密码必须为8—20位且符合复杂性要求"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">启用账号：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="add_user_userAccountControl" id="add_user_userAccountControl" onchange="selectuseruserAccountControl(this)">
+                                <option value="yes">是</option>
+                                <option value="no">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">开通邮箱：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="add_user_mail" id="add_user_mail">
+                                <option value="yes">是</option>
+                                <option value="no">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="modal_mail_db">
+                        <label class="col-md-3 control-label" for="UserName">邮箱数据库：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="add_user_mail_db" id="add_user_mail_db">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <input class="btn btn-primary" value="确定" type="submit">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="add_group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建对象 - 组
+                    </h4>
+                </div>
+                <form id="form_add_group" class="form-horizontal" method="post" action="/addGroup/">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">创建于：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_group_distinguishedName" name="add_group_distinguishedName" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">组名(cn)：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_group_cn" name="add_group_cn" placeholder="" type="text" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">组名(sAMAccountName)：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_group_sAMAccountName" name="add_group_sAMAccountName" placeholder="" type="text" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">显示名称(displayName)：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_group_displayName" name="add_group_displayName" placeholder="" type="text" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">描述(description)：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_group_description" name="add_group_description" placeholder="" type="text" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            <div class="col-sm-5">
+                                <label class="control-label">组作用域：</label>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="group_scope" value=4>本地域(O)</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="group_scope" value=2 checked>全局(G)</label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="group_scope" value=8>通用(U)</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">组类型：</label>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="group_type" value=2147483648 checked>安全组(S)
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="group_type" value=0>通讯组(D)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <input class="btn btn-primary" value="确定" type="submit">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="add_organizationalUnit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建对象 - 组织单位
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">创建于：</label>
+                            <label class="col-md-8 control-label" for="UserName" id="add_organizationalUnit_distinguishedName"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName">组名(A)：</label>
+                            <input class="form-control" id="add_organizationalUnit_cn" placeholder="" type="text" value=""/>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" checked="checked" value="" id="add_organizationalUnit_checkbox">防止容器被意外删除(P)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="add_organizationalUnit(this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="add_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建对象 - 联系人
+                    </h4>
+                </div>
+                <form id="form_add_control" class="form-horizontal" method="post" action="/addContact/">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">创建于：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_distinguishedName" name="add_contact_distinguishedName" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">*姓名(cn)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_cn" name="add_contact_cn" placeholder="" type="text" value="" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">姓(sn)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_sn" name="add_contact_sn" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">名(givenName)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_givenName" name="add_contact_givenName" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">显示名称(displayName)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_displayName" name="add_contact_displayName" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">描述(description)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_contact_description" name="add_contact_description" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">开通邮箱：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="add_contact_mail" id="add_contact_mail">
+                                <option value="yes">是</option>
+                                <option value="no">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group contact_mail">
+                        <label class="col-sm-3 control-label">*别名：</label>
+                        <div class="col-sm-6">
+                            <input id="add_contact_name" name="add_contact_name" class="form-control" type="text" placeholder="xxxmail" data-easyform="char-normal"
+                                   data-message="别名只能为英文、数字、下划线">
+                        </div>
+                    </div>
+                    <div class="form-group contact_mail">
+                        <label class="col-sm-3 control-label">*电子邮件(mail)：</label>
+                        <div class="col-sm-6">
+                            <input id="add_contact_smtpvalue" name="add_contact_smtpvalue" class="form-control" type="text" placeholder="xxxmail@contoso.com" data-easyform="email"
+                                   data-message="请填写正确的邮箱地址">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <input class="btn btn-primary" value="确定" type="submit">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="add_computer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新建对象 - 计算机
+                    </h4>
+                </div>
+                <form id="form_add_computer" class="form-horizontal" method="post" action="/addComputer/">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">创建于：</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_computer_distinguishedName" name="add_computer_distinguishedName" placeholder="" type="text" value="" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="UserName">*计算机名称(cn)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_computer_cn" name="add_computer_cn" placeholder="" type="text" value="" data-message="不能为空"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">显示名称(displayName)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_computer_displayName" name="add_computer_displayName" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="col-md-3 control-label" for="UserName">描述(description)</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" id="add_computer_description" name="add_computer_description" placeholder="" type="text" value="" data-easyform="null;"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                        <input class="btn btn-primary" value="确定" type="submit">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="rename_ou" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重命名
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">名称</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="ou_name" placeholder="" type="text" value=""/>
+                                <input class="form-control" id="ou_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                                <input class="form-control" id="ou_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                                <input class="form-control" id="ou_treename" placeholder="" type="text" value="" style="display: none"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="rename_object('ou',this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="rename_group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重命名组
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName">组名(N)</label>
+                            <input class="form-control" id="group_name" placeholder="" type="text" value=""/>
+                            <label class="control-label" for="UserName">组名(Windows 2000 以前版本)(W)</label>
+                            <input class="form-control" id="group_sAMAccountName" placeholder="" type="text" value=""/>
+                            <input class="form-control" id="group_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="group_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="group_treename" placeholder="" type="text" value="" style="display: none"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="rename_object('group',this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="rename_contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重命名联系人
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">姓名(U)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="contact_name" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">姓(L)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="contact_sn" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">名(F)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="contact_givenName" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">显示名称(D)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="contact_displayName" placeholder="" type="text" value=""/>
+                                <input class="form-control" id="contact_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                                <input class="form-control" id="contact_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                                <input class="form-control" id="contact_treename" placeholder="" type="text" value="" style="display: none"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="rename_object('contact',this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="rename_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重命名用户
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">姓名(N)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_name" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">姓(L)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_sn" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">名(I)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_givenName" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">显示名称(S)</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_displayName" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label class="col-md-12 control-label" for="UserName">用户登陆名(U)</label>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_userPrincipalName1" placeholder="" type="text" value=""/>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_userPrincipalName2" placeholder="" type="text" value="" readonly="readonly"/>
+                            </div>
+                            <input class="form-control" id="user_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="user_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="user_treename" placeholder="" type="text" value="" style="display: none"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <label class="col-md-12 control-label" for="UserName">用户登陆名(Windows 2000以前版本)(W)</label>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_sAMAccountName1" placeholder="" type="text" value="" readonly="readonly"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="user_sAMAccountName2" placeholder="" type="text" value=""/>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="rename_object('user',this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="object_move_to_ou_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        移动
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-form">
+                        <input class="form-control" id="object_move_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                        <input class="form-control" id="object_move_ztreename" placeholder="" type="text" value="" style="display: none"/>
+                        <label class="control-label" for="UserName">将对象移动到容器(M)</label>
+                        <ul id="treemove" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="setObjectMoveToOu(this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="del_object" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        Active Directory 域服务 删除
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName" id="del_object_label">XXX</label>
+                            <input class="form-control" id="del_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="del_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="del_treename" placeholder="" type="text" value="" style="display: none"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="delObject(this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="del_ou" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        确认删除子树目录
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName" id="del_ou_label" style="color: red">对象 包含其他账户或对象。您确定要删除 及其包含的所有对象吗?</label>
+                            <label class="control-label" for="UserName" id="">如果取消正在执行的删除操作，则不会恢复已经删除的对象。</label>
+                            <label class="control-label" for="UserName" id="">警告: 如果选择“使用删除子树目录”服务器控制复选框，则会删除子树中的所有对象(包括所有受删除保护的对象)，且无法取消删除。</label>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="del_ou_checkbox">使用删除子树目录服务器控制(U)</label>
+                            </div>
+                            <div id="del_ou_div" style="display: none">
+                                <code><label class="control-label" for="UserName" id="">这个操作会删除下面所有账户或对象,确定这样操作,请输入'删除下面所有账户或对象'。</label></code>
+                                <input class="form-control" id="del_ou_checkboxtext" placeholder="" type="text" value=""/>
+                            </div>
+                            <input class="form-control" id="del_ou_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="del_ou_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="del_ou_treename" placeholder="" type="text" value="" style="display: none"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="delOu(this)">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="export_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        导出列表
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="export_list_checkbox">导出子树目录</label>
+                            </div>
+                            <input class="form-control" id="export_list_distinguishedName" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="export_list_objectClass" placeholder="" type="text" value="" style="display: none"/>
+                            <input class="form-control" id="export_list_treename" placeholder="" type="text" value="" style="display: none"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="exportListObject()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+    <div class="modal fade" id="dorpErrors" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        在尝试移动选定的对象时发生了多个错误。
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <table id="dorpTable">
+                                <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>错误</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {#                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>#}
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/fuzzysearch.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.core.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.exhide.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.exedit.min.js"></script>
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.excheck.min.js"></script>
+    <script type="text/javascript" src="/static/js/icheck.min.js"></script>
+    <script type="text/javascript" src="/static/js/activedirectory.js"></script>
+    <script src="/static/easyfrom/easyform.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script>
+
+    </script>
+{% endblock %}

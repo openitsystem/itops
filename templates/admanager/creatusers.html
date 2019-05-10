@@ -1,0 +1,525 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>AD管理</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <!--jquery steps-->
+    <link href="/static/css/jquery-steps.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>批量创建用户</h4>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <!--start page content-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <code>创建用户</code>
+                </div>
+                <div class="panel-body">
+                    <form id="example-form" action="#">
+                        <div>
+                            <h3>添加用户明细</h3>
+                            <section>
+                                <label for="userName">选择导出模板需要的附加项:</label>
+                                <br>
+                                <label for="acceptuserPrincipalName">登录名(<code>userPrincipalName</code>)</label> |
+                                <label>登录名(Windows 2000以前版本)(<code>sAMAccountName</code>)</label> |
+                                <label for="acceptcn">全名(<code>cn</code>)</label>
+                                <br>
+                                <label for="acceptgivenName"><input id="acceptgivenName" name="acceptgivenName" type="checkbox"> 名字(givenName)</label>
+                                <label for="acceptinitials"><input id="acceptinitials" name="acceptinitials" type="checkbox"> 中间名首字母缩写(initials)</label>
+                                <label for="acceptsn"><input id="acceptsn" name="acceptsn" type="checkbox"> 姓氏(sn)</label>
+                                <label for="acceptdisplayName"><input id="acceptdisplayName" name="acceptdisplayName" type="checkbox"> 显示名称(displayName)</label>
+                                <label for="acceptdescription"><input id="acceptdescription" name="acceptdescription" type="checkbox"> 描述(description)</label>
+                                <label for="acceptphysicalDeliveryOfficeName"><input id="acceptphysicalDeliveryOfficeName" name="acceptphysicalDeliveryOfficeName" type="checkbox">
+                                    办公室(physicalDeliveryOfficeName)</label>
+                                <label for="accepttelephoneNumber"><input id="accepttelephoneNumber" name="accepttelephoneNumber" type="checkbox"> 电话号码(telephoneNumber)</label>
+                                {#                                <label for="acceptmail"><input id="acceptmail" name="acceptmail" type="checkbox"> 电子邮件(mail)</label>#}
+                                <label for="acceptmaildb"><input id="acceptmaildb" name="acceptmaildb" type="checkbox"> 邮箱数据库(maildb)</label>
+                                <label for="acceptwWWHomePage"><input id="acceptwWWHomePage" name="acceptwWWHomePage" type="checkbox"> 网页(wWWHomePage)</label>
+                                <label for="acceptpassword"> <input id="acceptpassword" name="acceptpassword" type="checkbox"> 密码(password)</label>
+                                <label for="acceptuserAccountControl"> <input id="acceptuserAccountControl" name="acceptuserAccountControl" type="checkbox"> 禁用用户(disableuser)</label>
+                                {#                                <div class="radio">#}
+                                {#                                    <label for="enableuser"> <input id="enableuser" name="userAccountControl" type="radio" checked="checked" value=512> 启用用户</label>#}
+                                {#                                </div>#}
+                                {#                                <div class="radio">#}
+                                {#                                    <label for="disableuser"> <input id="disableuser" name="userAccountControl" type="radio" value=514> 禁用用户</label>#}
+                                {#                                </div>#}
+                                <br>
+                                <h5>
+                                    <code><a href="#" onclick="exportfiletemplate();"><i class="icon-link"></i> 下载模板</a></code> |
+                                    <code><a href="/ladpattributes/" target="_blank"><i class="icon-share"></i> LDAP常用属性</a></code>
+                                </h5>
+                                <p>请使用DN格式，指定隶属于（MemberOf）、经理（Manager）或者SAM账户名称及组织单位名称（OUName）字段的值，并用双引号将值括起来。</p>
+                                <p>如果导入文件中含有非英文字符，请使用正确的编码(UTF-8)保存文件，否则会出现乱码。</p>
+                                <p>导出文件模板的第一行被认为是列头(LDAP)<code>*请勿更改</code></p>
+                                <p><code>填写邮箱数据库(maildb)，才会新建邮箱</code></p>
+                                <br>
+                                <input type="file" name='uploadfile' id="uploadfile" class="form-control"/>
+                                <button type="button" class="btn btn-primary btn-border btn-rounded btn-sm" onclick="uploadfiletemplate();">
+                                    <span class="fa fa-cloud-upload" aria-hidden="true"></span>&nbsp;上传Excel
+                                </button>
+
+                            </section>
+                            <h3>查看导入数据</h3>
+                            <section>
+                                <div id="toolbar">
+                                    <button id="btn_delete" type="button" class="btn btn-warning btn-border btn-rounded btn-sm" onclick="deluser()">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
+                                    </button>
+                                    <label>共有<label id="usercount"></label>个对象</label>
+                                </div>
+                                <table id="tb_departments"></table>
+                            </section>
+                            <h3>选择组织单位</h3>
+                            <section>
+                                <div>
+                                    <div>
+                                        <label class="control-label">创建于：</label>
+                                        <label class="control-label" id="get_user_distinguishedName"></label>
+                                    </div>
+                                </div>
+                                <div class="chat-room">
+                                    <ul id="treemove" class="ztree"></ul>
+                                </div>
+                            </section>
+                            <h3>创建并查看状态</h3>
+                            <section>
+                                <div id="toolbaruser">
+                                    <label>共有<label id="creatusercount"></label>个对象</label>
+                                </div>
+                                <table id="tb_creatuser"></table>
+                            </section>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page content-->
+    <!--Start footer-->
+    <footer class="footer">
+        <span>IT &copy; 2019</span>
+    </footer>
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+
+{% endblock %}
+
+{% block custom_js %}
+    <!--Common plugins-->
+    <script src="/static/js/pace.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <!--jquery steps-->
+    <script src="/static/js/jquery.steps.min.js"></script>
+    <script src="/static/js/jquery.validate.min.js"></script>
+    <script src="/static/js/messages_zh.js"></script>
+
+    <script src="/static/js/Blob.js"></script>
+    <script src="/static/js/FileSaver.min.js"></script>
+    <script src="/static/js/xlsx.core.min.js"></script>
+    <script src="/static/js/xlsx.full.min.js"></script>
+
+    <script src="/static/js/tableexport.min.js"></script>
+
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-export.min.js"></script>
+
+
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+
+    <script>
+        //设置垂直滚动条
+        $(document).ready(function () {
+            $('.chat-room,.chat-contacts').slimScroll({
+                color: '#eee',
+                size: '5px',
+                height: '490px',
+                alwaysVisible: true
+            });
+        });
+        $("#example-basic").steps({
+            headerTag: "h3", // 指定头部对应什么HTML标签
+            bodyTag: "section",// 指定步骤内容对应的HTML标签
+            autoFocus: true, // 将焦点设置为第一个向导实例，以便从一开始就启用关键导航 if true  优先级在startIndex之下
+            //startIndex: currentStepxl, // 通过修改这个值来改变当前步数指向，即通过索引值确定向导加载后开始步骤是哪一步
+
+        });
+        //表格的步骤
+        var form = $("#example-form");
+
+        form.children("div").steps({
+            headerTag: "h3",// 指定头部对应什么HTML标签
+            bodyTag: "section",// 指定步骤内容对应的HTML标签
+            transitionEffect: "slideLeft",// 步骤切换动画
+            labels: {
+                finish: "完成", // 修改按钮得文本
+                next: "下一步", // 下一步按钮的文本
+                previous: "上一步", // 上一步按钮的文本
+                loading: "Loading ..."
+            },
+            // 下一步切换时的监听
+            onStepChanging: function (event, currentIndex, newIndex) {
+                if (currentIndex < newIndex) {
+                    if (newIndex == 1) {
+                        var getData = $('#tb_departments').bootstrapTable('getData');
+                        if (getData.length > 0) {
+                            startztree();
+                        } else {
+                            swal('请导入文件!');
+                            return false;
+                        }
+                    }
+                    if (newIndex == 2) {
+                        startztree();
+                    }
+                    ;
+                    if (newIndex == 3) {
+                        var get_user_distinguishedName = document.getElementById('get_user_distinguishedName').innerHTML;
+                        var getData = $('#tb_departments').bootstrapTable('getData');
+                        if (get_user_distinguishedName.length > 0) {
+                            showBg();
+                            $.ajax({
+                                url: {% url "creatalluser" %},
+                                type: 'POST',
+                                dataType: "json",
+                                //async:false,
+                                //traditional:true,
+                                data: {'getData': JSON.stringify(getData), 'get_user_distinguishedName': get_user_distinguishedName},
+                                success: function (data) {
+                                    if (data['isSuccess']) {
+                                        var tabledata = data['message'];
+                                        var columns = data['columns'];
+                                        //;
+                                        columns.push({field: "status", title: "status"});
+                                        document.getElementById('creatusercount').innerHTML = tabledata.length;
+                                        $('#tb_creatuser').bootstrapTable(
+                                                "refreshOptions",
+                                                {
+                                                    showExport: true,                     //是否显示导出按钮
+                                                    exportTypes: ['json', 'xlsx'],           //导出文件类型
+                                                    exportDataType: "all",             //basic当前页', 'all所有, 'selected'.
+                                                    exportOptions: {
+                                                        //ignoreColumn: [0, 1],  //忽略某一列的索引
+                                                        fileName: '创建用户表',  //文件名称设置
+                                                        worksheetName: 'sheet1',  //表格工作区名称
+                                                        tableName: '创建用户表',
+                                                        excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                                                    },
+                                                    columns: columns,
+                                                    data: tabledata,
+                                                },
+                                        );
+                                        closeBg();
+                                    } else {
+                                        closeBg();
+                                        swal('批量创建用户发生严重错误');
+                                        return false;
+                                    }
+                                }
+                            });
+                        } else {
+                            swal('请选择组织单位!');
+                            return false;
+                        }
+                    }
+                    form.validate({
+                        //更改错误信息显示的位置
+                        errorPlacement: function errorPlacement(error, element) {
+                            element.before(error);
+                        },
+                        //id = confirm  添加新规则
+                        {#            rules: {#}
+                        {#                confirm: {#}
+                        {#                    equalTo: "#password"#}
+                        {#                }#}
+                        {#            }#}
+                    });
+                    form.validate().settings.ignore = ":disabled,:hidden";
+                    return form.valid();
+                }
+                if (currentIndex > newIndex) {
+                    if (currentIndex == 3) {
+                        swal('不能返回了');
+                        return false;
+                    }
+                }
+
+                return true
+            },
+            // 完成时得监听
+            onFinishing: function (event, currentIndex) {
+                form.validate().settings.ignore = ":disabled";
+                return form.valid();
+            },
+            // 完成后的监听
+            onFinished: function (event, currentIndex) {
+                //alert("Submitted!");
+                swal({
+                    title: "跳转回AD管理页",
+                    text: '新建用户完成',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: '是(Y)',//使用此选项可更改“确认”按钮上的文本。
+                    cancelButtonText: '否(N)',//使用此选项可更改“取消”按钮上的文本。
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: false
+                }, function () {
+                    window.location.href = "/admanager/";
+                    return true;
+                });
+
+            }
+        });
+        function exportfiletemplate() {
+            var givenName = $("#acceptgivenName").prop('checked');
+            var initials = $("#acceptinitials").prop('checked');
+            var sn = $("#acceptsn").prop('checked');
+            var displayName = $("#acceptdisplayName").prop('checked');
+            var description = $("#acceptdescription").prop('checked');
+            var physicalDeliveryOfficeName = $("#acceptphysicalDeliveryOfficeName").prop('checked');
+            var telephoneNumber = $("#accepttelephoneNumber").prop('checked');
+            {#            var mail = $("#acceptmail").prop('checked');#}
+            var maildb = $("#acceptmaildb").prop('checked');
+            var wWWHomePage = $("#acceptwWWHomePage").prop('checked');
+            var password = $("#acceptpassword").prop('checked');
+            var userAccountControl = $("#acceptuserAccountControl").prop('checked');
+            //var userAccountControl = $("input[name='userAccountControl']:checked").val();
+            post_url = '/exportfiletemplate/?givenName=' + givenName + '&initials=' + initials + '&sn=' + sn + '&displayName=' + displayName + '&description=' + description + '&physicalDeliveryOfficeName=' + physicalDeliveryOfficeName
+                    + '&telephoneNumber=' + telephoneNumber + '&maildb=' + maildb + '&wWWHomePage=' + wWWHomePage + '&password=' + password + '&userAccountControl=' + userAccountControl
+                    + '&userPrincipalName=' + 'true' + '&cn=' + 'true';
+            location.replace(post_url);
+        }
+        ;
+        function uploadfiletemplate() {
+            var obj = document.getElementById('uploadfile').value;
+            var fileObj = document.getElementById("uploadfile").files[0];
+            var fileext = obj.substring(obj.lastIndexOf("."), obj.length);//获取文件名后缀
+            fileext = fileext.toLowerCase();//小写
+            if (obj == '') {
+                swal('请选择需要导入的文件！');
+                return false;
+            }
+            if (fileext != '.xlsx') {
+                swal('请上传.xlsx格式Excel文件！');
+                return false;
+            }
+            var formFile = new FormData();
+            formFile.append("action", "UploadVMKImagePath");
+            formFile.append("file", fileObj); //加入文件对象
+            $.ajax({
+                url: {% url "uploadfiletemplate" %},
+                type: 'POST',
+                //async:false,
+                cache: false,//上传文件无需缓存
+                dataType: "json",
+                data: formFile,
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false,  //必须
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        var columnsdate = data['heard'];
+                        var tabledata = data['tabledata'];
+                        columnsdate.unshift({checkbox: true});
+                        document.getElementById('usercount').innerHTML = tabledata.length;
+                        $('#tb_departments').bootstrapTable(
+                                "refreshOptions",
+                                {
+                                    showExport: true,                     //是否显示导出按钮
+                                    exportTypes: ['json', 'xlsx'],           //导出文件类型
+                                    exportDataType: "all",             //basic当前页', 'all所有, 'selected'.
+                                    exportOptions: {
+                                        //ignoreColumn: [0, 1],  //忽略某一列的索引
+                                        fileName: '导入用户数据表',  //文件名称设置
+                                        worksheetName: 'sheet1',  //表格工作区名称
+                                        tableName: '导入用户数据表',
+                                        excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                                    },
+                                    columns: columnsdate,
+                                    data: tabledata,
+                                }
+                        );
+                        swal('导入文件成功');
+                    } else {
+                        swal('导入文件失败');
+                        return false;
+                    }
+                }
+            });
+        }
+        ;
+        $(function () {
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+        });
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_departments').bootstrapTable({
+                    //url: '/Home/GetDepartment',         //请求后台的URL（*）
+                    //method: 'get',                      //请求方式（*）
+                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: false,                   //是否显示分页（*）
+                    sortable: false,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100,],        //可供选择的每页的行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "sAMAccountName",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    escape:true,
+                });
+                $('#tb_creatuser').bootstrapTable({
+                    //url: '/Home/GetDepartment',         //请求后台的URL（*）
+                    //method: 'get',                      //请求方式（*）
+                    toolbar: '#toolbaruser',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: false,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100,],        //可供选择的每页的行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 1,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "sAMAccountName",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    escape:true,
+                });
+            };
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    departmentname: $("#txt_search_departmentname").val(),
+                    statu: $("#txt_search_statu").val()
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+            return oInit;
+        };
+
+        function deluser() {
+            var ids = $.map($('#tb_departments').bootstrapTable('getSelections'), function (row) {
+                return row.sAMAccountName;
+            })
+            $('#tb_departments').bootstrapTable('remove', {
+                field: 'sAMAccountName',
+                values: ids
+            });
+            var counss = document.getElementById('usercount').innerHTML;
+            document.getElementById('usercount').innerHTML = parseInt(counss) - ids.length;
+        }
+        $.ajax({
+            url: "/show_domain/",
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                zNodes = data["message"];
+            }
+        });//生成OU初始数
+        var zNodes;
+        var setting_ou = {
+            async: {
+                enable: true, //表示异步加载生效
+                url: "/show_ou_for_dn/",// 异步加载时访问的页面
+                autoParam: ["distinguishedName", "id"], // 异步加载时自动提交的父节点属性的参数
+                //otherParam:["paths"], //ajax请求时提交的参数
+                type: 'post',
+                dataType: 'json'
+            },
+            view: {
+                expandSpeed: "",//zTree 节点展开、折叠时的动画速度
+                selectedMulti: false ////设置是否允许同时选中多个节点。
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },//设置数据格式为id
+            check: {
+                enable: false,//设置 zTree 的节点上是否显示 checkbox / radio
+                chkStyle: "radio",
+                chkboxType: {"Y": "", "N": ""},//只影响子节点
+            }, callback: { // 回调函数
+                onClick: zTreeOnClick, // 单击鼠标事件
+            },
+
+        };
+        function startztree() {
+            $.fn.zTree.init($("#treemove"), setting_ou, zNodes);//初始化zTree
+            var ztreeou = $.fn.zTree.getZTreeObj("treemove");
+            var nodes = ztreeou.getNodes();
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    ztreeou.expandNode(nodes[i], true, false, false);//默认展开第一级节点
+                }
+            }
+        }
+        ;
+        function zTreeOnClick() {
+            var zTree = $.fn.zTree.getZTreeObj("treemove"), //zTree = Object {setting: Object} 根据 treeId 获取 zTree 对象的方法
+                    nodes = zTree.getSelectedNodes(), // nodes = [Object] 获取zTree当前被选中的节点数据集合
+                    treeNode = nodes[0];
+            document.getElementById('get_user_distinguishedName').innerHTML = treeNode.distinguishedName;
+        }
+
+
+    </script>
+{% endblock %}

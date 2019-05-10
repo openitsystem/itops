@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<style type="text/css">
+
+
+    {#        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: transparent;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}#}
+    #fullbg {
+        position: fixed;
+    }
+
+    #fullbg {
+        width: 100%;
+        display: none;
+        background-color: Gray;
+        left: 0px;
+        opacity: 0.5;
+        position: absolute;
+        top: 0px;
+        z-index: 100003;
+        filter: alpha(opacity=50); /* IE6 */
+        -moz-opacity: 0.5; /* Mozilla */
+        -khtml-opacity: 0.5; /* Safari */
+    }
+
+    #dialoga {
+        background-color: transparent;
+        display: none;
+        height: 200px;
+        left: 50%;
+        margin: -100px 0 0 -100px;
+        padding: 12px;
+        position: fixed !important; /* 浮动对话框 */
+        position: absolute;
+        top: 50%;
+        width: 200px;
+        z-index: 100005;
+    }
+
+    #dialoga p {
+        margin: 0 0 12px;
+    }
+
+    #dialoga p.close {
+        text-align: right;
+    }
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}<title id="titlehtml"></title>{% endblock %}
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/simple-line-icons.css" rel="stylesheet">
+    <link href="/static/css/pace.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/metismenu.min.css">
+    <link rel="stylesheet" href="/static/css/nanoscroller.css">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+
+    {% block custom_css %}
+        {#        <link href="/static/css/style.min862f.css?v=4.1.0" rel="stylesheet">#}
+    {% endblock %}
+</head>
+<body id="pic1">
+
+<!--top bar start-->
+<div class="top-bar light-top-bar"><!--by default top bar is dark, add .light-top-bar class to make it light-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/home/" class="admin-logo">
+                    <span style="font-size: 25px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;text-align: center"> 运维平台</span>
+                </a>
+                <div class="left-nav-toggle visible-xs visible-sm">
+                    <a href="">
+                        <i class="glyphicon glyphicon-menu-hamburger"></i>
+                    </a>
+                </div><!--end nav toggle icon-->
+            </div>
+            <div class="col-xs-6">
+                <ul class="list-inline top-right-nav">
+                    <li class="dropdown avtar-dropdown">
+                        <a class="btn" target="_blank">{{ request.session.displayname }}  </a>
+                    </li>
+                    <li>
+                        <a href="/logout/">
+                            注销
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- top bar end-->
+<!--left navigation start-->
+<aside class="float-navigation light-navigation">
+    <div class="nano">
+        <div class="nano-content">
+            <ul class="metisMenu nav" id="menu">
+                <li id="ittool" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-settings"></i> IT记录管理 <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav" aria-expanded="true">
+                        <li><a href="/ldapcord/">LDAP账号管理</a></li>
+                        <li><a href="/dnscord/">DNS记录管理</a></li>
+                    </ul>
+                </li>
+                <li id="ad" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-users"></i> Active Directory <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav" aria-expanded="true">
+                        <li><a href="/directorytree/">用户和计算机</a></li>
+                        {#                        <li><a href="/search/">账号搜索</a></li>#}
+                        <li><a href="/leavesearch/">账号搜索</a></li>
+                        <li><a href="/admanager/">批量操作</a></li>
+                        <li><a href="/downloadcsv/">报表管理</a></li>
+                    </ul>
+                </li>
+                {#                <li class="nav-heading"><span>Mail</span></li>#}
+                <li id="mailli" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-envelope"></i> 邮箱 <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav collapse " aria-expanded="true">
+                        <li><a href="/findmail/">邮件流查询</a></li>
+                    </ul>
+                </li>
+                <li id="logli" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-docs"></i> 文档 <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav collapse " aria-expanded="true">
+                        <li><a href="/faultproject/">故障报告</a></li>
+                        <li><a href="/findproject/">故障回溯</a></li>
+                        <li><a href="/creatproject/">新建文档</a></li>
+                        <li><a href="/projects/">文档查看</a></li>
+                    </ul>
+                </li>
+                <li id="logli" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> API <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav collapse " aria-expanded="true">
+                        <li><a href="/docs/" target="_blank">API文档</a></li>
+                        <li><a href="/apipermissions/">权限配置</a></li>
+                        <li><a href="/apinames/">API方法导航</a></li>
+                    </ul>
+                </li>
+                <li id="logli" class="active">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 日志 <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav collapse " aria-expanded="true">
+                        <li><a href="/serchlog/">日志</a></li>
+                    </ul>
+                </li>
+                <li id="monitorvalue" class="active" style="display:none;">
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 监控 <span class="fa arrow"></span></a>
+                    <ul class="nav-second-level nav collapse " aria-expanded="true">
+                        <li><a href="/dfsmonitor/">dfs监控</a></li>
+                        <li><a href="/casmonitor/">邮箱cas监控</a></li>
+                        <li><a href="/mailboxmonitor/">邮箱mailbox监控</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--nano content-->
+    </div><!--nano scroll end-->
+</aside>
+<!--left navigation end-->
+<section class="main-content">
+    <div class="modal fade" id="reset_password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        重置密码
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">新密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword1" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">确认密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword2" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="checkbox_password">用户下次登陆时须更改密码(U)</label>
+                            </div>
+                            <label class="control-label" for="UserName">要使更改生效，用户必须注销，然后重新登陆。</label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label" for="UserName" id="label_unlock">此域控制器中账户锁定状态：</label>
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="checkbox_unlock">解锁用户的账户(A)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary " onclick="setResetPassword()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    {% block content %}
+        {#<button onclick="opentreesearch()">66666666</button>#}
+        <!-- or -->
+        {#        <div><iframe src="/bigindex" frameborder="0" scrolling="no" id="external-frame" onload="setIframeHeight(this)"></iframe></div>#}
+        {#        <div><iframe src="/bigindex"></iframe></div>#}
+        <div class="row">
+
+            <div class="col-sm-12">
+                <iframe width="100%" height="1300" frameborder="no" scrolling="no" src="/bigindex">
+
+                </iframe>
+            </div>
+        </div>
+
+    {% endblock %}
+
+</section>
+
+<!--main content start-->
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+<script src="/static/js/jquery.nanoscroller.min.js"></script>
+<script src="/static/js/metismenu.min.js"></script>
+<script src="/static/js/float-custom.js"></script>
+<script src="/static/js/fixXss.js"></script>
+<script src="/static/sweetalert/sweetalert.min.js"></script>
+<!-- jQuery 遮罩层 -->
+<div id="fullbg"></div>
+<!-- end jQuery 遮罩层 -->
+<!-- 对话框 -->
+<div class="sk-spinner sk-spinner-three-bounce" id="dialoga">
+    <div class="sk-bounce1"></div>
+    <div class="sk-bounce2"></div>
+    <div class="sk-bounce3"></div>
+</div>
+<script>
+    var quiteTime = 120 * 60;
+    var currentTime = 0;
+    $(function () {
+
+        $("*").click(function () {
+            currentTime = 0;
+        });
+
+        $('*').mouseover(function () {
+            currentTime = 0;
+        });
+
+        setInterval(function () {
+            currentTime++;
+            if (currentTime >= quiteTime) {
+                window.location.href = '/logout/'
+            }
+        }, 1000);
+    });
+
+
+    function openModle(url) {
+        window.open(url, 'ObjectProperties', 'resizable=yes,width=1010,height=700,scrollbars=yes,left=24,top=50');
+    }
+    function opentreesearch() {
+        window.open('/treesearch/', 'ObjectProperties', 'resizable=yes,width=1010,height=700,scrollbars=yes,left=24,top=50');
+    }
+    var distinguishedName, sAMAccountName, lockoutTime, lockip;
+    function showResetPassword(dn, accountName, outTime) {
+        distinguishedName = dn;
+        sAMAccountName = accountName;
+        $.ajax({
+            url: "/serchLock/",
+            type: 'POST',
+            dataType: 'json',
+            data: {'distinguishedName': distinguishedName, 'sAMAccountName': sAMAccountName,},
+            success: function (data) {
+                if (data['isSuccess']) {
+                    document.getElementById("label_unlock").innerHTML = "此域控制器中账户锁定状态：锁定:" + data['message']['ip'];
+                    lockip = data['message']['ip'];
+                } else {
+                    document.getElementById("label_unlock").innerHTML = "此域控制器中账户锁定状态：未锁定";
+                    lockip = '';
+                }
+            }
+        });
+        lockoutTime = outTime;
+        $("#checkbox_password").removeAttr("checked");
+        $("#checkbox_unlock").removeAttr("checked");
+        document.getElementById("newpassword1").value = '';
+        document.getElementById("newpassword2").value = '';
+        $('#reset_password').modal({
+            keyboard: true,
+            backdrop: false
+        });
+    }
+    function setResetPassword() {
+        var newpassword1 = document.getElementById("newpassword1").value;
+        var newpassword2 = document.getElementById("newpassword2").value;
+        var checkbox_password = $("#checkbox_password").prop('checked');
+        var checkbox_unlock = $("#checkbox_unlock").prop('checked');
+        var _distinguishedName = distinguishedName;
+        var _sAMAccountName = sAMAccountName;
+        var _ip = lockip;
+        if (_distinguishedName.length > 0) {
+            if (newpassword1.length > 0 && newpassword1 == newpassword2) {
+                $.ajax({
+                    url: "/resetUserPassword/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'distinguishedName': _distinguishedName, 'newpassword': newpassword1, 'pwdLastSet': checkbox_password, 'unlock': checkbox_unlock, 'ip': _ip},
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            swal({
+                                title: "",
+                                text: _sAMAccountName + "修改密码成功",
+                                type: "success",
+                                showConfirmButton: "true",
+                                confirmButtonText: "好的",
+                                animation: "slide-from-top"
+                            });
+                            $("#reset_password").modal("hide");
+                        } else {
+                            swal(data['message']);
+                            $("#reset_password").modal("hide");
+                        }
+                    }
+                });
+            } else {
+                swal('密码不能为空或两个密码不一致');
+            }
+
+        } else {
+            swal('传入空值');
+            $("#reset_password").modal("hide");
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    //显示灰色 jQuery 遮罩层
+    function showBg() {
+        var bh = $("body").height();
+        var bw = $("body").width();
+        $("#fullbg").css({
+            height: bh,
+            width: bw,
+            display: "block"
+        });
+        $("#dialoga").show();
+    }
+    //关闭灰色 jQuery 遮罩
+    function closeBg() {
+        $("#fullbg,#dialoga").hide();
+    }
+
+</script>
+
+{% block custom_js %}
+
+
+{% endblock %}
+</body>
+</html>

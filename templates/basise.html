@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<style type="text/css">
+    {#        #bg{ display: none;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: transparent;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}#}
+    #fullbg {
+        position: fixed;
+    }
+
+    #fullbg {
+        width: 100%;
+        display: none;
+        background-color: Gray;
+        left: 0px;
+        opacity: 0.5;
+        position: absolute;
+        top: 0px;
+        z-index: 100003;
+        filter: alpha(opacity=50); /* IE6 */
+        -moz-opacity: 0.5; /* Mozilla */
+        -khtml-opacity: 0.5; /* Safari */
+    }
+
+    #dialoga {
+        background-color: transparent;
+        display: none;
+        height: 200px;
+        left: 50%;
+        margin: -100px 0 0 -100px;
+        padding: 12px;
+        position: fixed !important; /* 浮动对话框 */
+        position: absolute;
+        top: 50%;
+        width: 200px;
+        z-index: 100005;
+    }
+
+    #dialoga p {
+        margin: 0 0 12px;
+    }
+
+    #dialoga p.close {
+        text-align: right;
+    }
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>配置</title>
+
+    <!-- Common plugins -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/simple-line-icons.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/static/easyfrom/easyform.css" rel="stylesheet" type="text/css" xmlns="http://www.w3.org/1999/html">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+          <script src="js/html5shiv.min.js"></script>
+          <script src="js/respond.min.js"></script>
+        <![endif]-->
+</head>
+<body>
+<!--main cntent start-->
+<section style="margin-left:100px;margin-right: 100px">
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>配置页面</h4>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <div class="modal fade" id="resetadminpassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改密码
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">旧密码(O):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="oldpassword" placeholder="" type="text" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">新密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword1" placeholder="" type="password" value=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group ">
+                            <label class="col-md-3 control-label" for="UserName">确认密码(N):</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="newpassword2" placeholder="" type="password" value=""/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary " onclick="setadminPassword()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <fieldset>
+                            <a onclick="changeadminpwd()" class="btn btn-primary ">修改初始密码</a>
+                        </fieldset>
+                        <fieldset>
+                            <form class="form-horizontal" id="mysqlsite" method="post" onsubmit="return testmysql();">
+                                <legend>* MySQL数据库配置---<span>填写此配置用于存放数据到数据库</span></legend>
+                                <div class="form-group" style="margin-top: 30px">
+                                    <label class="col-lg-3 control-label">数据库地址</label>
+                                    <div class="col-lg-6">
+                                        <input id="host" name="host" type="text" placeholder="127.0.0.1" class="form-control required" {% ifequal mysqlipvalue 'None' %}  {% else %}
+                                               value="{{ mysqlipvalue }}" {% endifequal %}>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px">
+                                    <label class="col-lg-3 control-label">数据库名称</label>
+                                    <div class="col-lg-6">
+                                        <input id="database" name="database" type="text" placeholder="DBName"
+                                               class="form-control required"  {% ifequal mysqldatabase 'None' %} {% else %} value="{{ mysqldatabase }}" {% endifequal %}>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px">
+                                    <label class="col-lg-3 control-label">账号：</label>
+                                    <div class="col-lg-6">
+                                        <input id="DBUser" name="DBUser" placeholder="DBUser" class="form-control required" {% ifequal mysqlipvalue 'None' %} {% else %}
+                                               value="{{ mysqlusernamevalue }}" {% endifequal %}>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px">
+                                    <label class="col-lg-3 control-label">密码：</label>
+                                    <div class="col-lg-6">
+                                        <input id="password" type="password" name="password"
+                                               placeholder="************" class="form-control required" {% ifequal mysqlipvalue 'None' %} {% else %}
+                                               value="{{ mysqlPasswordvalue }}" {% endifequal %}>
+                                        <span class="help-block m-b-none" style="color:#ac2925;"><i class="fa fa-info-circle"></i> 因密码已做加密处理，更新配置时，需重新填写密码</span>
+
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px">
+                                    <label class="col-lg-3 control-label">端口：</label>
+                                    <div class="col-lg-6">
+                                        <input id="port" name="port" placeholder="port" class="form-control" {% ifequal mysqlipvalue 'None' %} {% else %}
+                                               value="{{ mysqlPortevalue }}" {% endifequal %}>
+                                    </div>
+                                </div>
+                                {% ifequal mysqldatabase 'None' %}
+                                    <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
+                                    </form>
+                                {% else %}
+                                    <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">
+                                    </form>
+                                {% endifequal %}
+                        </fieldset>
+                        {% if mysqldatabase != 'None' %}
+                            <fieldset>
+                                <legend>LDAP 配置</legend>
+                                <form class="form-horizontal" id="ladpsite" method="post" onsubmit="return testldap();">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">AD服务器地址：</label>
+                                        <div class="col-lg-6">
+                                            <input id="adip" name="adip" placeholder="127.0.0.1" class="form-control required"
+                                                    {% ifequal myserver 'None' %}{% else %} value="{{ myserver }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">域名：</label>
+                                        <div class="col-lg-6">
+                                            <input id="domian" name="domian" placeholder="contoso.com" class="form-control required"
+                                                    {% ifequal mydomain 'None' %}{% else %} value="{{ mydomain }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">账号：</label>
+                                        <div class="col-lg-6">
+                                            <input id="aduser" name="aduser" placeholder="contoso.com\administrator" class="form-control required"
+                                                    {% ifequal myuser 'None' %}{% else %} value="{{ myuser }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">密码：</label>
+                                        <div class="col-lg-6">
+                                            <input id="adpassword" type="password" name="adpassword" placeholder="************" class="form-control required"
+                                                    {% ifequal mypassword 'None' %}{% else %} value="{{ mypassword }}" {% endifequal %}>
+                                            <span class="help-block m-b-none" style="color:#ac2925;"><i class="fa fa-info-circle"></i> 因密码已做加密处理，更新配置时，需重新填写密码</span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">默认查找起始：</label>
+                                        <div class="col-lg-6">
+                                            <input id="adserchbase" name="adserchbase" placeholder="DC=contoso,DC=com" class="form-control required"
+                                                    {% ifequal mysearch_base 'None' %}{% else %} value="{{ mysearch_base }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">是否开启加密连接：</label>
+                                        <div class="col-lg-6">
+                                            <select name="sele" id="sele" class="form-control m-b">
+                                                {% if myusessl == 'None' %}
+                                                    <option value="1">开启</option>
+                                                    <option value="0">不开启</option>
+                                                {% elif myusessl == 1 %}
+                                                    <option selected value="1">开启</option>
+                                                    <option value="0">不开启</option>
+                                                {% elif myusessl == 0 %}
+                                                    <option value="1">开启</option>
+                                                    <option selected value="0">不开启</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {% ifequal myserver 'None' %}
+                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
+                                        </form>
+                                    {% else %}
+                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">
+                                        </form>
+                                    {% endifequal %}
+                            </fieldset>
+                            <fieldset>
+                                <legend>EXChange 配置</legend>
+                                <form class="form-horizontal" id="exchangesite" method="post" onsubmit="return exlinktest();">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">EXChange服务器地址：</label>
+                                        <div class="col-lg-6">
+                                            <input id="exip" name="exip" placeholder="127.0.0.1" class="form-control required"
+                                                    {% ifequal exip 'None' %}{% else %} value="{{ exip }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">账号：</label>
+                                        <div class="col-lg-6">
+                                            <input id="exuser" name="exuser" placeholder="contoso.com\administrator" class="form-control required"
+                                                    {% ifequal exuser 'None' %}{% else %} value="{{ exuser }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">密码：</label>
+                                        <div class="col-lg-6">
+                                            <input id="expassword" type="password" name="expassword" placeholder="************" class="form-control required"
+                                                    {% ifequal expassword 'None' %}{% else %} value="{{ expassword }}" {% endifequal %}>
+                                            <span class="help-block m-b-none" style="color:#ac2925;"><i class="fa fa-info-circle"></i> 因密码已做加密处理，更新配置时，需重新填写密码</span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">域名：</label>
+                                        <div class="col-lg-6">
+                                            <input id="exdomain" name="exdomain" placeholder="contoso.com" class="form-control required"
+                                                    {% ifequal exdomain 'None' %}{% else %} value="{{ exdomain }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    {% ifequal exip 'None' %}
+                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
+                                        </form>
+                                    {% else %}
+                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">
+                                        </form>
+                                    {% endifequal %}
+                            </fieldset>
+                            {#                            <fieldset>#}
+                            {#                                <form class="form-horizontal" id="mailsite" method="post" onsubmit="return testmail();">#}
+                            {#                                    <legend>发送邮件配置</legend>#}
+                            {#                                    <div class="form-group">#}
+                            {#                                        <label class="col-lg-3 control-label">邮箱地址：</label>#}
+                            {#                                        <div class="col-lg-6">#}
+                            {#                                            <input id="mailladdress" name="mailladdress" placeholder="portal@contoso.com" class="form-control required"#}
+                            {#                                                    {% ifequal maddress 'None' %}  {% else %}  value="{{ maddress }}" {% endifequal %}>#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                    <div class="form-group">#}
+                            {#                                        <label class="col-lg-3 control-label">邮箱账号：</label>#}
+                            {#                                        <div class="col-lg-6">#}
+                            {#                                            <input id="inputmail" name="inputmail" placeholder="portal" class="form-control required" {% ifequal mascount 'None' %}  {% else %}#}
+                            {#                                                   value="{{ mascount }}" {% endifequal %}>#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                    <div class="form-group">#}
+                            {#                                        <label class="col-lg-3 control-label">邮箱密码：</label>#}
+                            {#                                        <div class="col-lg-6">#}
+                            {#                                            <input id="mailpassword" type="password" name="mailpassword" placeholder="****************" class="form-control required"#}
+                            {#                                                    {% ifequal mailpassr 'None' %} {% else %}  value="{{ mailpassr }}" {% endifequal %}>#}
+                            {#                                            <span class="help-block m-b-none" style="color:#ac2925;"><i class="fa fa-info-circle"></i> 因密码已做加密处理，更新配置时，需重新填写密码</span>#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                    <div class="form-group">#}
+                            {#                                        <label class="col-lg-3 control-label">服务器地址：</label>#}
+                            {#                                        <div class="col-lg-6">#}
+                            {#                                            <input id="mailserver" name="mailserver" placeholder="mail.contoso.com" class="form-control required" {% ifequal masrever 'None' %}  {% else %}#}
+                            {#                                                   value="{{ masrever }}" {% endifequal %}>#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                    {% ifequal masrever 'None' %}#}
+                            {#                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">#}
+                            {#                                        </form>#}
+                            {#                                    {% else %}#}
+                            {#                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">#}
+                            {#                                        </form>#}
+                            {#                                    {% endifequal %}#}
+                            {#                            </fieldset>#}
+                            <fieldset>
+                                <form class="form-horizontal" id="persite" method="post" onsubmit="return testpersave();">
+                                    <legend>* 账号权限配置---<span>填写此配置以判断用户权限</span></legend>
+                                    <div class="form-group" style="margin-top: 20px">
+                                        <label class="col-lg-3 control-label">具有登录权限的组</label>
+                                        <div class="col-lg-6">
+                                            <input id="logingr" name="logingr" type="text" placeholder="组名"
+                                                   class="form-control required"  {% ifequal perlogn 'None' %} {% else %} value="{{ perlogn }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-top: 20px">
+                                        <label class="col-lg-3 control-label">具有修改密码的组：</label>
+                                        <div class="col-lg-6">
+                                            <input id="changpwdgr" name="changpwdgr" placeholder="组名" class="form-control required" {% ifequal perchangepwd 'None' %} {% else %}
+                                                   value="{{ perchangepwd }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-top: 20px">
+                                        <label class="col-lg-3 control-label">具有修改栏位的组：</label>
+                                        <div class="col-lg-6">
+                                            <input id="changfiled" name="changfiled"
+                                                   placeholder="组名" class="form-control required" {% ifequal perfile 'None' %} {% else %} value="{{ perfile }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-top: 20px">
+                                        <label class="col-lg-3 control-label">具有操作权限的组：</label>
+                                        <div class="col-lg-6">
+                                            <input id="setopert" name="setopert" placeholder="组名" class="form-control" {% ifequal perset 'None' %} {% else %}
+                                                   value="{{ perset }}" {% endifequal %}>
+                                        </div>
+                                    </div>
+                                    {% ifequal perlogn 'None' %}
+                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
+                                        </form>
+                                    {% else %}
+                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">
+                                        </form>
+                                    {% endifequal %}
+                            </fieldset>
+                        {% endif %}
+
+
+                        <fieldset>
+                            <legend>
+                                <code>* MySQL数据库配置,LDAP 配置 更新后必须重载配置才能生效,重启服务大约需要1分钟</code>
+                            </legend>
+                            <a href="/logout/" class="btn btn-primary ">配置已全部完成，返回使用</a>
+                            <button style="text-align: center" class="btn btn-primary" value="重载配置" onclick="restartuwsgi()">重载配置</button>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--end page content-->
+
+</section>
+
+
+<!--Common plugins-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/fixXss.js"></script>
+<script src="/static/easyfrom/easyform.js"></script>
+<script src="/static/sweetalert/sweetalert.min.js"></script>
+<!-- jQuery 遮罩层 -->
+<div id="fullbg"></div>
+<!-- end jQuery 遮罩层 -->
+<!-- 对话框 -->
+<div class="sk-spinner sk-spinner-three-bounce" id="dialoga">
+    <div class="sk-bounce1"></div>
+    <div class="sk-bounce2"></div>
+    <div class="sk-bounce3"></div>
+</div>
+<script>
+    //显示灰色 jQuery 遮罩层
+    function showBg() {
+        var bh = $("body").height();
+        var bw = $("body").width();
+        $("#fullbg").css({
+            height: bh,
+            width: bw,
+            display: "block"
+        });
+        $("#dialoga").show();
+    }
+    //关闭灰色 jQuery 遮罩
+    function closeBg() {
+        $("#fullbg,#dialoga").hide();
+    }
+    $(document).ready(function () {
+        $('#ladpsite').easyform();
+        $('#mysqlsite').easyform();
+        $('#persite').easyform();
+        $('#exchangesite').easyform();
+        var monitorselect = $("#monitorselect").val();
+        if (monitorselect == '1') {
+            $(".zabbix").show();
+        } else {
+            $(".zabbix").hide();
+        }
+    });
+
+    function exlinktest() {
+        var exinputip = document.getElementById("exip").value;
+        var exinputaccount = document.getElementById("exuser").value;
+        var exinputpassword = document.getElementById("expassword").value;
+        var exinputdomain = document.getElementById("exdomain").value;
+        $.ajax({
+            url:{% url "exlinktest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            data: {"exinputip": exinputip, "exinputaccount": exinputaccount, "exinputpassword": exinputpassword, "exinputdomain": exinputdomain},
+            success: function (data) {
+                if (data['isSuccess']) {
+                    swal({
+                        title: "恭喜！",
+                        text: "Exchange连接成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    swal({
+                        title: "错误！",
+                        text: "Exchange连接失败",
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    });
+                }
+            }
+        });
+        return false
+    }
+    function testmysql() {
+        showBg();
+        var host = document.getElementById("host").value;
+        var database = document.getElementById("database").value;
+        var DBUser = document.getElementById("DBUser").value;
+        var password = document.getElementById("password").value;
+        var port = document.getElementById("port").value;
+        $.ajax({
+            url: {% url "mysqltest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                'host': host,
+                'database': database,
+                'DBUser': DBUser,
+                'password': password,
+                'port': port
+            },
+            success: function (data) {
+                if (data['isSuccess']) {
+                    closeBg();
+                    swal({
+                        title: "恭喜！",
+                        text: "数据库配置保存成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    closeBg();
+                    swal(data['message']);
+                }
+            }
+        });
+        return false
+    }
+    //monitorselect 为Select添加事件，当选择其中一项时触发
+    $("#monitorselect").change(function () {
+        var monitorselect = $("#monitorselect").val();
+        if (monitorselect == '1') {
+            $(".zabbix").show();
+        } else {
+            $(".zabbix").hide();
+        }
+    });
+    function testldap() {
+        showBg();
+        var adip = document.getElementById("adip").value;
+        var domian = document.getElementById("domian").value;
+        var aduser = document.getElementById("aduser").value;
+        var adpassword = document.getElementById("adpassword").value;
+        var adserchbase = document.getElementById("adserchbase").value;
+        var sele = document.getElementById("sele").value;
+        $.ajax({
+            url: {% url "adldaptest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                'adip': adip, 'domian': domian, 'aduser': aduser, 'adpassword': adpassword, 'adserchbase': adserchbase, 'sele': sele
+            },
+            success: function (data) {
+                if (data['isSuccess']) {
+                    closeBg();
+                    swal({
+                        title: "恭喜！",
+                        text: "LDAP配置保存成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    closeBg();
+                    swal(data['message']);
+                }
+            }
+        });
+        return false
+    }
+    function testmail() {
+        var mailladdress = document.getElementById("mailladdress").value;
+        var inputmail = document.getElementById("inputmail").value;
+        var mailpassword = document.getElementById("mailpassword").value;
+        var mailserver = document.getElementById("mailserver").value;
+        showBg();
+        $.ajax({
+            url: {% url "sendmailtest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {'mailladdress': mailladdress, 'inputmail': inputmail, 'mailpassword': mailpassword, 'mailserver': mailserver},
+            success: function (data) {
+                if (data['isSuccess']) {
+                    closeBg();
+                    swal({
+                        title: "恭喜！",
+                        text: "邮箱配置保存成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    closeBg();
+                    swal(data['message']);
+                }
+            }
+        });
+        return false
+    }
+    function testpersave() {
+        showBg();
+        var logingr = document.getElementById("logingr").value;
+        var changpwdgr = document.getElementById("changpwdgr").value;
+        var changfiled = document.getElementById("changfiled").value;
+        var setopert = document.getElementById("setopert").value;
+        $.ajax({
+            url: {% url "permsetest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                'logongroup': logingr,
+                'changpwdgr': changpwdgr,
+                'changfiled': changfiled,
+                'setopert': setopert
+            },
+            success: function (data) {
+                if (data['isSuccess']) {
+                    closeBg();
+                    swal({
+                        title: "恭喜！",
+                        text: "权限组配置保存成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    closeBg();
+                    swal(data['message']);
+                }
+            }
+        });
+        return false
+    }
+
+    function changeadminpwd() {
+        $('#resetadminpassword').modal({
+            keyboard: true,
+            backdrop: false
+        });
+    }
+
+    function setadminPassword() {
+        var oldpassword = document.getElementById("oldpassword").value;
+        var newpassword1 = document.getElementById("newpassword1").value;
+        var newpassword2 = document.getElementById("newpassword2").value;
+        if (newpassword1 != newpassword2) {
+            swal('两次密码不一致')
+        }
+        else {
+            showBg();
+            $.ajax({
+                url: {% url "changadminpwd" %},
+                type: 'POST',
+                dataType: 'json',
+                async: true,
+                data: {
+                    'oldpassword': oldpassword,
+                    'newpassword1': newpassword1,
+                    'newpassword2': newpassword2,
+                },
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        closeBg();
+                        swal({
+                            title: "恭喜！",
+                            text: "密码修改成功",
+                            type: "success",
+                            showCancelButton: false,
+                            closeOnConfirm: false
+                        }, function () {
+                            location.reload()
+                        });
+                    }
+                    else {
+                        closeBg();
+                        swal(data['message']);
+                    }
+                }
+            });
+        }
+
+    }
+
+    //重启uwsgi服务
+    function restartuwsgi() {
+        showBg();
+        $.ajax({
+            url: {% url "restartuwsgi" %},
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            success: function (data) {
+                if (data['isSuccess']) {
+                    closeBg();
+                    swal({
+                        title: "正在重启uwsgi服务",
+                        text: "大约需要1分钟",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    closeBg();
+                    swal(data['message']);
+                }
+            }
+        });
+        return false
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,552 @@
+{% extends 'home.html' %}
+
+{% block title %}
+    <title>AD管理</title>
+{% endblock %}
+
+{% block custom_css %}
+    {#    //引入css#}
+    <link href="/static/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/zTreeStyle/zTreeStyle.css" type="text/css">
+    <!--jquery steps-->
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-editable.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <!--page header start-->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>批量移动用户</h4>
+            </div>
+        </div>
+    </div>
+    <!--page header end-->
+    <!--start page content-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <code>批量移动用户</code> |<code><a href="/ladpattributes/" target="_blank"><i class="icon-share"></i> LDAP常用属性</a></code>
+                    <button type="button" class="btn btn-primary btn-border btn-rounded btn-sm" onclick="exportfiletemplate();">
+                        <span class="fa fa-cloud-download" aria-hidden="true"></span>&nbsp;下载模板
+                    </button>
+                    <button type="button" class="btn btn-primary btn-border btn-rounded btn-sm" data-toggle="modal" data-target="#openfilemodal">
+                        <span class="fa fa-cloud-upload" aria-hidden="true"></span>&nbsp;上传Excel
+                    </button>
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <a onclick="pshowou()"> <i class="icon-link"></i> 请选择组织单位:</a>
+                        <label id="showdn"></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input type="text" id="showfilter" class="form-control">
+                            <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" onclick="searchuser()">搜索</button>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div id="toolbar_user">
+                            <button id="btn_delete" type="button" class="btn btn-warning btn-border btn-rounded btn-sm" onclick="deluser()">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;删除
+                            </button>
+                            <button id="btn_modify" type="button" class="btn btn-teal btn-border btn-rounded btn-sm" onclick="btshowou()">
+                                <span class="fa fa-check" aria-hidden="true"></span>&nbsp;执行
+                            </button>
+                            <label>勾选<label id="usercount"></label>个对象</label>
+                        </div>
+                        <table id="tb_userattributes"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page content-->
+    <!--Start footer-->
+    <footer class="footer">
+        <span>IT &copy; 2019</span>
+    </footer>
+    <!--end footer-->
+    <!-- 模态框（Modal1） -->
+    <div class="modal fade" id="showou" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        请选择组织单位
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-form">
+                        <label class="control-label" for="UserName">组织单位</label>
+                        <label class="control-label" id="labelshowou"></label>
+                        <ul id="treemove" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="openfilemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        上传Excel
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-form">
+                        <label>请确保导入的<code>sAMAccountName</code>正确</label>
+                        <input type="file" name='uploadfile' id="uploadfile" class="form-control"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="uploadfiletemplate()">&nbsp导入文件</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+    <div class="modal fade" id="moveoumodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        移动<code>--<label id="checkusercount"></label>个对象</code>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-form">
+                        <label class="control-label">将对象移动到容器(M)</label>
+                        <code><label class="control-label" id="labelmoveou"></label></code>
+                        <ul id="treemoveou" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">&nbsp关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="executemodifypasswd()">&nbsp确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+
+    </div>
+
+{% endblock %}
+
+{% block custom_js %}
+    <!--Common plugins-->
+    <script src="/static/js/pace.min.js"></script>
+    <script src="/static/js/jasny-bootstrap.min.js"></script>
+    <!--导出xlsx-->
+    <script src="/static/js/Blob.js"></script>
+    <script src="/static/js/FileSaver.min.js"></script>
+    <script src="/static/js/xlsx.core.min.js"></script>
+    <script src="/static/js/xlsx.full.min.js"></script>
+
+    <script src="/static/js/tableexport.min.js"></script>
+
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-export.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <!--编辑bootstrap-->
+    <script src="/static/js/bootstrap-editable.min.js"></script>
+    <script src="/static/js/bootstrap-table-editable.js"></script>
+
+    <script type="text/javascript" src="/static/zTreeStyle/jquery.ztree.all.min.js"></script>
+
+    <script>
+
+        function pshowou() {
+            $('#showou').modal({
+                keyboard: true,
+                backdrop: false
+            });
+            startztree();
+        }
+        function btshowou() {
+            $('#moveoumodal').modal({
+                keyboard: true,
+                backdrop: false
+            });
+            startztreemove();
+        }
+        $.ajax({
+            url: "/show_domain/",
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                zNodes = data["message"];
+                document.getElementById('showdn').innerHTML = zNodes.distinguishedName;
+                document.getElementById('labelshowou').innerHTML = zNodes.distinguishedName;
+            }
+        });//生成OU初始数
+        var zNodes;
+        var setting_ou = {
+            async: {
+                enable: true, //表示异步加载生效
+                url: "/show_ou_for_dn/",// 异步加载时访问的页面
+                autoParam: ["distinguishedName", "id"], // 异步加载时自动提交的父节点属性的参数
+                //otherParam:["paths"], //ajax请求时提交的参数
+                type: 'post',
+                dataType: 'json'
+            },
+            view: {
+                expandSpeed: "",//zTree 节点展开、折叠时的动画速度
+                selectedMulti: false ////设置是否允许同时选中多个节点。
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },//设置数据格式为id
+            check: {
+                enable: false,//设置 zTree 的节点上是否显示 checkbox / radio
+                chkStyle: "radio",
+                chkboxType: {"Y": "", "N": ""},//只影响子节点
+            }, callback: { // 回调函数
+                onClick: zTreeOnClick, // 单击鼠标事件
+            },
+
+        };
+        function startztree() {
+            $.fn.zTree.init($("#treemove"), setting_ou, zNodes);//初始化zTree
+            var ztreeou = $.fn.zTree.getZTreeObj("treemove");
+            var nodes = ztreeou.getNodes();
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    ztreeou.expandNode(nodes[i], true, false, false);//默认展开第一级节点
+                }
+            }
+        }
+        ;
+        function startztreemove() {
+            $.fn.zTree.init($("#treemoveou"), setting_ou, zNodes);//初始化zTree
+            var ztreeou = $.fn.zTree.getZTreeObj("treemoveou");
+            var nodes = ztreeou.getNodes();
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    ztreeou.expandNode(nodes[i], true, false, false);//默认展开第一级节点
+                }
+            }
+        }
+        ;
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeId == 'treemove') {
+                document.getElementById('showdn').innerHTML = treeNode.distinguishedName;
+                document.getElementById('labelshowou').innerHTML = treeNode.distinguishedName;
+            } else if (treeId == 'treemoveou') {
+                document.getElementById('labelmoveou').innerHTML = treeNode.distinguishedName;
+            }
+        }
+
+        function exportfiletemplate() {
+            post_url = '/exportfiletemplate/?givenName=true&sn=true&displayName=true&description=true';
+            location.replace(post_url);
+        }
+        function deluser() {
+            var ids = $.map($('#tb_userattributes').bootstrapTable('getSelections'), function (row) {
+                return row.sAMAccountName;
+            })
+            $('#tb_userattributes').bootstrapTable('remove', {
+                field: 'sAMAccountName',
+                values: ids
+            });
+        }
+        function searchuser() {
+            var dn = document.getElementById('showdn').innerHTML;
+            var filteruser = document.getElementById("showfilter").value;
+            if (dn.length > 0) {
+                showBg();
+                $.ajax({
+                    url: {% url "searchuser_modify" %},
+                    type: 'POST',
+                    dataType: "json",
+                    //async: false,
+                    //traditional:true,
+                    data: {
+                        'dn': dn,
+                        'filteruser': filteruser,
+                        'givenName': true,
+                        'sn': true,
+                        'displayName': true,
+                        'description': true,
+                    },
+                    success: function (datas) {
+                        if (datas['isSuccess']) {
+                            var columns = datas['heard'];
+                            var tabledata = datas['tabledata'];
+                            for (x in columns) {
+                                columns[x]['sortable'] = true;
+                            }
+                            columns.unshift({checkbox: true});
+                            $('#tb_userattributes').bootstrapTable(
+                                    "refreshOptions",
+                                    {
+                                        columns: columns,
+                                        data: tabledata,
+                                    },
+                            );
+                        }
+                        closeBg();
+                    }
+                });
+            } else {
+                swal('请选择组织单位');
+                return false;
+            }
+        }
+        ;
+        $("#showfilter").keydown(function (e) {
+            if (e.keyCode == 13) {
+                searchuser()
+            }
+        });
+
+        //上传xlsx 文件
+        function uploadfiletemplate() {
+            var obj = document.getElementById('uploadfile').value;
+            var fileObj = document.getElementById("uploadfile").files[0];
+            var fileext = obj.substring(obj.lastIndexOf("."), obj.length);//获取文件名后缀
+            fileext = fileext.toLowerCase();//小写
+            if (obj == '') {
+                swal('请选择需要导入的文件！');
+                return false;
+            }
+            if (fileext != '.xlsx') {
+                swal('请上传.xlsx格式Excel文件！');
+                return false;
+            }
+            var formFile = new FormData();
+            formFile.append("action", "UploadVMKImagePath");
+            formFile.append("file", fileObj); //加入文件对象
+            $.ajax({
+                url: {% url "uploadfiletemplate" %},
+                type: 'POST',
+                //async:false,
+                cache: false,//上传文件无需缓存
+                dataType: "json",
+                data: formFile,
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false,  //必须
+                success: function (data) {
+                    if (data['isSuccess']) {
+                        var columns = data['heard'];
+                        var tabledata = data['tabledata'];
+                        for (x in columns) {
+                            columns[x]['sortable'] = true;
+                        }
+                        columns.unshift({checkbox: true});
+                        $('#tb_userattributes').bootstrapTable(
+                                "refreshOptions",
+                                {
+                                    columns: columns,
+                                    data: tabledata,
+                                }
+                        );
+                        $('#openfilemodal').modal('hide');
+                        document.getElementById('usercount').innerHTML = 0;
+                        document.getElementById('checkusercount').innerHTML = 0;
+                        swal('导入文件成功');
+                    } else {
+                        swal('导入文件失败');
+                        return false;
+                    }
+
+                }
+            });
+        }
+        //执行修改
+        function executemodifypasswd() {
+            var getData = $('#tb_userattributes').bootstrapTable('getAllSelections');
+            var movetoou = document.getElementById('labelmoveou').innerHTML;
+            if (getData.length <= 0) {
+                $('#moveoumodal').modal('hide');
+                swal('请勾选对象');
+                return false
+            }
+            if (movetoou.length <= 0) {
+                swal('请选择移动到的组织单位');
+                return false
+            }
+            swal({
+                title: "移动用户",
+                text: '处理表格全部数据需要一定的时间',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: '是(Y)',//使用此选项可更改“确认”按钮上的文本。
+                cancelButtonText: '否(N)',//使用此选项可更改“取消”按钮上的文本。
+                closeOnConfirm: false,
+                showLoaderOnConfirm: false
+            }, function () {
+                showBg();
+                $.ajax({
+                    url: {% url "executemoveuser" %},
+                    type: 'POST',
+                    dataType: "json",
+                    //async:false,
+                    //traditional:true,
+                    data: {
+                        'getData': JSON.stringify(getData),
+                        'movetoou': movetoou,
+                    },
+                    success: function (data) {
+                        if (data['isSuccess']) {
+                            var columns = data['columns'];
+                            var tabledata = data['message'];
+                            for (x in columns) {
+                                columns[x]['sortable'] = true;
+                            }
+                            ;
+                            columns.unshift({checkbox: true});
+                            columns.push({field: "status", title: "status"});
+                            $('#tb_userattributes').bootstrapTable(
+                                    "refreshOptions",
+                                    {
+                                        columns: columns,
+                                        data: tabledata,
+                                    }
+                            );
+                            $('#moveoumodal').modal('hide');
+                            closeBg();
+                            document.getElementById('usercount').innerHTML = 0;
+                            document.getElementById('checkusercount').innerHTML = 0;
+                            sweetAlert("success", '移动成功', "success");
+                            return true;
+                        }
+                        else {
+                            $('#moveoumodal').modal('hide');
+                            closeBg();
+                            sweetAlert("errors", '移动失败', "error");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        function getcheckcount() {
+            var getAllSelections = $('#tb_userattributes').bootstrapTable('getAllSelections');
+            document.getElementById('usercount').innerHTML = getAllSelections.length;
+            document.getElementById('checkusercount').innerHTML = getAllSelections.length;
+        }
+        $(function () {
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+        });
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#tb_userattributes').bootstrapTable({
+                    toolbar: '#toolbar_user',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                    editable: true,
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100, 'ALL'],        //可供选择的每页的行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,
+                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "sAMAccountName",                     //每一行的唯一标识，一般为主键列
+                    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    escape: true,
+                    showExport: true,                     //是否显示导出按钮
+                    exportTypes: ['json', 'xlsx'],           //导出文件类型
+                    exportDataType: "all",             //basic当前页', 'all所有, 'selected'.
+                    exportOptions: {
+                        //ignoreColumn: [0, 1],  //忽略某一列的索引
+                        fileName: '用户模板',  //文件名称设置
+                        worksheetName: 'sheet1',  //表格工作区名称
+                        tableName: '用户模板',
+                        excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+                    },
+                    onClickRow: function () {   //当用户点击某一行的时候触发
+                        getcheckcount()
+                    },
+                    onCheck: function () {   //当用户选择某一行时触发
+                        getcheckcount()
+                    },
+                    onUncheck: function () {   //当用户反选某一行时触发
+                        getcheckcount()
+                    },
+                    onCheckAll: function () {   //当用户全选所有的行时触发
+                        getcheckcount()
+                    },
+                    onUncheckAll: function () {   //当用户反选所有的行时触发
+                        getcheckcount()
+                    },
+                    onCheckSome: function () {   //当用户选择某些行时触发
+                        getcheckcount()
+                    },
+                    onUncheckSome: function () {   //当用户反选某些行时触发
+                        getcheckcount()
+                    },
+                    onDblClickRow: function (row, $element) {   //当用户双击某一行的时候触发
+                        getcheckcount();
+                        openModle("/searchuser/?disName=" + row.sAMAccountName);//modal-ifram 接新弹框user
+                    },
+                });
+            };
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    departmentname: $("#txt_search_departmentname").val(),
+                    statu: $("#txt_search_statu").val()
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+            return oInit;
+        };
+
+    </script>
+{% endblock %}
