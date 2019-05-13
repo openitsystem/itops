@@ -26,8 +26,14 @@
 ### 基础环境
 * Active directory 2008R2
 * DC 2008R2
+* PowerShell 版本 4.0 以上
 * Exchange 2010
-* PowerShell 版本 4.0
+* 在Exchange服务器上执行以下操作
+  * 在链接邮箱服务器右键已管理员身份运行powershell，输入以下命令，按Y确认：
+  ```powershell
+  Set-ExecutionPolicy RemoteSigned
+  ```
+  * 在链接邮箱服务器依次点击：开始——管理工具——Internet Information Services (IIS)管理器，进入iis管理器。依次展开：计算机名——网站——Default Web Site——PowerShell，双击“身份验证”，右键启用“基本身份验证”
 
 ### 部署服务器要求
 * centos:7.x
