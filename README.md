@@ -12,6 +12,10 @@
 详细功能可参见[基于web的AD、Exchange管理平台](https://www.opscaff.com/2019/04/28/%E5%9F%BA%E4%BA%8Ead%E3%80%81exchange%E7%9A%84%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/)
 
 
+## ToDo
+
+* Exchange功能开关，系统不依赖Exchange运行。
+* AD临时(短期)账号管理，自动清理过期账号
 
 # ITOPS安装部署文档
 
