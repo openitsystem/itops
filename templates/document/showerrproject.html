@@ -115,22 +115,23 @@
                         <button id="edit" class="btn btn-w-m btn-warning" onclick="edit1()" type="button">编辑</button>
                         <button id="dsabedit" class="btn btn-w-m btn-warning" style="display: none" onclick="disabledit1()" type="button">取消编辑</button>
                         <button type="submit" style="display:none;" id="newsavve" class="btn btn-primary" onclick="savesumon()">保存</button>
+                        <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">主题：</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="zhutin" value={{ title }}>
+                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="zhutin" value='{{ title }}'>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">处理人：</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="userper" value={{ userper }}>
+                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="userper" value='{{ userper }}'>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">影响：</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="affect" value={{ accfet }}>
+                                <input type="text" class="form-control" readonly style="background-color:transparent;border:0; " id="affect" value='{{ accfet }}'>
                             </div>
                         </div>
                         <div class="form-group">

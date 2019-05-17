@@ -10,7 +10,7 @@ from django.http import HttpResponse
 import json
 from django.shortcuts import render_to_response
 
-from ADapi.views import getmailboxdatabasenovalue, date_handler
+from ADapi.views import getmailboxdatabasenovalue, date_handler, getskey
 from apps.activeapi.views import moveToOu, \
     delete_object, inspect_object, getObjectToDn, objectClassFrom, setAccount, \
     resetPassword, dnMoveToOu, serchlock, unlockuser, can_accidentally_deleted, check_accidentally_deleted, uncheck_accidentally_deleted
@@ -80,9 +80,13 @@ def show_domain(request):
 def show_ou_for_dn(request):
     distinguishedName = request.POST.get('distinguishedName')
     treeid = request.POST.get('id')
+    username = request.session.get('username')
     if distinguishedName:
         try:
-            result = get_ou_for_dn(distinguishedName,treeid)['message']
+            get_ou_for_dns = get_ou_for_dn(distinguishedName, treeid)
+            result = get_ou_for_dns['message']
+            if not get_ou_for_dns["isSuccess"]:
+                insert_log(username, request, str(get_ou_for_dns['isSuccess']), str(get_ou_for_dns), '')
             response = HttpResponse()
             response['Content-Type'] = "text/javascript"
             response.write(json.dumps(result))
@@ -96,9 +100,12 @@ def show_ou_for_dn(request):
 #获取下层目录所有对象
 def show_object_for_dn(request):
     distinguishedName = request.POST.get('distinguishedName')
+    username = request.session.get('username')
     if distinguishedName:
         try:
             result = get_object_for_dn(distinguishedName)
+            if not result["isSuccess"]:
+                insert_log(username, request, str(result['isSuccess']), str(result), '')
             response = HttpResponse()
             response['Content-Type'] = "text/javascript"
             response.write(json.dumps(result,default=date_handler))
@@ -666,6 +673,24 @@ def canAccidentallyDeleted(request):
         result = can_accidentally_deleted(sAMAccountName=sAMAccountName,distinguishedName=distinguishedName)
     except Exception as e:
         result = {'isSuccess': False, "message": str(e)}
+    response = HttpResponse()
+    response['Content-Type'] = "text/javascript"
+    response.write(json.dumps(result))
+    return response
+
+# 获取数据库中的邮箱配置
+def getExissconfig(request):
+    try:
+        getskeys = getskey()
+        if getskeys:
+            if str(getskeys.get('status', '0')) == '1':
+                result = {'isSuccess': True, "message": getskeys, "code": '1'}
+            else:
+                result = {'isSuccess': False, "message": getskeys, "code": '0'}
+        else:
+            result = {'isSuccess': False, "message": '未获取到exiisconfig表数据', "code": '0'}
+    except Exception as e:
+        result = {'isSuccess': False, "message": str(e), "code": '0'}
     response = HttpResponse()
     response['Content-Type'] = "text/javascript"
     response.write(json.dumps(result))

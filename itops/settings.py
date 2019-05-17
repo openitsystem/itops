@@ -15,9 +15,9 @@ from ldap3 import Server, Connection, ALL, ASYNC, REUSABLE, RESTARTABLE, NONE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from dbinfo.encrypt_decode import encrypt_and_decode
-from dbinfo.models import searchsendmail, dbinfo
+from dbinfo.models import  dbinfo
 from dbinfo.views import getldap3configtion
-
+from ops.thrcreatmysqltable import mysqlDatabase
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -95,6 +95,11 @@ JWT_AUTH = {
 #     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 # ]
 
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
+DATA_UPLOAD_MAX_MEMORY_SIZE = 29621440
 
 
 MIDDLEWARE = [
@@ -160,8 +165,8 @@ WSGI_APPLICATION = 'itops.wsgi.application'
 
 
 try:
-    conn = dbinfo()
-    if conn:
+    mysqlDatabases = mysqlDatabase()
+    if mysqlDatabases:
         from dbinfo.Profile import readprofile
         DATABASES = {
             'default': {
@@ -227,28 +232,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-try:
-    message = searchsendmail()
-    if message != None:
-        mailcount = message['mailcount']
-        mysqlPasswordvalue = encrypt_and_decode().decrypted_text(message['password'])
-        mailserver = message['mailserver']
-        mailaddress = message['mailaddress']
-        #Email设置
-        EMAIL_BACKEND = u'django.core.mail.backends.smtp.EmailBackend'
-        EMAIL_HOST= mailserver
-        EMAIL_PORT= 25
-        EMAIL_HOST_USER = mailcount
-        EMAIL_HOST_PASSWORD = mysqlPasswordvalue
-        #EMAIL_USE_TLS = True #开启安全链接
-        SERVER_EMAIL = mailaddress
-        DEFAULT_FROM_EMAIL = mailaddress #设置发件人
-    else:
-        pass
-except Exception as e:
-    print(e)
 
 try:
     ldap3configtion = getldap3configtion()

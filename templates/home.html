@@ -119,7 +119,7 @@
                     </ul>
                 </li>
                 {#                <li class="nav-heading"><span>Mail</span></li>#}
-                <li id="mailli" class="active">
+                <li id="mailli" class="active" style="display: none">
                     <a href="javascript: void(0);" aria-expanded="true"><i class="icon-envelope"></i> 邮箱 <span class="fa arrow"></span></a>
                     <ul class="nav-second-level nav collapse " aria-expanded="true">
                         <li><a href="/findmail/">邮件流查询</a></li>
@@ -254,7 +254,6 @@
     var quiteTime = 120 * 60;
     var currentTime = 0;
     $(function () {
-
         $("*").click(function () {
             currentTime = 0;
         });
@@ -353,6 +352,23 @@
 
 <script type="text/javascript">
 
+    function selmail() {
+        $.ajax({
+            url: "/searchmailstaus/",
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                if (data['isSuccess']) {
+                    document.getElementById("mailli").style.display='block';
+                    document.getElementById("exchangdown").style.display='block';
+                } else {
+                    document.getElementById("mailli").style.display='none';
+                    document.getElementById("exchangdown").style.display='none';
+                }
+            }
+        });
+    }
+    selmail();
     //显示灰色 jQuery 遮罩层
     function showBg() {
         var bh = $("body").height();

@@ -24,11 +24,35 @@
 
 <script>
 import menu from '@/config/contact-menu-config'
+import axios from 'axios'
+import serverurlvaluefromjs from '@/config/serverurlvalue'
+
+axios.defaults.withCredentials = true
+// 本地服务器地址
+function serviceurl () {
+  // 正式环境value值取空
+  // let serviceurlvalue = ''
+  let serviceurlvalue = serverurlvaluefromjs.serverurl
+  return serviceurlvalue
+}
 export default {
   data () {
     return {
       menu: menu
     }
+  },
+  created () {
+    axios
+      .get(serviceurl() + '/getExissconfig/')
+      .then(response => {
+        if (!response.data.isSuccess) {
+          for (let i = 0; i < this.menu.length; i++) {
+            if (this.menu[i]['componentName'] === 'contactexchangevalue') {
+              this.menu.splice(i, 1)
+              }
+          }
+        }
+    })
   },
   methods: {
     handleOpen (key, keyPath) {

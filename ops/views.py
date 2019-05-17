@@ -16,8 +16,9 @@ from pypsrp.wsman import WSMan
 from ADapi.zapi import ZabbixApi
 from dbinfo.Profile import writeprofile, readprofile
 from dbinfo.encrypt_decode import encrypt_and_decode
-from dbinfo.models import dbinfotest, ldaptest, selectldapdb, insert_ldapmessage, crearldapdb, mailtest, selectmaildb, \
-    insert_sendmail, crearmaildb, searchsendmail, selectperdb, insert_userper, crearperdb, selectiisex, creariisdb, insert_expmessage,insert_userper_monitor, insert_userper_zabbix
+from dbinfo.models import dbinfotest, ldaptest, selectldapdb, insert_ldapmessage, crearldapdb, mailtest, selectperdb, \
+    insert_userper, crearperdb, selectiisex, creariisdb, insert_expmessage, insert_userper_monitor, \
+    insert_userper_zabbix, insert_exp
 from dbinfo.views import getldap3configtion, getpermsessage, getliisconfigtion, getskey, insert_log, seargooled, \
     insert_tokenb
 from itops.settings import returnadminusernamevalue, ldap3RESTARTABLE, ladp3search_base
@@ -27,6 +28,7 @@ from permission.views import  verifyuser_login_new
 
 
 def home(request):
+
     try:
         return render_to_response('home.html', locals())
     except:
@@ -92,14 +94,6 @@ def basite(request):
             else:
                 myserver='None'
                 myusessl='None'
-            # mailvalue=searchsendmail()
-            # if mailvalue:
-            #     mascount = mailvalue.get('mailcount', "None")
-            #     mailpassr = mailvalue.get('password', "None")
-            #     masrever = mailvalue.get('mailserver', "None")
-            #     maddress = mailvalue.get('mailaddress', "None")
-            # else:
-            #     masrever='None'
             permessa=getpermsessage()
             if permessa:
                 perlogn = permessa.get('logongroup', "None")
@@ -122,9 +116,9 @@ def basite(request):
                 expassword = iisexx.get('expassword', "None")
                 exdomain = iisexx.get('exdomain', "None")
                 exip = iisexx.get('exserver', "None")
+                exchangeselect = iisexx.get('status', "None")
             else:
-                iisserver='None'
-                exserver='None'
+                exchangeselect='None'
         else:
             mysqldatabase='None'
         return render_to_response('basise.html',locals())
@@ -245,22 +239,29 @@ def exservertest(**kwargs):
 #ex测试
 def exlinktest(request):
     post = request.POST
+    exchangeselect = post.get("exchangeselect")
     exinputip = post.get("exinputip")
     exinputaccount = post.get("exinputaccount")
     exinputpassword = post.get("exinputpassword")
     exinputdomain = post.get("exinputdomain")
-    password = encrypt_and_decode().encrypted_text(exinputpassword)
-    exapitestvalue = exservertest(exip=exinputip,exaccount=exinputaccount,expassword=exinputpassword,domain=exinputdomain)
-    if exapitestvalue and ('isSuccess' in exapitestvalue):
-        if exapitestvalue['isSuccess']:
-            if insert_expmessage(exinputip,exinputaccount,password,exinputdomain)==():
-                result = {'isSuccess': True, "message": '成功'}
+    if exchangeselect=='0':
+        if insert_exp() == ():
+            result = {'isSuccess': True, "message": '成功'}
+        else:
+            result = {'isSuccess': False, "message": '写入失败'}
+    else:
+        password = encrypt_and_decode().encrypted_text(exinputpassword)
+        exapitestvalue = exservertest(exip=exinputip,exaccount=exinputaccount,expassword=exinputpassword,domain=exinputdomain)
+        if exapitestvalue and ('isSuccess' in exapitestvalue):
+            if exapitestvalue['isSuccess']:
+                if insert_expmessage(exinputip,exinputaccount,password,exinputdomain)==():
+                    result = {'isSuccess': True, "message": '成功'}
+                else:
+                    result = {'isSuccess': False, "message": '写入失败'}
             else:
-                result = {'isSuccess': False, "message": '写入失败'}
+                result = {'isSuccess': False, "message": '测试失败'}
         else:
             result = {'isSuccess': False, "message": '测试失败'}
-    else:
-        result = {'isSuccess': False, "message": '测试失败'}
     response = HttpResponse()
     response['Content-Type'] = "text/javascript"
     response.write(json.dumps(result))
@@ -372,42 +373,6 @@ def restartuwsgi(request):
     response.write(json.dumps(result))
     return response
 
-#邮箱信息保存
-def sendmailtest(request):
-    mailladdress = request.POST.get('mailladdress')
-    inputmail = request.POST.get('inputmail')
-    mailpassword = request.POST.get('mailpassword')
-    mailserver = request.POST.get('mailserver')
-    try:
-        username = request.session.get('username')
-        if username == returnadminusernamevalue:
-            if mailtest(mailladdress,inputmail,mailpassword,mailserver,mailladdress):
-                try:
-                    if selectmaildb():
-                        if insert_sendmail(inputmail, encrypt_and_decode().encrypted_text(mailpassword), mailserver, mailladdress)==():
-                            result = {'isSuccess': True, "message": '成功'}
-                        else:
-                            result = {'isSuccess': False, "message": '数据写入失败'}
-                    else:
-                        if crearmaildb()==():
-                            if insert_sendmail(inputmail, encrypt_and_decode().encrypted_text(mailpassword), mailserver, mailladdress)==():
-                                result = {'isSuccess': True, "message": '成功'}
-                            else:
-                                result = {'isSuccess': False, "message": '数据写入失败'}
-                        else:
-                            result = {'isSuccess': False, "message": '表格创建失败'}
-                except:
-                    result = {'isSuccess': False, "message": '出现异常'}
-            else:
-                result = {'isSuccess': False, "message": '连接失败'}
-        else:
-            result = {'isSuccess': False, "message": '权限不足'}
-    except Exception as e:
-        result = {'isSuccess': False, "message": str(e)}
-    response = HttpResponse()
-    response['Content-Type'] = "text/javascript"
-    response.write(json.dumps(result))
-    return response
 
 #用户信息保存 权限组相关
 def permsetest(request):
@@ -546,7 +511,26 @@ def userlogin(request):
     response['Content-Type'] = "text/javascript"
     response.write(json.dumps(result))
     return response
+#判断是否使用邮箱
 
+#用户登录
+def searchmailstaus(request):
+    try:
+        exchangstatus=getliisconfigtion()
+        if exchangstatus:
+            if exchangstatus.get('status', "None")=='1':
+                result = {'isSuccess': True, "message": '启用'}
+            else:
+                result = {'isSuccess': False, "message": '禁用'}
+        else:
+            result = {'isSuccess': False, "message": '禁用'}
+    except Exception as e:
+        print(e)
+        result = {'isSuccess': False, "message": '禁用'}
+    response = HttpResponse()
+    response['Content-Type'] = "text/javascript"
+    response.write(json.dumps(result))
+    return response
 
 def logingotok(request):
     post = request.POST
@@ -582,7 +566,7 @@ def gootokenpng(request):
         goinamge=pyotp.totp.TOTP(miyue).provisioning_uri(nameuser)
         result = {'isSuccess': True, "message": goinamge,'miyue':miyue}
     except Exception as e:
-        result = {'isSuccess': True, "message": str(e)}
+        result = {'isSuccess': False, "message": str(e)}
     response = HttpResponse()
     response['Content-Type'] = "text/javascript"
     response.write(json.dumps(result))

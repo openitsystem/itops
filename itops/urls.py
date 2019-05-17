@@ -60,6 +60,7 @@ urlpatterns += [
     url(r'^$|^login/$', ops_views.login, name='login'),
     url(r'^logout/$', ops_views.logout, name="logout"),
     url(r'^home/$', ops_views.home, name="home"),
+    url(r'^searchmailstaus/$', ops_views.searchmailstaus, name="searchmailstaus"),
     url(r'^userlogin/$', ops_views.userlogin, name="userlogin"),
     url(r'^gootokenpng/$', ops_views.gootokenpng, name="gootokenpng"),
     url(r'^logingotok/$', ops_views.logingotok, name="logingotok"),
@@ -71,7 +72,6 @@ urlpatterns += [
     # url(r'^iislinktest/$', ops_views.iislinktest, name="iislinktest"),
     url(r'^exlinktest/$', ops_views.exlinktest, name="exlinktest"),
     url(r'^adldaptest/$', ops_views.adldaptest, name="adldaptest"),
-    url(r'^sendmailtest/$', ops_views.sendmailtest, name="sendmailtest"),
     url(r'^permsetest/$', ops_views.permsetest, name="permsetest"),
 
     url(r'^restartuwsgi/$', ops_views.restartuwsgi, name="restartuwsgi"),
@@ -119,6 +119,7 @@ urlpatterns += [
     url(r'^unLockuser/$', activedirectory_views.unLockuser, name='unLockuser'),## 解锁用户  传入 sAMAccountName or distinguishedName
     url(r'^setAccidentallyDeleted/$', activedirectory_views.setAccidentallyDeleted, name='setAccidentallyDeleted'),## 勾选 防止对象被意外删除(P)
     url(r'^canAccidentallyDeleted/$', activedirectory_views.canAccidentallyDeleted, name='canAccidentallyDeleted'),## 判断 勾选 防止对象被意外删除(P)
+    url(r'^getExissconfig/$', activedirectory_views.getExissconfig, name='getExissconfig'),## 获取数据库中的邮箱配置
 
     url(r'^admanager/$', admanager_views.admanager, name='admanager'),# 登录admanager页面
     url(r'^creatusers/$', admanager_views.creatusers, name='creatusers'), # 登录creatusers页面

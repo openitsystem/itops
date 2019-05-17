@@ -12,10 +12,6 @@
 详细功能可参见[基于web的AD、Exchange管理平台](https://www.opscaff.com/2019/04/28/%E5%9F%BA%E4%BA%8Ead%E3%80%81exchange%E7%9A%84%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/)
 
 
-## ToDo
-
-* Exchange功能开关，系统不依赖Exchange运行。
-* AD临时(短期)账号管理，自动清理过期账号
 
 # ITOPS安装部署文档
 
@@ -171,7 +167,7 @@ cd /usr/local/its-itops/dbinfo/ \
 > 运行下列命令启动平台服务
 
 ```
-/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/its-itops/ --plugin python --wsgi-file /usr/local/its-itops/itops/wsgi.py --master --static-map /static=/usr/local/its-itops/static/ --static-map /static=/usr/local/its-itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 8 --threads 8 --uid=99 --gid=99
+/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/its-itops/ --plugin python --wsgi-file /usr/local/its-itops/itops/wsgi.py --master --static-map /static=/usr/local/its-itops/static/ --static-map /static=/usr/local/its-itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 8 --threads 8 --uid=99 --gid=99 --static-gzip-dir=/usr/local/its-itops/frontend/
 ```
 > 关闭uwsgi
 
@@ -256,7 +252,7 @@ EXChange服务器地址：具有powershell4.0 的CAS服务器
 域名：AD域名
 ```
 
-![](https://www.opscaff.com/wp-content/uploads/2019/05/picture_seven.png)
+![](https://www.opscaff.com/wp-content/uploads/2019/05/c51406fd166189c4f07166ac5c8fdab2.png)
 
 配置完成请点击提交
 #### 5.1.8.账号权限配置

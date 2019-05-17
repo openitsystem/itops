@@ -22,41 +22,41 @@
     <!--page header end-->
     <!--start page content-->
     <div class="row">
-                <div class="col-md-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            批量用户<code>管理</code>
-                        </div>
-                        <div class="panel-body">
-                            <p class="text-muted margin-b-10">创建与更改用户对象</p>
-                            <div>
-                                <ul>
-                                    <li><a href="/creatusers/">创建用户</a></li>
-                                    <li><a href="/creatusermail/">创建邮箱</a></li>
-                                    <li><a href="/modifyuserattributes/">修改用户属性</a></li>
-                                    <li><a href="/modifypasswd/">修改用户密码</a></li>
-                                    <li><a href="/moveuser/">移动用户</a></li>
-                                </ul>
-                            </div>
-                        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    批量用户<code>管理</code>
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted margin-b-10">创建与更改用户对象</p>
+                    <div>
+                        <ul>
+                            <li><a href="/creatusers/">创建用户</a></li>
+                            <li id="creatusermail"><a href="/creatusermail/">创建邮箱</a></li>
+                            <li><a href="/modifyuserattributes/">修改用户属性</a></li>
+                            <li><a href="/modifypasswd/">修改用户密码</a></li>
+                            <li><a href="/moveuser/">移动用户</a></li>
+                        </ul>
                     </div>
-                </div><!--col-md-6-->
-                <div class="col-md-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            批量计算机<code>管理</code>
-                        </div>
-                        <div class="panel-body">
-                            <p class="text-muted margin-b-10">创建与更改计算机对象</p>
-                            <div>
-                                <ul>
-                                    <li><a href="/movecomputer/">移动计算机</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div><!--col-md-6-->
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    批量计算机<code>管理</code>
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted margin-b-10">创建与更改计算机对象</p>
+                    <div>
+                        <ul>
+                            <li><a href="/movecomputer/">移动计算机</a></li>
+                        </ul>
                     </div>
-                </div><!--col-md-6-->
-        </div>
+                </div>
+            </div>
+        </div><!--col-md-6-->
+    </div>
     <!--end page content-->
     <!--Start footer-->
     <footer class="footer">
@@ -68,6 +68,20 @@
 {% endblock %}
 
 {% block custom_js %}
-
+    <script>
+        $.ajax({
+            url: "/getExissconfig/",
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                if (data['isSuccess']) {
+                }
+                else {
+                    $("#creatusermail").css({"display": "none"});
+                }
+            }
+        });
+    </script>
 
 {% endblock %}

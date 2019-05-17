@@ -165,28 +165,7 @@ def crearldapdb():
         print(e)
         return False
 
-#创建y邮箱表
-def crearmaildb():
-    conn = dbinfo()
-    try:
-        conncur = conn.cursor()
-        connsql ='''CREATE TABLE `sendmailsite` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mailcount` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `mailserver` varchar(255) DEFAULT NULL,
-  `mailaddress` varchar(255) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4'''
-        conncur.execute(connsql)
-        histroycounts = conncur.fetchall()
-        conn.commit()
-        conn.close()
-        return histroycounts
-    except Exception as e:
-        print(e)
-        return False
+
 
 
 #验证ldap表是否存在
@@ -230,34 +209,6 @@ def crearperdb():
         print(e)
         return False
 
-def searchsendmail():
-    conn = dbinfo()
-    try:
-        conncur = conn.cursor()
-        connsql = "select * from sendmailsite limit1"
-        conncur.execute(connsql, ())
-        histroycounts = conncur.fetchone()
-        conn.commit()
-        conn.close()
-        return histroycounts
-    except Exception as e:
-        print(e)
-        return False
-
-#验证邮箱表是否存在
-def selectmaildb():
-    conn = dbinfo()
-    try:
-        conncur = conn.cursor()
-        connsql = "show tables like 'sendmailsite'"
-        conncur.execute(connsql)
-        histroycounts = conncur.fetchone()
-        conn.commit()
-        conn.close()
-        return histroycounts
-    except Exception as e:
-        print(e)
-
 
 #验证操作表是否存在
 def selectperdb():
@@ -272,32 +223,6 @@ def selectperdb():
         return histroycounts
     except Exception as e:
         print(e)
-
-def insert_sendmail(mailcount,password, mailserver,mailaddress):
-    createtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    conn = dbinfo()
-    try:
-        conncur = conn.cursor()
-        connsql = "select * from sendmailsite"
-        conncur.execute(connsql, ())
-        histroycounts = conncur.fetchone()
-        if histroycounts:
-            id =histroycounts['id']
-            conncur = conn.cursor()
-            connsql = "UPDATE sendmailsite SET mailcount=%s,password=%s, mailserver=%s,mailaddress=%s,datetime=%s WHERE id =%s"
-            conncur.execute(connsql, (mailcount,password, mailserver,mailaddress,createtime,id))
-            histroycounts = conncur.fetchall()
-        else:
-            conncur = conn.cursor()
-            connsql = "INSERT INTO sendmailsite (mailcount,password, mailserver,mailaddress,datetime) VALUES (%s,%s,%s,%s,%s) "
-            conncur.execute(connsql, (mailcount, password, mailserver, mailaddress, createtime))
-            histroycounts = conncur.fetchall()
-        conn.commit()
-        conn.close()
-        return histroycounts
-    except Exception as e:
-        print(e)
-        return False
 
 def insert_userper(logongroup,changepwdgroup, fieldgroup,operagroup):
     conn = dbinfo()
@@ -427,31 +352,7 @@ def creariisdb():
         print(e)
         return False
 
-# #iis信息写入
-# def insert_iisexpmessage(iisip,iisport):
-#     conn = dbinfo()
-#     try:
-#         conncur = conn.cursor()
-#         connsql = "select * from exiisconfig"
-#         conncur.execute(connsql, ())
-#         histroycounts = conncur.fetchone()
-#         if histroycounts:
-#             id =histroycounts['id']
-#             conncur = conn.cursor()
-#             connsql = "UPDATE exiisconfig SET iisserver=%s,iisport=%s WHERE id =%s"
-#             conncur.execute(connsql, (iisip,iisport,id))
-#             histroycounts = conncur.fetchall()
-#         else:
-#             conncur = conn.cursor()
-#             connsql = "INSERT INTO exiisconfig (iisserver,iisport) VALUES (%s,%s) "
-#             conncur.execute(connsql, (iisip,iisport))
-#             histroycounts = conncur.fetchall()
-#         conn.commit()
-#         conn.close()
-#         return histroycounts
-#     except Exception as e:
-#         print(e)
-#         return False
+
 
 
 #exchange信息写入
@@ -466,17 +367,25 @@ def insert_expmessage(exinputip,exinputaccount,password,exinputdomain):
         if not exiisconfig:
             conncur = conn.cursor()
             connsql = '''DROP TABLE IF EXISTS `exiisconfig`;
-                        CREATE TABLE `exiisconfig` (
-                        `id` int(11) NOT NULL AUTO_INCREMENT,
-                        `exserver` varchar(255) DEFAULT NULL,
-                        `exuser` varchar(255) DEFAULT NULL,
-                        `expassword` varchar(255) DEFAULT NULL,
-                        `exdomain` varchar(255) DEFAULT NULL,
-                        PRIMARY KEY (`id`)
-                        ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-                                '''
+CREATE TABLE `exiisconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exserver` varchar(255) DEFAULT NULL,
+  `exuser` varchar(255) DEFAULT NULL,
+  `expassword` varchar(255) DEFAULT NULL,
+  `exdomain` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;'''
             conncur.execute(connsql)
             conn.commit()
+        else:
+            try:
+                conncur = conn.cursor()
+                connsql = 'ALTER TABLE exiisconfig ADD COLUMN status VARCHAR(100) DEFAULT NULL'
+                conncur.execute(connsql)
+                conn.commit()
+            except Exception as e:
+                pass
         conncur = conn.cursor()
         connsql = "select * from exiisconfig"
         conncur.execute(connsql, ())
@@ -484,13 +393,66 @@ def insert_expmessage(exinputip,exinputaccount,password,exinputdomain):
         if histroycounts:
             id =histroycounts['id']
             conncur = conn.cursor()
-            connsql = "UPDATE exiisconfig SET exserver=%s,exuser=%s,expassword=%s,exdomain=%s WHERE id =%s"
+            connsql = "UPDATE exiisconfig SET exserver=%s,exuser=%s,expassword=%s,exdomain=%s,status='1' WHERE id =%s"
             conncur.execute(connsql, (exinputip,exinputaccount,password,exinputdomain,id))
             histroycounts = conncur.fetchall()
         else:
             conncur = conn.cursor()
-            connsql = "INSERT INTO exiisconfig (exserver,exuser,expassword,exdomain) VALUES (%s,%s,%s,%s) "
+            connsql = "INSERT INTO exiisconfig (exserver,exuser,expassword,exdomain,status) VALUES (%s,%s,%s,%s,'1') "
             conncur.execute(connsql, (exinputip,exinputaccount,password,exinputdomain))
+            histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+        return False
+
+#exchange不配做写入信息
+def insert_exp():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'exiisconfig'"
+        conncur.execute(connsql, ())
+        exiisconfig = conncur.fetchone()
+        conn.commit()
+        if not exiisconfig:
+            conncur = conn.cursor()
+            connsql = '''DROP TABLE IF EXISTS `exiisconfig`;
+CREATE TABLE `exiisconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exserver` varchar(255) DEFAULT NULL,
+  `exuser` varchar(255) DEFAULT NULL,
+  `expassword` varchar(255) DEFAULT NULL,
+  `exdomain` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;'''
+            conncur.execute(connsql)
+            conn.commit()
+        else:
+            try:
+                conncur = conn.cursor()
+                connsql = 'ALTER TABLE exiisconfig ADD COLUMN status VARCHAR(100) DEFAULT NULL'
+                conncur.execute(connsql)
+                conn.commit()
+            except Exception as e:
+                pass
+        conncur = conn.cursor()
+        connsql = "select * from exiisconfig"
+        conncur.execute(connsql, ())
+        histroycounts = conncur.fetchone()
+        if histroycounts:
+            id =histroycounts['id']
+            conncur = conn.cursor()
+            connsql = "UPDATE exiisconfig SET status=%s WHERE id =%s"
+            conncur.execute(connsql, ('0',id))
+            histroycounts = conncur.fetchall()
+        else:
+            conncur = conn.cursor()
+            connsql = "INSERT INTO exiisconfig (status) VALUES ('0') "
+            conncur.execute(connsql, ())
             histroycounts = conncur.fetchall()
         conn.commit()
         conn.close()

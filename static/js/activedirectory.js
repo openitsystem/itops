@@ -226,7 +226,7 @@ function showRMenu(treeNode, x, y) {
         $("#treeDemo_add").hide();
         $("#treeDemo_exportList").hide();
     }
-    if (zNodes.name==treeNode.name){
+    if (zNodes.name == treeNode.name) {
         $("#treeDemo_add").show();
         $("#treeDemo_exportList").show();
         $("#treeDemo_rename").hide();
@@ -534,22 +534,38 @@ function addObject(get_select_node, objectclass) {
             document.getElementById('add_user_displayName').value = '';
             document.getElementById('add_user_description').value = '';
             $.ajax({
-                url: "/getMailboxDatebase/",
+                url: "/getExissconfig/",
                 type: 'POST',
                 dataType: 'json',
-                async: true,
+                async: false,
                 success: function (data) {
                     if (data['isSuccess']) {
-                        var $add_user_mail_db = $("#add_user_mail_db")
-                        $add_user_mail_db.empty();
-                        var message = data['message'];
-                        for (var i = 0; i < message.length; i++) {
-                            var $newOption = "<option value='" + message[i]['daname'] + "'>" + message[i]['daname'] + "</option>";
-                            $add_user_mail_db.append($newOption);
-                        }
+                        $.ajax({
+                            url: "/getMailboxDatebase/",
+                            type: 'POST',
+                            dataType: 'json',
+                            async: true,
+                            success: function (data) {
+                                if (data['isSuccess']) {
+                                    var $add_user_mail_db = $("#add_user_mail_db")
+                                    $add_user_mail_db.empty();
+                                    var message = data['message'];
+                                    for (var i = 0; i < message.length; i++) {
+                                        var $newOption = "<option value='" + message[i]['daname'] + "'>" + message[i]['daname'] + "</option>";
+                                        $add_user_mail_db.append($newOption);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        $("#add_user_mail  option[value='no'] ").attr("selected",true);
+                        $("#from_add_user_mail").css({"display": "none"});
+                        $("#modal_mail_db").css({"display": "none"});
                     }
                 }
             });
+
             $('#add_user').modal({
                 keyboard: true,
                 backdrop: false
@@ -583,6 +599,23 @@ function addObject(get_select_node, objectclass) {
             document.getElementById('add_contact_smtpvalue').value = '';
             document.getElementById('add_contact_sn').value = '';
             document.getElementById('add_contact_givenName').value = '';
+            $.ajax({
+                url: "/getExissconfig/",
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data['isSuccess']) {
+                    }
+                    else {
+                        $("#add_contact_mail  option[value='no'] ").attr("selected",true);
+                        $("#from_add_contact_mail").css({"display": "none"});
+                        $(".contact_mail").css({"display": "none"});
+                        document.getElementById("add_contact_name").disabled = "disabled";
+                        document.getElementById("add_contact_smtpvalue").disabled = "disabled";
+                    }
+                }
+            });
             $('#add_contact').modal({
                 keyboard: true,
                 backdrop: false
@@ -973,8 +1006,6 @@ function objectAttribute(get_select_node, treename) {
             openModle("/contactvalue/?disName=" + encodeURIComponent(get_select_node.distinguishedName));//modal-ifram 接新弹框contact
             break;
     }
-
-
 }
 //删除方法-打开模态框
 function del_object(get_select_node, treename) {
@@ -1650,7 +1681,7 @@ var dataTree, rMenudataTree;
 function queryHandler(zTreeNodes) {
     //初始化树
     var datetree_count = zTreeNodes.length;
-    document.getElementById("datetree_count").innerHTML = "共有"+datetree_count+"个对象";
+    document.getElementById("datetree_count").innerHTML = "共有" + datetree_count + "个对象";
     $.fn.zTree.init($("#dataTree"), setting1, zTreeNodes);
     //添加表头
     var li_head = ' <li class="head"><a><div class="divTd" style="width:30%">名称(name)</div><div class="divTd" style="width:20%">类型(objectClass)</div>' +

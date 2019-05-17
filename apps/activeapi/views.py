@@ -278,6 +278,10 @@ def get_ou_for_dn(distinguishedName, treeid):
 def get_object_for_dn(distinguishedName):
     try:
         with ldap3RESTARTABLE as conn:
+            conn.search(
+                search_base=distinguishedName,
+                search_filter="(objectClass=*)",
+                search_scope='BASE',)
             object_list = []
             total_entries = 0
             entry_generator = conn.extend.standard.paged_search(

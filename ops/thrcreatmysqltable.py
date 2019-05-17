@@ -36,6 +36,29 @@ class ThrCreatMysqlTable(threading.Thread):
                 insert_log_table_name('log', '127.0.0.1', 'ThrCreatMysqlTable', 'adminportal', 'False', 'django_session', '创建django_session表', str(e))
             try:
                 conncur = conn.cursor()
+                connsql = "show tables like 'exiisconfig'"
+                conncur.execute(connsql)
+                django_session = conncur.fetchone()
+                conn.commit()
+                if not django_session:
+                    conncur = conn.cursor()
+                    connsql = '''DROP TABLE IF EXISTS `exiisconfig`;
+CREATE TABLE `exiisconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `exserver` varchar(255) DEFAULT NULL,
+  `exuser` varchar(255) DEFAULT NULL,
+  `expassword` varchar(255) DEFAULT NULL,
+  `exdomain` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;'''
+                    conncur.execute(connsql)
+                    conn.commit()
+            except Exception as e:
+                insert_log_table_name('log', '127.0.0.1', 'ThrCreatMysqlTable', 'adminportal', 'False',
+                                      'django_session', '创建邮箱表', str(e))
+            try:
+                conncur = conn.cursor()
                 connsql = "show tables like 'apiusers_profile'"
                 conncur.execute(connsql)
                 apiusers_profile = conncur.fetchone()
@@ -278,3 +301,25 @@ def creatmysqltable():
     send_email = ThrCreatMysqlTable()
     send_email.start()
 
+
+
+# 数据库判断settings
+def mysqlDatabase():
+    try:
+        conn = dbinfo()
+        if conn:
+            conncur = conn.cursor()
+            connsql = "show tables like 'django_session'"
+            conncur.execute(connsql)
+            histroycounts = conncur.fetchone()
+            conn.commit()
+            conn.close()
+            if histroycounts:
+                return True
+            else:
+                creatmysqltable()
+                return False
+        else:
+            return False
+    except Exception as e:
+        return False

@@ -86,7 +86,7 @@
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12"  v-if="tableexchangeshow">
         <el-card shadow="always" class="box-card" :class="[classname.classSpanFloatmid, classname.classkuandu]" :style="{width: '95%'}">
           <div slot="header" class="clearfix">
             <span>exchange报表</span>
@@ -182,6 +182,7 @@ export default {
       allcomputernodisablecpuntvalue: 0, // 启用的计算机数量
       allcomputerdisablecountvalue: 0, // 禁用的计算机数量
       // 邮箱
+      tableexchangeshow: true,
       tableDataallexchange: [],
       allexchangetableshowvalue: false, // 邮箱table是否显示
       allexchangeusercountvalue: 0, // 所有启用邮箱的用户数量
@@ -190,6 +191,17 @@ export default {
       allexchangenodizhicountvalue: 0, // 不显示在exchange地址簿的用户数量
       allexchangenoarchivecountvalue: 0 // 禁用归档的账户数量
     }
+  },
+  async created () {
+    await axios
+      .get(serverurlvaluefromjs.serverurl + '/getExissconfig/')
+      .then(response => {
+        if (!response.data.isSuccess) {
+          this.tableexchangeshow = false
+        } else {
+          this.tableexchangeshow = true
+        }
+      })
   },
   mounted () {
     this.alluserLine()

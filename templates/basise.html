@@ -200,7 +200,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label">账号：</label>
                                         <div class="col-lg-6">
-                                            <input id="aduser" name="aduser" placeholder="contoso.com\administrator" class="form-control required"
+                                            <input id="aduser" name="aduser" placeholder="contoso\administrator" class="form-control required"
                                                     {% ifequal myuser 'None' %}{% else %} value="{{ myuser }}" {% endifequal %}>
                                         </div>
                                     </div>
@@ -248,21 +248,35 @@
                             <fieldset>
                                 <legend>EXChange 配置</legend>
                                 <form class="form-horizontal" id="exchangesite" method="post" onsubmit="return exlinktest();">
-                                    <div class="form-group">
+                                 <div class="form-group">
+                                        <label class="col-lg-3 control-label">是否使用Exchange：</label>
+                                        <div class="col-lg-6">
+                                            <select name="sele" id="exchangeselect" class="form-control m-b">
+                                                {% if exchangeselect == '1' %}
+                                                    <option selected value="1">使用</option>
+                                                    <option value="0">不使用</option>
+                                                {% else %}
+                                                    <option value="1">使用</option>
+                                                    <option selected value="0">不使用</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group exchangecl">
                                         <label class="col-lg-3 control-label">EXChange服务器地址：</label>
                                         <div class="col-lg-6">
                                             <input id="exip" name="exip" placeholder="127.0.0.1" class="form-control required"
-                                                    {% ifequal exip 'None' %}{% else %} value="{{ exip }}" {% endifequal %}>
+                                                    {% ifequal exchangeselect 'None' %}{% else %} value="{{ exip }}" {% endifequal %}>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group exchangecl">
                                         <label class="col-lg-3 control-label">账号：</label>
                                         <div class="col-lg-6">
-                                            <input id="exuser" name="exuser" placeholder="contoso.com\administrator" class="form-control required"
+                                            <input id="exuser" name="exuser" placeholder="administrator" class="form-control required"
                                                     {% ifequal exuser 'None' %}{% else %} value="{{ exuser }}" {% endifequal %}>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group exchangecl">
                                         <label class="col-lg-3 control-label">密码：</label>
                                         <div class="col-lg-6">
                                             <input id="expassword" type="password" name="expassword" placeholder="************" class="form-control required"
@@ -271,14 +285,14 @@
 
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group exchangecl">
                                         <label class="col-lg-3 control-label">域名：</label>
                                         <div class="col-lg-6">
                                             <input id="exdomain" name="exdomain" placeholder="contoso.com" class="form-control required"
                                                     {% ifequal exdomain 'None' %}{% else %} value="{{ exdomain }}" {% endifequal %}>
                                         </div>
                                     </div>
-                                    {% ifequal exip 'None' %}
+                                    {% ifequal exchangeselect 'None' %}
                                         <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
                                         </form>
                                     {% else %}
@@ -286,46 +300,6 @@
                                         </form>
                                     {% endifequal %}
                             </fieldset>
-                            {#                            <fieldset>#}
-                            {#                                <form class="form-horizontal" id="mailsite" method="post" onsubmit="return testmail();">#}
-                            {#                                    <legend>发送邮件配置</legend>#}
-                            {#                                    <div class="form-group">#}
-                            {#                                        <label class="col-lg-3 control-label">邮箱地址：</label>#}
-                            {#                                        <div class="col-lg-6">#}
-                            {#                                            <input id="mailladdress" name="mailladdress" placeholder="portal@contoso.com" class="form-control required"#}
-                            {#                                                    {% ifequal maddress 'None' %}  {% else %}  value="{{ maddress }}" {% endifequal %}>#}
-                            {#                                        </div>#}
-                            {#                                    </div>#}
-                            {#                                    <div class="form-group">#}
-                            {#                                        <label class="col-lg-3 control-label">邮箱账号：</label>#}
-                            {#                                        <div class="col-lg-6">#}
-                            {#                                            <input id="inputmail" name="inputmail" placeholder="portal" class="form-control required" {% ifequal mascount 'None' %}  {% else %}#}
-                            {#                                                   value="{{ mascount }}" {% endifequal %}>#}
-                            {#                                        </div>#}
-                            {#                                    </div>#}
-                            {#                                    <div class="form-group">#}
-                            {#                                        <label class="col-lg-3 control-label">邮箱密码：</label>#}
-                            {#                                        <div class="col-lg-6">#}
-                            {#                                            <input id="mailpassword" type="password" name="mailpassword" placeholder="****************" class="form-control required"#}
-                            {#                                                    {% ifequal mailpassr 'None' %} {% else %}  value="{{ mailpassr }}" {% endifequal %}>#}
-                            {#                                            <span class="help-block m-b-none" style="color:#ac2925;"><i class="fa fa-info-circle"></i> 因密码已做加密处理，更新配置时，需重新填写密码</span>#}
-                            {#                                        </div>#}
-                            {#                                    </div>#}
-                            {#                                    <div class="form-group">#}
-                            {#                                        <label class="col-lg-3 control-label">服务器地址：</label>#}
-                            {#                                        <div class="col-lg-6">#}
-                            {#                                            <input id="mailserver" name="mailserver" placeholder="mail.contoso.com" class="form-control required" {% ifequal masrever 'None' %}  {% else %}#}
-                            {#                                                   value="{{ masrever }}" {% endifequal %}>#}
-                            {#                                        </div>#}
-                            {#                                    </div>#}
-                            {#                                    {% ifequal masrever 'None' %}#}
-                            {#                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">#}
-                            {#                                        </form>#}
-                            {#                                    {% else %}#}
-                            {#                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">#}
-                            {#                                        </form>#}
-                            {#                                    {% endifequal %}#}
-                            {#                            </fieldset>#}
                             <fieldset>
                                 <form class="form-horizontal" id="persite" method="post" onsubmit="return testpersave();">
                                     <legend>* 账号权限配置---<span>填写此配置以判断用户权限</span></legend>
@@ -422,6 +396,13 @@
         $('#mysqlsite').easyform();
         $('#persite').easyform();
         $('#exchangesite').easyform();
+        var exchangeselect = $("#exchangeselect").val();
+        if (exchangeselect == '1') {
+            $(".exchangecl").show();
+        }
+        else {
+            $(".exchangecl").hide();
+        }
         var monitorselect = $("#monitorselect").val();
         if (monitorselect == '1') {
             $(".zabbix").show();
@@ -431,6 +412,7 @@
     });
 
     function exlinktest() {
+        var exchangeselect = $("#exchangeselect").val();
         var exinputip = document.getElementById("exip").value;
         var exinputaccount = document.getElementById("exuser").value;
         var exinputpassword = document.getElementById("expassword").value;
@@ -440,12 +422,12 @@
             type: 'POST',
             dataType: 'json',
             async: false,
-            data: {"exinputip": exinputip, "exinputaccount": exinputaccount, "exinputpassword": exinputpassword, "exinputdomain": exinputdomain},
+            data: {"exchangeselect": exchangeselect, "exinputip": exinputip, "exinputaccount": exinputaccount, "exinputpassword": exinputpassword, "exinputdomain": exinputdomain},
             success: function (data) {
                 if (data['isSuccess']) {
                     swal({
                         title: "恭喜！",
-                        text: "Exchange连接成功",
+                        text: "Exchange配置成功",
                         type: "success",
                         showCancelButton: false,
                         closeOnConfirm: false
@@ -507,6 +489,17 @@
         return false
     }
     //monitorselect 为Select添加事件，当选择其中一项时触发
+    $("#exchangeselect").change(function () {
+        var exchangeselect = $("#exchangeselect").val();
+        if (exchangeselect == '1') {
+            $(".exchangecl").show();
+        } else {
+            $(".exchangecl").hide();
+        }
+    });
+
+
+        //monitorselect 为Select添加事件，当选择其中一项时触发
     $("#monitorselect").change(function () {
         var monitorselect = $("#monitorselect").val();
         if (monitorselect == '1') {
@@ -537,39 +530,6 @@
                     swal({
                         title: "恭喜！",
                         text: "LDAP配置保存成功",
-                        type: "success",
-                        showCancelButton: false,
-                        closeOnConfirm: false
-                    }, function () {
-                        location.reload()
-                    });
-                }
-                else {
-                    closeBg();
-                    swal(data['message']);
-                }
-            }
-        });
-        return false
-    }
-    function testmail() {
-        var mailladdress = document.getElementById("mailladdress").value;
-        var inputmail = document.getElementById("inputmail").value;
-        var mailpassword = document.getElementById("mailpassword").value;
-        var mailserver = document.getElementById("mailserver").value;
-        showBg();
-        $.ajax({
-            url: {% url "sendmailtest" %},
-            type: 'POST',
-            dataType: 'json',
-            async: true,
-            data: {'mailladdress': mailladdress, 'inputmail': inputmail, 'mailpassword': mailpassword, 'mailserver': mailserver},
-            success: function (data) {
-                if (data['isSuccess']) {
-                    closeBg();
-                    swal({
-                        title: "恭喜！",
-                        text: "邮箱配置保存成功",
                         type: "success",
                         showCancelButton: false,
                         closeOnConfirm: false
