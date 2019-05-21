@@ -61,7 +61,7 @@ yum install zlib-devel openssl-devel ncurese-devel bzip2-devel \
 expat-devel gdbm-devel readline-devel sqlite-devel -y
 ```
 ### 2.3.下载安装包
-* [在python官网下载](https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz.asc)
+* [在python官网下载](https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz)
 
 ### 2.4.解压文件并安装python
 
