@@ -111,9 +111,9 @@ cffi                    1.12.3
 ```
 ## 3.安装系统
 ### 3.1.把运行程序拷贝到指定目录
-> 将its-itops文件夹拷贝到 /usr/local/ 下（注意不要改文件名）
+> 将itops文件夹拷贝到 /usr/local/ 下（注意不要改文件名）
 
-> 拷贝完成后路径为 /usr/local/its-itops/
+> 拷贝完成后路径为 /usr/local/itops/
 
 > 使用 xftp 5 或其他方式拷贝均可
 
@@ -129,7 +129,7 @@ cffi                    1.12.3
 > 进入代码目录
 
 ```
-cd /usr/local/its-itops/
+cd /usr/local/itops/
 ```
 > 确认目录中有package.txt文件（此文件中放了所必须的包名）
 
@@ -152,13 +152,13 @@ ls
 
 ```
 cd /usr/local/ \
-    && chmod 777 its-itops/
+    && chmod 777 itops/
 
-cd /usr/local/its-itops/ \
+cd /usr/local/itops/ \
     && chmod 777 db.sqlite3 \
     && chmod 777 upload/
 
-cd /usr/local/its-itops/dbinfo/ \
+cd /usr/local/itops/dbinfo/ \
     && chmod 777 config.ini
 
 ```
@@ -167,7 +167,7 @@ cd /usr/local/its-itops/dbinfo/ \
 > 运行下列命令启动平台服务
 
 ```
-/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/its-itops/ --plugin python --wsgi-file /usr/local/its-itops/itops/wsgi.py --master --static-map /static=/usr/local/its-itops/static/ --static-map /static=/usr/local/its-itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 8 --threads 8 --uid=99 --gid=99 --static-gzip-dir=/usr/local/its-itops/frontend/
+/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/itops/ --plugin python --wsgi-file /usr/local/itops/itops/wsgi.py --master --static-map /static=/usr/local/itops/static/ --static-map /static=/usr/local/itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 8 --threads 8 --uid=99 --gid=99 --static-gzip-dir=/usr/local/itops/frontend/
 ```
 > 关闭uwsgi
 
