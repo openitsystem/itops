@@ -3383,7 +3383,7 @@ def getuserdownload(idtyes,datevalue,checkval):
         elif idtyes == '下次登陆必须更改密码的用户':
             searfil = '(&(pwdLastSet=0)(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))))'
         elif idtyes == '密码永不过期的用户':
-            searfil = '(&(&(objectCategory=person)(objectClass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))(&(objectCategory=person)(objectClass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=8388608))(!(userAccountControl:1.2.840.113556.1.4.803:=65536))))'
+            searfil = '(&(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))(&(objectCategory=person)(objectClass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=8388608))(userAccountControl:1.2.840.113556.1.4.803:=65536)))'
         elif idtyes=='禁用的用户':
             searfil='(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=2))'
         elif idtyes=='账号已过期的用户':

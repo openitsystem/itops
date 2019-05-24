@@ -28,7 +28,7 @@ class SendHtmlEmail(threading.Thread):
                               alllockusercountvalue=alluservalue['alllockusercountvalue'],
                               nologoinusercountvalue=alluservalue['nologoinusercountvalue'],
                               allgroupcountvalue = allgroupvalue['allgroupcountvalue'],
-                              allgrouptalkgroupcountvalue = allgroupvalue['allgrouptalkgroupcountvalue'],
+                             allgrouptalkgroupcountvalue = allgroupvalue['allgrouptalkgroupcountvalue'],
                               allgroupsavegroupcpuntvalue = allgroupvalue['allgroupsavegroupcpuntvalue'],
                               allgroupnomembercountvalue = allgroupvalue['allgroupnomembercountvalue'],
                               allgrouphasmailcountvalue = allgroupvalue['allgrouphasmailcountvalue'],
@@ -58,22 +58,22 @@ class SendHtmlEmail(threading.Thread):
 
 
 def hasuservaluebyspi():
-    getuserdownloadallusercountvalue = getuserdownload(idtyes='所有用户', datevalue=int(1), checkval='true')
+    getuserdownloadallusercountvalue = getuserdownload(idtyes='所有用户', datevalue=False, checkval='true')
     if getuserdownloadallusercountvalue['isSuccess']:
         allusercountvalue = len(getuserdownloadallusercountvalue['message'])
     else:
         allusercountvalue = 0
-    getuserdownloadalldisableusercountvalue = getuserdownload(idtyes='禁用的用户', datevalue=int(1), checkval='true')
+    getuserdownloadalldisableusercountvalue = getuserdownload(idtyes='禁用的用户', datevalue=False, checkval='true')
     if getuserdownloadalldisableusercountvalue['isSuccess']:
         alldisableusercountvalue = len(getuserdownloadalldisableusercountvalue['message'])
     else:
         alldisableusercountvalue = 0
-    getuserdownloadallexpiredpasswordusercountvalue = getuserdownload(idtyes='密码已过期的用户', datevalue=int(1), checkval='true')
+    getuserdownloadallexpiredpasswordusercountvalue = getuserdownload(idtyes='密码已过期的用户', datevalue=False, checkval='true')
     if getuserdownloadallexpiredpasswordusercountvalue['isSuccess']:
         allexpiredpasswordusercountvalue = len(getuserdownloadallexpiredpasswordusercountvalue['message'])
     else:
         allexpiredpasswordusercountvalue = 0
-    getuserdownloadalllockusercountvalue = getuserdownload(idtyes='锁定的用户', datevalue=int(1), checkval='true')
+    getuserdownloadalllockusercountvalue = getuserdownload(idtyes='锁定的用户', datevalue=False, checkval='true')
     if getuserdownloadalllockusercountvalue['isSuccess']:
         alllockusercountvalue = len(getuserdownloadalllockusercountvalue['message'])
     else:
