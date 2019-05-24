@@ -28,7 +28,7 @@ class SendHtmlEmail(threading.Thread):
                               alllockusercountvalue=alluservalue['alllockusercountvalue'],
                               nologoinusercountvalue=alluservalue['nologoinusercountvalue'],
                               allgroupcountvalue = allgroupvalue['allgroupcountvalue'],
-                             allgrouptalkgroupcountvalue = allgroupvalue['allgrouptalkgroupcountvalue'],
+                              allgrouptalkgroupcountvalue = allgroupvalue['allgrouptalkgroupcountvalue'],
                               allgroupsavegroupcpuntvalue = allgroupvalue['allgroupsavegroupcpuntvalue'],
                               allgroupnomembercountvalue = allgroupvalue['allgroupnomembercountvalue'],
                               allgrouphasmailcountvalue = allgroupvalue['allgrouphasmailcountvalue'],
