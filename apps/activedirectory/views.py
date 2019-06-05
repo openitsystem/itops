@@ -16,7 +16,7 @@ from apps.activeapi.views import moveToOu, \
     resetPassword, dnMoveToOu, serchlock, unlockuser, can_accidentally_deleted, check_accidentally_deleted, uncheck_accidentally_deleted
 from apps.activeapi.views import get_domainbase, get_ou_for_dn, get_object_for_dn, set_rename_object, newUser, newGroup, newOrganizationalUnit, newContact, newComputer
 from apps.activedirectory.Ther import Usermessage
-from dbinfo.views import insert_log, getpermsessage
+from dbinfo.views import insert_log, getpermsessage, getliisconfigtion
 from itops.settings import ldap3RESTARTABLE
 from permission.views import Userperm
 
@@ -37,6 +37,14 @@ def treesearch(request):
     return render_to_response('ad/treesearch.html', locals())
 # 导出
 def downloadcsv(request):
+    exchangstatus = getliisconfigtion()
+    if exchangstatus:
+        if exchangstatus.get('status', "None") == '1':
+            exchangestatus = 'True'
+        else:
+            exchangestatus = 'False'
+    else:
+        exchangestatus='False'
     return render_to_response('ad/downslx.html', locals())
 
 #验证权限

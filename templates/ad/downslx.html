@@ -176,7 +176,11 @@
         </div>
     </div>
     <div class="row">
+    {% if exchangestatus == 'True' %}
         <div class="col-md-4 mailbox-sidenav">
+    {% else %}
+             <div class="col-md-6 mailbox-sidenav">
+    {% endif %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     用户报表
@@ -241,7 +245,11 @@
                     </ul></div>
             </div>
         </div><!--col-md-6-->
+           {% if exchangestatus == 'True' %}
         <div class="col-md-4 mailbox-sidenav">
+    {% else %}
+             <div class="col-md-6 mailbox-sidenav">
+    {% endif %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     组报表
@@ -319,7 +327,11 @@
                     </ul></div>
             </div><!--col-md-6-->
         </div><!--col-md-6-->
-        <div class="col-md-4 mailbox-sidenav" id="exchangdown" style="display: none">
+        {% if exchangestatus == 'True' %}
+        <div class="col-md-4 mailbox-sidenav">
+    {% else %}
+              <div class="col-md-4 mailbox-sidenav" id="exchangdown" style="display: none">
+    {% endif %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Exchange报表

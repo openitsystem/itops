@@ -16,10 +16,13 @@ urlpatterns = [
     url(r'^GetConMessage/$', views.GetConMessage.as_view(),name='GetConMessage'),#模糊查找AD账号
     url(r'^GetOnlyConMessage/$', views.GetOnlyConMessage.as_view(),name='GetOnlyConMessage'),#模糊查找用户账号
     url(r'^GetUserMessage/$', views.GetUserMessage.as_view(),name='GetUserMessage'),#精准查找AD
+    url(r'^GetUserMessageexchange/$', views.GetUserMessageexchange.as_view(), name='GetUserMessageexchange'),
     url(r'^GetMailMessage/$', views.GetMailMessage.as_view(),name='GetMailMessage'),#精准查找邮箱信息
     url(r'^ChangeUserMessage/$', views.ChangeUserMessage.as_view(),name='ChangeUserMessage'),#修改AD账号属性
     url(r'^GetGroupAnrMessage/$', views.GetGroupAnrMessage.as_view(),name='GetGroupAnrMessage'),#模糊查找组信息
     url(r'^GetGroupPreMessage/$', views.GetGroupPreMessage.as_view(),name='GetGroupPreMessage'),#精准查找组信息
+    url(r'^GetGroupPreMessageexchangevalue/$', views.GetGroupPreMessageexchangevalue.as_view(),
+        name='GetGroupPreMessageexchangevalue'),
     url(r'^GetMailContact/$', views.GetMailContact.as_view(),name='GetMailContact'),#查找联系人邮箱信息
     url(r'^DelGroupUser/$', views.DelGroupUser.as_view(),name='DelGroupUser'),#删除组成员
     url(r'^DelGroupUserMore/$', views.DelGroupUserMore.as_view(),name='DelGroupUserMore'),#批量删除组成员

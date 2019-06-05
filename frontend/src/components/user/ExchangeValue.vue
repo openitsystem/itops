@@ -864,7 +864,7 @@ export default{
       })
       this.dialogpublicDelegates = true
       let disNameforurl = this.getQueryVariable('disName')
-      axios.get(this.serviceurl() + '/api/GetUserMessage/?CountName=' + disNameforurl)
+      axios.get(this.serviceurl() + '/api/GetUserMessageexchange/?CountName=' + disNameforurl)
         .then(response => {
           loading.close()
           if (response.data.isSuccess) {
@@ -1718,7 +1718,7 @@ export default{
         lock: true
       })
       let disNameforurl = this.getQueryVariable('disName')
-      var responsevalue = await axios.get(this.serviceurl() + '/api/GetUserMessage/?CountName=' + disNameforurl)
+      var responsevalue = await axios.get(this.serviceurl() + '/api/GetUserMessageexchange/?CountName=' + disNameforurl)
       this.smtp = []
       if (responsevalue.data.isSuccess) {
         this.loadingstopshowall = true

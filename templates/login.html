@@ -280,6 +280,9 @@
                     document.getElementById("golapp").style.visibility='visible';
                     document.getElementById('nameuser').value=Username
                 }
+                else if(data['code']==4){
+                     window.location.href=data['backurl']
+                }
                 else {
                      window.location.href=data['message']
                 }

@@ -259,7 +259,7 @@ class GetUserMessage(View):
                                                         'telephoneNumber', 'homePhone', 'mobile',
                                                         'facsimileTelephoneNumber', 'pager','lockoutTime',
                                                         'ipPhone', 'description',
-                                                        'memberof','publicDelegates', 'proxyAddresses', 'whenChanged', 'whenCreated','objectClass','distinguishedName','managedBy','street','l','st','postalCode','name'])
+                                                        'memberof', 'proxyAddresses', 'whenChanged', 'whenCreated','objectClass','distinguishedName','managedBy','street','l','st','postalCode','name'])
                 else:
                     conn.search(search_base=ladp3search_base,
                                             search_filter="(&(objectClass=user)(objectCategory=person) (sAMAccountName=" + CountName +"))",
@@ -267,7 +267,7 @@ class GetUserMessage(View):
                                                         'msDS-UserPasswordExpiryTimeComputed', 'userAccountControl',
                                                         'displayName', 'physicalDeliveryOfficeName', 'mail', 'wWWHomePage',
                                                         'telephoneNumber', 'homePhone', 'mobile', 'facsimileTelephoneNumber', 'pager','lockoutTime',
-                                                        'ipPhone','publicDelegates', 'description',
+                                                        'ipPhone', 'description',
                                                         'memberof','proxyAddresses','whenChanged','whenCreated','objectClass','distinguishedName','street','l','st','postalCode','name','managedBy'])
                 result_id = conn.result
                 response_id = conn.response
@@ -302,6 +302,68 @@ class GetUserMessage(View):
     def post(self, request):
         print(1)
 
+# AD账号精准查找/ 传入dn 属性or sancount
+class GetUserMessageexchange(View):
+    def get(self, request):
+        CountName = request.GET.get('CountName')
+        objectClass = request.GET.get('objectClass', None)
+        try:
+            CountName=repeace(CountName)
+            with ldap3RESTARTABLE as conn:
+                if objectClass:
+                    conn.search(search_base=CountName,
+                                            search_filter="(objectClass=*)",
+                                            search_scope='BASE',
+                                            attributes=['givenName', 'initials', 'sn', 'cn', 'sAMAccountName',
+                                                        'accountExpires',
+                                                        'msDS-UserPasswordExpiryTimeComputed', 'userAccountControl',
+                                                        'displayName', 'physicalDeliveryOfficeName', 'mail',
+                                                        'wWWHomePage',
+                                                        'telephoneNumber', 'homePhone', 'mobile',
+                                                        'facsimileTelephoneNumber', 'pager','lockoutTime',
+                                                        'ipPhone', 'description',
+                                                        'memberof','publicDelegates',  'proxyAddresses', 'whenChanged', 'whenCreated','objectClass','distinguishedName','managedBy','street','l','st','postalCode','name'])
+                else:
+                    conn.search(search_base=ladp3search_base,
+                                            search_filter="(&(objectClass=user)(objectCategory=person) (sAMAccountName=" + CountName +"))",
+                                            attributes=['givenName', 'initials', 'sn', 'cn', 'sAMAccountName', 'accountExpires',
+                                                        'msDS-UserPasswordExpiryTimeComputed', 'userAccountControl',
+                                                        'displayName', 'physicalDeliveryOfficeName', 'mail', 'wWWHomePage',
+                                                        'telephoneNumber', 'homePhone', 'mobile', 'facsimileTelephoneNumber', 'pager','lockoutTime',
+                                                        'ipPhone','description',
+                                                        'memberof','publicDelegates',  'proxyAddresses','whenChanged','whenCreated','objectClass','distinguishedName','street','l','st','postalCode','name','managedBy'])
+                result_id = conn.result
+                response_id = conn.response
+                if result_id['result'] == 0:
+                    message = response_id[0].get('attributes', '')
+                    if message:
+                        if message['userAccountControl']:
+                            userAccountCon = bin(message['userAccountControl'])[-2]
+                            if userAccountCon == '0':
+                                message['userAccountConte'] = True
+                            else:
+                                message['userAccountConte'] = False
+                        if  message['msDS-UserPasswordExpiryTimeComputed']:
+                            if message['msDS-UserPasswordExpiryTimeComputed']==9223372036854775807 or message['msDS-UserPasswordExpiryTimeComputed']==0:
+                                message['msDSUserPasswordExpiryTimeComputed']='密码永不过期'
+                            else:
+                                date=message['msDS-UserPasswordExpiryTimeComputed']-116444736000000000
+                                date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(date / 10000000))
+                                message['msDSUserPasswordExpiryTimeComputed'] = date
+                        result = {'isSuccess': True, 'message': dict(message)}
+                    else:
+                        result = {'isSuccess': False, 'message': '未查询到信息'}
+                else:
+                    result = {'isSuccess': False, "message": str(result_id)}
+        except Exception as e:
+            result = {'isSuccess': False, "message": str(e)}
+        response = HttpResponse()
+        response['Content-Type'] = "application/json"
+        response.write(json.dumps(result, default=str).encode("UTF-8"))
+        return response
+
+    def post(self, request):
+        print(1)
 
 # 计算机账号精准查找/ sancount
 class GetCompMessage(View):
@@ -351,6 +413,45 @@ class GetGroupPreMessage(View):
                     search_base=ladp3search_base,
                     search_filter="(&(objectCategory=group)(sAMAccountName=" + CountName +"))",
                     search_scope='SUBTREE',
+                    # attributes=['member','memberof','groupType','msExchRequireAuthToSendTo','authOrig','managedBy','proxyAddresses','sAMAccountName', "distinguishedName", 'cn', 'name', 'displayName', 'canonicalName','mail','description','info','whenChanged','whenCreated'],
+                    attributes=['member', 'memberof', 'groupType', 'managedBy', 'proxyAddresses', 'sAMAccountName',
+                                "distinguishedName", 'cn', 'name', 'displayName', 'canonicalName', 'mail',
+                                'description', 'info', 'whenChanged', 'whenCreated'],
+                )
+                result_id = conn.result
+                response_id = conn.response
+                if result_id['result'] == 0:
+                    message = response_id[0].get('attributes', '')
+                    if message:
+                        result = {'isSuccess': True, 'message': dict(message)}
+                    else:
+                        result = {'isSuccess': False, 'message': '未查询到信息'}
+                else:
+                    result = {'isSuccess': False, "message": result_id}
+
+        except Exception as e:
+            result = {'isSuccess': False, "message": str(e)}
+
+        response = HttpResponse()
+        response['Content-Type'] = "application/json"
+        response.write(json.dumps(result, default=str).encode("UTF-8"))
+        return response
+
+    def post(self, request):
+        print(1)
+
+
+# 获取组信息精准查找/ 传入sAMAccountName 属性
+class GetGroupPreMessageexchangevalue(View):
+    def get(self, request):
+        CountName = request.GET.get('CountName')
+        try:
+            CountName = repeace(CountName)
+            with ldap3RESTARTABLE as conn:
+                conn.search(
+                    search_base=ladp3search_base,
+                    search_filter="(&(objectCategory=group)(sAMAccountName=" + CountName +"))",
+                    search_scope='SUBTREE',
                     attributes=['member','memberof','groupType','msExchRequireAuthToSendTo','authOrig','managedBy','proxyAddresses','sAMAccountName', "distinguishedName", 'cn', 'name', 'displayName', 'canonicalName','mail','description','info','whenChanged','whenCreated'],
                 )
                 result_id = conn.result
@@ -379,8 +480,6 @@ class GetGroupPreMessage(View):
 
     def post(self, request):
         print(1)
-
-
 
 #获取邮箱账号属性-get-mailboxstatic
 def GetobjectProperty(mailname):
@@ -428,7 +527,11 @@ def Getusermail(mailname):
     try:
         exapivalue = GetMailboxStatistics(mailname)
         if (exapivalue['isSuccess']):
-            return {'isSuccess':exapivalue['isSuccess'],'message':exapivalue['message'][0]}
+            # return {'isSuccess':exapivalue['isSuccess'],'message':exapivalue['message'][0]}
+            if exapivalue['message']:
+                return {'isSuccess':exapivalue['isSuccess'],'message':exapivalue['message'][0]}
+            else:
+                return {'isSuccess':exapivalue['isSuccess'],'message':{}}
         else:
             return {'isSuccess':exapivalue['isSuccess'],'message':exapivalue['msg']}
     except Exception as e :

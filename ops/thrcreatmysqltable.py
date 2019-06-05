@@ -259,6 +259,30 @@ CREATE TABLE `exiisconfig` (
                     conn.commit()
             except Exception as e:
                 insert_log_table_name('log', '127.0.0.1', 'ThrCreatMysqlTable', 'adminportal', 'False', 'Mess', '创建Mess表', str(e))
+
+            try:
+                conncur = conn.cursor()
+                connsql = "show tables like 'tokenstatus'"
+                conncur.execute(connsql)
+                Mess = conncur.fetchone()
+                conn.commit()
+                if not Mess:
+                    conncur = conn.cursor()
+                    connsql = '''CREATE TABLE `tokenstatus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usergotoken` varchar(255) DEFAULT NULL,
+  `ostatus` varchar(255) DEFAULT NULL,
+  `tstatus` varchar(255) DEFAULT NULL,
+  `sstatus` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+'''
+                    conncur.execute(connsql)
+                    conn.commit()
+            except Exception as e:
+                insert_log_table_name('log', '127.0.0.1', 'ThrCreatMysqlTable', 'adminportal', 'False', 'Mess',
+                                      '创建tokenstatus表', str(e))
+
             try:
                 conncur = conn.cursor()
                 connsql = "show tables like 'messgerro'"

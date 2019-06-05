@@ -547,6 +547,22 @@ def searmesserrid(textid):
     except Exception as e:
         print(e)
 
+#判断是否使用使用谷歌二次验证
+def goostatus():
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM tokenstatus LIMIT 1"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+        return False
+
+
 #查询密钥是否存在
 def seargooled(username):
     conn = dbinfo()

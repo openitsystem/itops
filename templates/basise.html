@@ -248,7 +248,7 @@
                             <fieldset>
                                 <legend>EXChange 配置</legend>
                                 <form class="form-horizontal" id="exchangesite" method="post" onsubmit="return exlinktest();">
-                                 <div class="form-group">
+                                    <div class="form-group">
                                         <label class="col-lg-3 control-label">是否使用Exchange：</label>
                                         <div class="col-lg-6">
                                             <select name="sele" id="exchangeselect" class="form-control m-b">
@@ -293,6 +293,31 @@
                                         </div>
                                     </div>
                                     {% ifequal exchangeselect 'None' %}
+                                        <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
+                                        </form>
+                                    {% else %}
+                                        <input style="text-align: center" class="btn btn-primary" value="更新配置" type="submit">
+                                        </form>
+                                    {% endifequal %}
+                            </fieldset>
+                            <fieldset>
+                                <legend>谷歌二次身份验证</legend>
+                                <form class="form-horizontal" id="tokensite" method="post" onsubmit="return tokenlink();">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">是否使用二次身份验证：</label>
+                                        <div class="col-lg-6">
+                                            <select name="seletok" id="tokenselect" class="form-control m-b">
+                                                {% if gootkuser == '1' %}
+                                                    <option selected value="1">使用</option>
+                                                    <option value="0">不使用</option>
+                                                {% else %}
+                                                    <option value="1">使用</option>
+                                                    <option selected value="0">不使用</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {% ifequal gootkuser 'None' %}
                                         <input style="text-align: center" class="btn btn-primary" value="提交" type="submit">
                                         </form>
                                     {% else %}
@@ -448,6 +473,39 @@
         });
         return false
     }
+    function tokenlink() {
+        var tokenselect = $("#tokenselect").val();
+        $.ajax({
+            url:{% url "tokentest" %},
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            data: {"tokenselect": tokenselect },
+            success: function (data) {
+                if (data['isSuccess']) {
+                    swal({
+                        title: "恭喜！",
+                        text: "配置保存成功",
+                        type: "success",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    }, function () {
+                        location.reload()
+                    });
+                }
+                else {
+                    swal({
+                        title: "错误！",
+                        text: "配置保存出现异常",
+                        type: "error",
+                        showCancelButton: false,
+                        closeOnConfirm: false
+                    });
+                }
+            }
+        });
+        return false
+    }
     function testmysql() {
         showBg();
         var host = document.getElementById("host").value;
@@ -499,7 +557,7 @@
     });
 
 
-        //monitorselect 为Select添加事件，当选择其中一项时触发
+    //monitorselect 为Select添加事件，当选择其中一项时触发
     $("#monitorselect").change(function () {
         var monitorselect = $("#monitorselect").val();
         if (monitorselect == '1') {

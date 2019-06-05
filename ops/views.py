@@ -18,9 +18,9 @@ from dbinfo.Profile import writeprofile, readprofile
 from dbinfo.encrypt_decode import encrypt_and_decode
 from dbinfo.models import dbinfotest, ldaptest, selectldapdb, insert_ldapmessage, crearldapdb, mailtest, selectperdb, \
     insert_userper, crearperdb, selectiisex, creariisdb, insert_expmessage, insert_userper_monitor, \
-    insert_userper_zabbix, insert_exp
+    insert_userper_zabbix, insert_exp, selectgotken, insert_tokengomessage, creargotken
 from dbinfo.views import getldap3configtion, getpermsessage, getliisconfigtion, getskey, insert_log, seargooled, \
-    insert_tokenb
+    insert_tokenb, goostatus
 from itops.settings import returnadminusernamevalue, ldap3RESTARTABLE, ladp3search_base
 from ops.thrcreatmysqltable import creatmysqltable
 from permission.therhasindexvalue import startapschedulerscheduler
@@ -119,6 +119,11 @@ def basite(request):
                 exchangeselect = iisexx.get('status', "None")
             else:
                 exchangeselect='None'
+            gootken=goostatus()
+            if gootken:
+                gootkuser = gootken.get('usergotoken', "None")
+            else:
+                gootkuser = 'None'
         else:
             mysqldatabase='None'
         return render_to_response('basise.html',locals())
@@ -235,6 +240,27 @@ def exservertest(**kwargs):
 #     response.write(json.dumps(result))
 #     return response
 
+#谷歌二次验证
+def tokentest(request):
+    post = request.POST
+    tokenselect = post.get("tokenselect")
+    if selectgotken():
+        if insert_tokengomessage(tokenselect) == ():
+            result = {'isSuccess': True, "message": '成功'}
+        else:
+            result = {'isSuccess': False, "message": '数据写入失败'}
+    else:
+        if creargotken() == ():
+            if insert_tokengomessage(tokenselect) == ():
+                result = {'isSuccess': True, "message": '成功'}
+            else:
+                result = {'isSuccess': False, "message": '数据写入失败'}
+        else:
+            result = {'isSuccess': False, "message": '表格创建失败'}
+    response = HttpResponse()
+    response['Content-Type'] = "text/javascript"
+    response.write(json.dumps(result))
+    return response
 
 #ex测试
 def exlinktest(request):
@@ -311,7 +337,8 @@ def adldaptest(request):
     try:
         username = request.session.get('username')
         if username == returnadminusernamevalue:
-            if ldaptest(adip,aduser, adpassword,sele):
+            ldaptests = ldaptest(adip, aduser, adpassword, sele)
+            if ldaptests['isSuccess']:
                 try:
                     if selectldapdb():
                         if insert_ldapmessage(domian, adip, aduser, encrypt_and_decode().encrypted_text(adpassword), adserchbase, sele)==():
@@ -329,7 +356,7 @@ def adldaptest(request):
                 except:
                     result = {'isSuccess': False, "message": '出现异常'}
             else:
-                result = {'isSuccess': False, "message": '连接失败'}
+                result = {'isSuccess': False, "message": ldaptests['message']}
         else:
             result = {'isSuccess': False, "message": '权限不足'}
     except Exception as e:
@@ -483,19 +510,45 @@ def userlogin(request):
                 else:
                     loginvalue = verifyuser_login_new(username, password)
                     if loginvalue['isSuccess'] == True:
-                        gotken=seargooled(username.lower())
-                        if gotken:
-                            result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'], 'displayname': loginvalue['message']['displayName']}}
-                            response = HttpResponse()
-                            response['Content-Type'] = "text/javascript"
-                            response.write(json.dumps(result))
-                            return response
+                        if goostatus():
+                            if goostatus()['usergotoken']=='1':
+                                gotken=seargooled(username.lower())
+                                if gotken:
+                                    result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'], 'displayname': loginvalue['message']['displayName']}}
+                                    response = HttpResponse()
+                                    response['Content-Type'] = "text/javascript"
+                                    response.write(json.dumps(result))
+                                    return response
+                                else:
+                                    result = {'code': 1, "message": '未绑定'}
+                                    response = HttpResponse()
+                                    response['Content-Type'] = "text/javascript"
+                                    response.write(json.dumps(result))
+                                    return response
+                            else:
+                                returnbackurl = request.session.get("returnbackurl")
+                                if not returnbackurl or returnbackurl == r'/' or returnbackurl == r'/login/':
+                                    returnbackurl = r'/home/'
+                                request.session['username'] = username
+                                request.session['displayname'] = loginvalue['message']['name']
+                                request.session['returnbackurl'] = ''
+                                # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
+                                result = {'code': 4, 'backurl': returnbackurl}
                         else:
-                            result = {'code': 1, "message": '未绑定'}
-                            response = HttpResponse()
-                            response['Content-Type'] = "text/javascript"
-                            response.write(json.dumps(result))
-                            return response
+                            gotken = seargooled(username.lower())
+                            if gotken:
+                                result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'],
+                                                                 'displayname': loginvalue['message']['displayName']}}
+                                response = HttpResponse()
+                                response['Content-Type'] = "text/javascript"
+                                response.write(json.dumps(result))
+                                return response
+                            else:
+                                result = {'code': 1, "message": '未绑定'}
+                                response = HttpResponse()
+                                response['Content-Type'] = "text/javascript"
+                                response.write(json.dumps(result))
+                                return response
                         # return HttpResponseRedirect(returnbackurl, request)
                     else:
                         # return render_to_response("login.html", {'message': loginvalue['message']})

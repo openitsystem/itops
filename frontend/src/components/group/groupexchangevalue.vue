@@ -436,7 +436,7 @@ export default{
       let disNameforurl = this.getQueryVariable('disName')
       this.authOriglist = []
       axios
-        .get(this.serviceurl() + '/api/GetGroupPreMessage/?CountName=' + disNameforurl)
+        .get(this.serviceurl() + '/api/GetGroupPreMessageexchangevalue/?CountName=' + disNameforurl)
         .then(response => {
           if (response.data.isSuccess) {
             this.dialogauthOrig = true
@@ -606,7 +606,7 @@ export default{
             textarea3lastvalue = textarea3lastvalue.replace(/;+/g, ';')
             for (let z = 0; z < groupvaluelist.length; z++) {
               if ((this.value9).indexOf(groupvaluelist[z]) === -1) {
-                let groupvalemessageone = await axios.get(this.serviceurl() + '/api/GetGroupPreMessage/?CountName=' + groupvaluelist[z])
+                let groupvalemessageone = await axios.get(this.serviceurl() + '/api/GetGroupPreMessageexchangevalue/?CountName=' + groupvaluelist[z])
                 let groupvalemessagetwo = await axios.get(this.serviceurl() + '/api/GetUserMessage/?CountName=' + groupvaluelist[z])
                 if (groupvalemessageone.data.isSuccess) {
                   if ((this.value9).indexOf(groupvalemessageone.data.message.distinguishedName) === -1) {
@@ -665,7 +665,7 @@ export default{
       })
       let disNameforurl = this.getQueryVariable('disName')
       axios
-        .get(this.serviceurl() + '/api/GetGroupPreMessage/?CountName=' + disNameforurl)
+        .get(this.serviceurl() + '/api/GetGroupPreMessageexchangevalue/?CountName=' + disNameforurl)
         .then(response => {
           if (response.data.isSuccess) {
             this.groupType = response.data.message.groupType

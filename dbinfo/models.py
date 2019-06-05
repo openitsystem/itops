@@ -57,18 +57,27 @@ def mailtest(inputadd,myysqlusername,myysqlpassword,inputserver,inputtestmail):
 # ladp测试
 def ldaptest(adip, aduser, adpassword,sele):
     try:
-        if sele==1:
+        if sele == '1':
             ussl=True
         else:
             ussl=False
         conn = Connection(Server(host=adip, use_ssl=ussl), user=aduser,
                           password=adpassword, auto_bind=True)
         if conn:
-            return True
+            result = {'isSuccess': True, "message": 'ldap链接成功'}
         else:
-            return False
+            result = {'isSuccess': False, "message": 'ldap链接失败,'}
     except Exception as e:
-        return False
+        if 'invalidCredentials' in str(e):
+            result = {'isSuccess': False, "message": '账号或密码错误'}
+        elif '[WinError 10054]' in str(e):
+            result = {'isSuccess': False, "message": '[WinError 10054] 远程主机强迫关闭了一个现有的连接,账号或密码错误.可能系统不支持加密连接'}
+        elif '[WinError 10060]' in str(e):
+            result = {'isSuccess': False, "message": '[WinError 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败.可能AD服务器地址错误'}
+        else:
+            result = {'isSuccess': False, "message": str(e)}
+    return result
+
 
 #创建首页数据表
 def crearindexmessagedb():
@@ -165,8 +174,27 @@ def crearldapdb():
         print(e)
         return False
 
-
-
+#创建谷歌二次验证表
+def creargotken():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql ='''CREATE TABLE `tokenstatus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usergotoken` varchar(255) DEFAULT NULL,
+  `ostatus` varchar(255) DEFAULT NULL,
+  `tstatus` varchar(255) DEFAULT NULL,
+  `sstatus` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4'''
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+        return False
 
 #验证ldap表是否存在
 def selectiisex():
@@ -325,6 +353,32 @@ def insert_ldapmessage(domian,adip,aduser,adpassword,adserchbase,sele):
         print(e)
         return False
 
+#谷歌身份验证写入
+def insert_tokengomessage(sele):
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "select * from tokenstatus"
+        conncur.execute(connsql, ())
+        histroycounts = conncur.fetchone()
+        if histroycounts:
+            id =histroycounts['id']
+            conncur = conn.cursor()
+            connsql = "UPDATE tokenstatus SET usergotoken=%s WHERE id =%s"
+            conncur.execute(connsql, (sele,id))
+            histroycounts = conncur.fetchall()
+        else:
+            conncur = conn.cursor()
+            connsql = "INSERT INTO tokenstatus (usergotoken) VALUES (%s) "
+            conncur.execute(connsql, (sele))
+            histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+        return False
+
 
 
 #创建操作表
@@ -407,6 +461,22 @@ CREATE TABLE `exiisconfig` (
     except Exception as e:
         print(e)
         return False
+
+
+#验证谷歌二次登陆表是否存在
+def selectgotken():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'tokenstatus'"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+
 
 #exchange不配做写入信息
 def insert_exp():
