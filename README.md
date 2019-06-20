@@ -308,7 +308,5 @@ API文档查看 | API文档查看 | API文档查看 | 所有权限
 
 # 欢迎贡献代码或提issue
 
-也欢迎关注我们的星球
 
-![星球](https://www.opscaff.com/wp-content/uploads/2019/04/WechatIMG124.jpeg)
 
