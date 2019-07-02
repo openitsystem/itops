@@ -658,7 +658,7 @@ def EnableMailContactapi(mailname,ExternalEmailAddress):
 ##创建用户邮箱
 def UserToExc(username,dbname):
     try:
-        exapivalue = EnableMailboxhigh(username,username,dbname)
+        exapivalue = EnableMailboxhigh(username,database=dbname)
         if (exapivalue['isSuccess']):
             return {'isSuccess':exapivalue['isSuccess'],'message':exapivalue['message']}
         else:

@@ -70,10 +70,13 @@ class exapi():
 # identity 用户唯一标识
 # alias 邮箱别名
 # database 数据库
-def EnableMailboxhigh(identity,alias,database,**kwargs):
+def EnableMailboxhigh(identity,alias=None,database=None,**kwargs):
     try:
         exchange = exapi()
-        exchange.connection('Enable-Mailbox',identity=identity,alias=alias,database=database,**kwargs)
+        if alias:
+            exchange.connection('Enable-Mailbox',identity=identity,alias=alias,database=database,**kwargs)
+        else:
+            exchange.connection('Enable-Mailbox',identity=identity,database=database,**kwargs)
         return  exchange.returnfuction()
     except Exception as e:
         return  {'isSuccess': False, 'count': 0, 'msg': str(e), 'code': 201, 'message': ''}

@@ -1562,6 +1562,7 @@ export default{
         .get(this.serviceurl() + '/api/GetDBMessage/')
         .then(response => {
           if (response.data.isSuccess) {
+            this.alldatabasename = []
             for (let i = 0; i < response.data.message.length; i++) {
               this.alldatabasename.push({'daname': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', ''), 'danamevalue': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', '')})
             }
@@ -1582,6 +1583,7 @@ export default{
         .get(this.serviceurl() + '/api/GetDBMessage/')
         .then(response => {
           if (response.data.isSuccess) {
+            this.alldatabasename = []
             for (let i = 0; i < response.data.message.length; i++) {
               this.alldatabasename.push({'daname': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', ''), 'danamevalue': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', '')})
             }
@@ -1602,6 +1604,7 @@ export default{
         .get(this.serviceurl() + '/api/GetDBMessage/')
         .then(response => {
           if (response.data.isSuccess) {
+            this.alldatabasename = []
             for (let i = 0; i < response.data.message.length; i++) {
               this.alldatabasename.push({'daname': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', ''), 'danamevalue': (response.data.message[i]).replace('{\'daname\':\'', '').replace('\'}', '')})
             }
@@ -1721,6 +1724,7 @@ export default{
       var responsevalue = await axios.get(this.serviceurl() + '/api/GetUserMessageexchange/?CountName=' + disNameforurl)
       this.smtp = []
       if (responsevalue.data.isSuccess) {
+        this.distinguishedName = responsevalue.data.message.distinguishedName
         this.loadingstopshowall = true
         if (!responsevalue.data.message['proxyAddresses'] || responsevalue.data.message['proxyAddresses'].length === 0) {
           loading.close()
@@ -1728,7 +1732,6 @@ export default{
         } else {
           this.hasexchangemailbox = true
           this.proxyAddresses = responsevalue.data.message.proxyAddresses
-          this.distinguishedName = responsevalue.data.message.distinguishedName
           await axios
             .get(this.serviceurl() + '/api/GetMailMessage/?username=' + this.distinguishedName)
             .then(response => {
