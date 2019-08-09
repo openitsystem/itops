@@ -38,10 +38,10 @@
                             <section>
                                 <label for="userName">选择导出模板需要的附加项:</label>
                                 <br>
-                                <label for="acceptuserPrincipalName">登录名(<code>userPrincipalName</code>)</label> |
                                 <label>登录名(Windows 2000以前版本)(<code>sAMAccountName</code>)</label> |
-                                <label for="acceptcn">全名(<code>cn</code>)</label>
                                 <br>
+                                <label for="acceptuserPrincipalName"><input id="acceptuserPrincipalName" name="acceptuserPrincipalName" type="checkbox">登录名(<code>userPrincipalName</code>)</label> |
+                                <label for="acceptcn"><input id="acceptcn" name="acceptcn" type="checkbox">全名(<code>cn</code>)</label>|
                                 <label for="acceptgivenName"><input id="acceptgivenName" name="acceptgivenName" type="checkbox"> 名字(givenName)</label>
                                 <label for="acceptinitials"><input id="acceptinitials" name="acceptinitials" type="checkbox"> 中间名首字母缩写(initials)</label>
                                 <label for="acceptsn"><input id="acceptsn" name="acceptsn" type="checkbox"> 姓氏(sn)</label>
@@ -288,6 +288,8 @@
             }
         });
         function exportfiletemplate() {
+            var userPrincipalName = $("#acceptuserPrincipalName").prop('checked');
+            var cn = $("#acceptcn").prop('checked');
             var givenName = $("#acceptgivenName").prop('checked');
             var initials = $("#acceptinitials").prop('checked');
             var sn = $("#acceptsn").prop('checked');
@@ -303,7 +305,7 @@
             //var userAccountControl = $("input[name='userAccountControl']:checked").val();
             post_url = '/exportfiletemplate/?givenName=' + givenName + '&initials=' + initials + '&sn=' + sn + '&displayName=' + displayName + '&description=' + description + '&physicalDeliveryOfficeName=' + physicalDeliveryOfficeName
                     + '&telephoneNumber=' + telephoneNumber + '&maildb=' + maildb + '&wWWHomePage=' + wWWHomePage + '&password=' + password + '&userAccountControl=' + userAccountControl
-                    + '&userPrincipalName=' + 'true' + '&cn=' + 'true';
+                    + '&userPrincipalName=' + userPrincipalName + '&cn=' + cn;
             location.replace(post_url);
         }
         ;

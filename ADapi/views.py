@@ -2473,7 +2473,9 @@ class GetLeaveUser(View):
         try:
             if searchvalue:
                 # shellvalue+='(anr='+searchvalue+')'
-                shellvalue+='(|(anr='+searchvalue+')(|(wWWHomePage='+searchvalue+')(physicalDeliveryOfficeName='+searchvalue+')))'
+                # shellvalue+='(|(anr='+searchvalue+')(|(wWWHomePage='+searchvalue+')(physicalDeliveryOfficeName='+searchvalue+')))'
+                shellvalue += '(|(cn=*' + searchvalue + '*)(sAMAccountName=*' + searchvalue + '*)(mail=*' + searchvalue + '*)(description=*' + searchvalue + '*)' \
+                '(physicalDeliveryOfficeName=*' + searchvalue + '*)(wWWHomePage=*' + searchvalue + '*)(givenName=*' + searchvalue + '*)(sn=*' + searchvalue + '*))'
             for i in NameList:
                 if i == '禁用':
                     shellvalue+='(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=2))'

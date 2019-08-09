@@ -4,8 +4,10 @@
 import queue
 import threading
 
-from apps.activeapi.th_creat_mail import UserCreatMail
-from itops.settings import ldap3RESTARTABLE
+from ADapi.views import UserToExc
+from apps.admanager.pwd import getpwd
+from dbinfo.views import insert_log_table_name
+from itops.settings import ldap3RESTARTABLE, ladp3search_domain
 
 
 def repeace_dn(message):
@@ -31,43 +33,75 @@ class CreatUserThread(threading.Thread):
                 status = {'status': '用户创建失败'}
                 if '0' in getDatato:
                     getDatato.pop('0')
-                if 'disableuser' in getDatato:
-                    getDatato.update({'userAccountControl': 546})
-                    getDatato.pop('disableuser')
-                else:
-                    getDatato.update({'userAccountControl': 544})
-                if 'password' in getDatato:
-                    usermessage.update({'password': getDatato['password']})
-                    getDatato.pop('password')
-                if 'maildb' in getDatato:
-                    usermessage.update({'maildb': getDatato['maildb']})
-                    getDatato.pop('maildb')
-                if getDatato['cn'] and getDatato['sAMAccountName']:
-                    newdistinguishedName = "CN=" + getDatato['cn'] + "," + distinguishedName
-                    usermessage.update({'cn': getDatato['cn']})
-                    getDatato.pop('cn')
+                if 'sAMAccountName' in getDatato:
+                    sAMAccountName = getDatato['sAMAccountName']
+                    if 'cn' in getDatato:
+                        newdistinguishedName = "CN=" + getDatato['cn'] + "," + distinguishedName
+                        usermessage.update({'cn': getDatato['cn']})
+                        getDatato.pop('cn')
+                    else:
+                        newdistinguishedName = "CN=" + sAMAccountName + "," + distinguishedName
+                    if 'userPrincipalName' in getDatato:
+                        userPrincipalName = getDatato['userPrincipalName']
+                        getDatato.pop('userPrincipalName')
+                    else:
+                        userPrincipalName = sAMAccountName + '@' + ladp3search_domain
+                    if 'disableuser' in getDatato:
+                        userAccountControl = 546
+                        getDatato.pop('disableuser')
+                    else:
+                        userAccountControl = 544
                     with ldap3RESTARTABLE as conn:
                         newuser = conn.add(
                             dn=newdistinguishedName,
-                            object_class=[
-                                "top",
-                                "person",
-                                "organizationalPerson",
-                                "user"],
-                            attributes=getDatato)
+                            object_class=["top", "person", "organizationalPerson", "user"],
+                            attributes={'sAMAccountName': sAMAccountName, 'userPrincipalName':userPrincipalName, 'userAccountControl':userAccountControl})
                         if newuser:
-                            if 'password' in usermessage:
-                                print('设置密码')
+                            status = {'status': '用户创建成功'}
+                            usermessage.update({'sAMAccountName': sAMAccountName})
+                            usermessage.update({'userPrincipalName': userPrincipalName})
+                            usermessage.update({'userAccountControl': userAccountControl})
+                            getDatato.pop('sAMAccountName')
+                            if 'password' in getDatato:
+                                passwd = getDatato['password']
+                                getDatato.pop('password')
                             else:
-                                print('自动密码')
-                                result.update({'password': '自动密码'})
-                            if 'maildb' in usermessage:
-                                UserCreatMail(getDatato['sAMAccountName'], usermessage['maildb'])
-                                status = {'status':'用户创建成功'}
+                                passwd = getpwd(10)
+                            port = conn.server.port
+                            if int(port) == 636:
+                                modify_password = conn.extend.microsoft.modify_password(newdistinguishedName, passwd)
+                                if modify_password:
+                                    result.update({'password': passwd})
+                                    modify_userAccountControl = conn.modify(dn=newdistinguishedName, changes={'userAccountControl': [('MODIFY_REPLACE', [512])]})
+                                    if modify_userAccountControl:
+                                        usermessage.update({'userAccountControl': 512})
+                                else:
+                                    result.update({'password': '设置密码失败'})
+                            else:
+                                result.update({'password': '设置密码LDAP必须采用加密连接,端口636'})
+                            if 'maildb' in getDatato:
+                                maildb = getDatato['maildb']
+                                if maildb:
+                                    #UserCreatMail(sAMAccountName, maildb)
+                                    import time
+                                    import random
+                                    time.sleep(int(random.randint(60,130)))
+                                    UserToExcs = UserToExc(sAMAccountName, maildb)
+                                    if not UserToExcs['isSuccess']:
+                                        insert_log_table_name('log', '', 'user_to_exc', '创建邮箱', str(UserToExcs['isSuccess']), str(sAMAccountName), str(UserToExcs['message']), str(maildb))
+                                usermessage.update({'maildb': maildb})
+                                getDatato.pop('maildb')
+                            for dataName, dateVaule in getDatato.items():
+                                try:
+                                    modify_user = conn.modify(dn=newdistinguishedName, changes={dataName: [('MODIFY_REPLACE', [dateVaule])]})
+                                    if not modify_user:
+                                        getDatato.update({dataName: '修改属性失败'})
+                                except:
+                                    getDatato.pop(dataName)
                         else:
                             status = {'status': '用户创建失败：'+str(conn.result)}
                 else:
-                    status = {'status': '用户创建失败：cn,sAMAccountName不能为空'}
+                    status = {'status': '用户创建失败：sAMAccountName不能为空'}
             except Exception as e:
                 status = {'status': '用户创建失败:'+str(e)}
             result.update(getDatato)
