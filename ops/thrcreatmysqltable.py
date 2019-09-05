@@ -229,11 +229,23 @@ CREATE TABLE `exiisconfig` (
                         `username` varchar(255) DEFAULT NULL,
                         `token` varchar(255) DEFAULT NULL,
                         `date` datetime DEFAULT NULL,
+                        `ip` varchar(255) DEFAULT NULL,
+                        `agent` varchar(255) DEFAULT NULL,
                         PRIMARY KEY (`id`)
                         ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
                     '''
                     conncur.execute(connsql)
                     conn.commit()
+                else:
+                    try:
+                        conncur = conn.cursor()
+                        connsql = '''ALTER TABLE usertoken ADD COLUMN `ip` VARCHAR(255) DEFAULT NULL;
+                              ALTER TABLE usertoken ADD COLUMN `agent` VARCHAR(255) DEFAULT NULL;
+                        '''
+                        conncur.execute(connsql)
+                        conn.commit()
+                    except Exception as e:
+                        pass
             except Exception as e:
                 insert_log_table_name('log', '127.0.0.1', 'ThrCreatMysqlTable', 'adminportal', 'False', 'usertoken', '创建usertoken表', str(e))
             try:

@@ -562,11 +562,49 @@ def goostatus():
         print(e)
         return False
 
+def creatUsertoken():
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "show tables like 'usertoken'"
+        conncur.execute(connsql)
+        usertoken = conncur.fetchone()
+        conn.commit()
+        if not usertoken:
+            conncur = conn.cursor()
+            connsql = '''DROP TABLE IF EXISTS `usertoken`;
+                           CREATE TABLE `usertoken` (
+                           `id` int(11) NOT NULL AUTO_INCREMENT,
+                           `username` varchar(255) DEFAULT NULL,
+                           `token` varchar(255) DEFAULT NULL,
+                           `date` datetime DEFAULT NULL,
+                           `ip` varchar(255) DEFAULT NULL,
+                           `agent` varchar(255) DEFAULT NULL,
+                           PRIMARY KEY (`id`)
+                           ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+                       '''
+            conncur.execute(connsql)
+            conn.commit()
+        else:
+            try:
+                conncur = conn.cursor()
+                connsql = '''ALTER TABLE usertoken ADD COLUMN `ip` VARCHAR(255) DEFAULT NULL;
+                      ALTER TABLE usertoken ADD COLUMN `agent` VARCHAR(255) DEFAULT NULL;
+                '''
+                conncur.execute(connsql)
+                conn.commit()
+            except Exception as e:
+                pass
+    except Exception as e:
+        insert_log_table_name('log', '127.0.0.1', 'creatUsertoken', 'adminportal', 'False', 'usertoken', '创建usertoken表', str(e))
+    return 1
+
 
 #查询密钥是否存在
 def seargooled(username):
     conn = dbinfo()
     try:
+        creatUsertoken()
         conncur = conn.cursor()
         connsql = "select * from usertoken where username = %s"
         conncur.execute(connsql, (username))
@@ -578,6 +616,20 @@ def seargooled(username):
         print(e)
         return False
 
+# 更新密钥相关ip mac
+def updateUsertoken(username, ip, agent):
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "update usertoken set ip=%s, agent=%s where username = %s"
+        conncur.execute(connsql, (ip, agent, username))
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        print(e)
+        return False
 
 #验证成功插入密钥
 def insert_tokenb(username, token): #写入数据

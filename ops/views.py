@@ -20,7 +20,7 @@ from dbinfo.models import dbinfotest, ldaptest, selectldapdb, insert_ldapmessage
     insert_userper, crearperdb, selectiisex, creariisdb, insert_expmessage, insert_userper_monitor, \
     insert_userper_zabbix, insert_exp, selectgotken, insert_tokengomessage, creargotken
 from dbinfo.views import getldap3configtion, getpermsessage, getliisconfigtion, getskey, insert_log, seargooled, \
-    insert_tokenb, goostatus
+    insert_tokenb, goostatus, updateUsertoken
 from itops.settings import returnadminusernamevalue, ldap3RESTARTABLE, ladp3search_base
 from ops.thrcreatmysqltable import creatmysqltable
 from permission.therhasindexvalue import startapschedulerscheduler
@@ -496,7 +496,10 @@ def userlogin(request):
     post = request.POST
     username = post.get("Username")
     password = post.get("Password")
+    ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR'])
+    agent = request.META.get('HTTP_USER_AGENT', '')
     try:
+        result = {'code': 2, 'backurl': ''}
         if username:
             if password:
                 if username.lower() == returnadminusernamevalue:
@@ -509,23 +512,10 @@ def userlogin(request):
                         result = {'code': 2, "message": '密码错误'}
                 else:
                     loginvalue = verifyuser_login_new(username, password)
-                    if loginvalue['isSuccess'] == True:
-                        if goostatus():
-                            if goostatus()['usergotoken']=='1':
-                                gotken=seargooled(username.lower())
-                                if gotken:
-                                    result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'], 'displayname': loginvalue['message']['displayName']}}
-                                    response = HttpResponse()
-                                    response['Content-Type'] = "text/javascript"
-                                    response.write(json.dumps(result))
-                                    return response
-                                else:
-                                    result = {'code': 1, "message": '未绑定'}
-                                    response = HttpResponse()
-                                    response['Content-Type'] = "text/javascript"
-                                    response.write(json.dumps(result))
-                                    return response
-                            else:
+                    if loginvalue['isSuccess']:
+                        goo_status = goostatus()
+                        if goo_status:
+                            if goo_status['usergotoken'] == '0':
                                 returnbackurl = request.session.get("returnbackurl")
                                 if not returnbackurl or returnbackurl == r'/' or returnbackurl == r'/login/':
                                     returnbackurl = r'/home/'
@@ -534,24 +524,26 @@ def userlogin(request):
                                 request.session['returnbackurl'] = ''
                                 # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
                                 result = {'code': 4, 'backurl': returnbackurl}
-                        else:
+                        if result['code'] != 4:
                             gotken = seargooled(username.lower())
                             if gotken:
-                                result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'],
-                                                                 'displayname': loginvalue['message']['displayName']}}
-                                response = HttpResponse()
-                                response['Content-Type'] = "text/javascript"
-                                response.write(json.dumps(result))
-                                return response
+                                gotken_ip = gotken[0].get('ip', '')
+                                gotken_agent = gotken[0].get('agent', '')
+                                if gotken_ip == ip and gotken_agent == agent:
+                                    returnbackurl = request.session.get("returnbackurl")
+                                    if not returnbackurl or returnbackurl == r'/' or returnbackurl == r'/login/':
+                                        returnbackurl = r'/home/'
+                                    request.session['username'] = username
+                                    request.session['displayname'] = loginvalue['message']['name']
+                                    request.session['returnbackurl'] = ''
+                                    # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
+                                    result = {'code': 4, 'backurl': returnbackurl}
+                                else:
+                                    result = {'code': 0, "message": {'username': loginvalue['message']['sAMAccountName'],
+                                                                     'displayname': loginvalue['message']['displayName']}}
                             else:
                                 result = {'code': 1, "message": '未绑定'}
-                                response = HttpResponse()
-                                response['Content-Type'] = "text/javascript"
-                                response.write(json.dumps(result))
-                                return response
-                        # return HttpResponseRedirect(returnbackurl, request)
                     else:
-                        # return render_to_response("login.html", {'message': loginvalue['message']})
                         result = {'code': 2, "message": loginvalue['message']}
             else:
                 result = {'code': 2, "message": '请填写密码'}
@@ -591,6 +583,8 @@ def logingotok(request):
     disname = post.get("disname")
     otpcode = post.get("otpcode")
     returnbackurl = request.session.get("returnbackurl")
+    ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR'])
+    agent = request.META.get('HTTP_USER_AGENT', '')
     try:
         if not returnbackurl or returnbackurl==r'/' or returnbackurl==r'/login/':
             returnbackurl = r'/home/'
@@ -599,6 +593,7 @@ def logingotok(request):
             request.session['username'] = username
             request.session['displayname'] = disname
             request.session['returnbackurl'] = ''
+            updateUsertoken(username, ip, agent)
             result = {'isSuccess': True, "message": '验证成功','backurl': returnbackurl}
         else:
             result = {'isSuccess': False, "message": '验证失败'}
