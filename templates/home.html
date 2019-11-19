@@ -66,102 +66,103 @@
 <body id="pic1">
 
 <!--top bar start-->
-<div class="top-bar light-top-bar"><!--by default top bar is dark, add .light-top-bar class to make it light-->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-6">
-                <a href="/home/" class="admin-logo">
-                    <span style="font-size: 25px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;text-align: center"> 运维平台</span>
-                </a>
-                <div class="left-nav-toggle visible-xs visible-sm">
-                    <a href="">
-                        <i class="glyphicon glyphicon-menu-hamburger"></i>
-                    </a>
-                </div><!--end nav toggle icon-->
-            </div>
-            <div class="col-xs-6">
-                <ul class="list-inline top-right-nav">
-                    <li class="dropdown avtar-dropdown">
-                        <a class="btn" target="_blank">{{ request.session.displayname }}  </a>
-                    </li>
-                    <li>
-                        <a href="/logout/">
-                            注销
-                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+{#<div class="top-bar light-top-bar"><!--by default top bar is dark, add .light-top-bar class to make it light-->#}
+{#    <div class="container-fluid">#}
+{#        <div class="row">#}
+{#            <div class="col-xs-6">#}
+{#                <a href="/home/" class="admin-logo">#}
+{#                    <span style="font-size: 25px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;text-align: center"> 运维平台</span>#}
+{#                </a>#}
+{#                <div class="left-nav-toggle visible-xs visible-sm">#}
+{#                    <a href="">#}
+{#                        <i class="glyphicon glyphicon-menu-hamburger"></i>#}
+{#                    </a>#}
+{#                </div><!--end nav toggle icon-->#}
+{#            </div>#}
+{#            <div class="col-xs-6">#}
+{#                <ul class="list-inline top-right-nav">#}
+{#                    <li class="dropdown avtar-dropdown">#}
+{#                        <a class="btn" target="_blank">{{ request.session.displayname }}  </a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a href="/logout/">#}
+{#                            注销#}
+{#                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 <!-- top bar end-->
 <!--left navigation start-->
-<aside class="float-navigation light-navigation">
-    <div class="nano">
-        <div class="nano-content">
-            <ul class="metisMenu nav" id="menu">
-                <li id="ittool" class="active">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-settings"></i> IT记录管理 <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav" aria-expanded="true">
-                        <li><a href="/ldapcord/">LDAP账号管理</a></li>
-                        <li><a href="/dnscord/">DNS记录管理</a></li>
-                    </ul>
-                </li>
-                <li id="ad" class="active">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-users"></i> Active Directory <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav" aria-expanded="true">
-                        <li><a href="/directorytree/">用户和计算机</a></li>
+{#<aside class="float-navigation light-navigation">#}
+{#    <div class="nano">#}
+{#        <div class="nano-content">#}
+{#            <ul class="metisMenu nav" id="menu">#}
+{#                <li id="ittool" class="active">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-settings"></i> IT记录管理 <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav" aria-expanded="true">#}
+{#                        <li><a href="/ldapcord/">LDAP账号管理</a></li>#}
+{#                        <li><a href="/dnscord/">DNS记录管理</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li id="ad" class="active">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-users"></i> Active Directory <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav" aria-expanded="true">#}
+{#                        <li><a href="/directorytree/">用户和计算机</a></li>#}
                         {#                        <li><a href="/search/">账号搜索</a></li>#}
-                        <li><a href="/leavesearch/">账号搜索</a></li>
-                        <li><a href="/admanager/">批量操作</a></li>
-                        <li><a href="/downloadcsv/">报表管理</a></li>
-                    </ul>
-                </li>
+{#                        <li><a href="/leavesearch/">账号搜索</a></li>#}
+{#                        <li><a href="/admanager/">批量操作</a></li>#}
+{#                        <li><a href="/downloadcsv/">报表管理</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
                 {#                <li class="nav-heading"><span>Mail</span></li>#}
-                <li id="mailli" class="active" style="display: none">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-envelope"></i> 邮箱 <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav collapse " aria-expanded="true">
-                        <li><a href="/findmail/">邮件流查询</a></li>
-                    </ul>
-                </li>
-                <li id="logli" class="active">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-docs"></i> 文档 <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav collapse " aria-expanded="true">
-                        <li><a href="/faultproject/">故障报告</a></li>
-                        <li><a href="/findproject/">故障回溯</a></li>
-                        <li><a href="/creatproject/">新建文档</a></li>
-                        <li><a href="/projects/">文档查看</a></li>
-                    </ul>
-                </li>
-                <li id="logli" class="active">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> API <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav collapse " aria-expanded="true">
-                        <li><a href="/docs/" target="_blank">API文档</a></li>
-                        <li><a href="/apipermissions/">权限配置</a></li>
-                        <li><a href="/apinames/">API方法导航</a></li>
-                    </ul>
-                </li>
-                <li id="logli" class="active">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 日志 <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav collapse " aria-expanded="true">
-                        <li><a href="/serchlog/">日志</a></li>
-                    </ul>
-                </li>
-                <li id="monitorvalue" class="active" style="display:none;">
-                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 监控 <span class="fa arrow"></span></a>
-                    <ul class="nav-second-level nav collapse " aria-expanded="true">
-                        <li><a href="/dfsmonitor/">dfs监控</a></li>
-                        <li><a href="/casmonitor/">邮箱cas监控</a></li>
-                        <li><a href="/mailboxmonitor/">邮箱mailbox监控</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!--nano content-->
-    </div><!--nano scroll end-->
-</aside>
-<!--left navigation end-->
-<section class="main-content">
+{#                <li id="mailli" class="active" style="display: none">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-envelope"></i> 邮箱 <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav collapse " aria-expanded="true">#}
+{#                        <li><a href="/findmail/">邮件流查询</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li id="logli" class="active">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-docs"></i> 文档 <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav collapse " aria-expanded="true">#}
+{#                        <li><a href="/faultproject/">故障报告</a></li>#}
+{#                        <li><a href="/findproject/">故障回溯</a></li>#}
+{#                        <li><a href="/creatproject/">新建文档</a></li>#}
+{#                        <li><a href="/projects/">文档查看</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li id="logli" class="active">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> API <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav collapse " aria-expanded="true">#}
+{#                        <li><a href="/docs/" target="_blank">API文档</a></li>#}
+{#                        <li><a href="/apipermissions/">权限配置</a></li>#}
+{#                        <li><a href="/apinames/">API方法导航</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li id="logli" class="active">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 日志 <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav collapse " aria-expanded="true">#}
+{#                        <li><a href="/serchlog/">日志</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                <li id="monitorvalue" class="active" style="display:none;">#}
+{#                    <a href="javascript: void(0);" aria-expanded="true"><i class="icon-folder-alt"></i> 监控 <span class="fa arrow"></span></a>#}
+{#                    <ul class="nav-second-level nav collapse " aria-expanded="true">#}
+{#                        <li><a href="/dfsmonitor/">dfs监控</a></li>#}
+{#                        <li><a href="/casmonitor/">邮箱cas监控</a></li>#}
+{#                        <li><a href="/mailboxmonitor/">邮箱mailbox监控</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </div><!--nano content-->#}
+{#    </div><!--nano scroll end-->#}
+{#</aside>#}
+{#<!--left navigation end-->#}
+{#<section class="main-content">#}
+<section style="height: calc(100vh - 60px)">
     <div class="modal fade" id="reset_password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -218,14 +219,14 @@
         <!-- or -->
         {#        <div><iframe src="/bigindex" frameborder="0" scrolling="no" id="external-frame" onload="setIframeHeight(this)"></iframe></div>#}
         {#        <div><iframe src="/bigindex"></iframe></div>#}
-        <div class="row">
-
-            <div class="col-sm-12">
-                <iframe width="100%" height="1300" frameborder="no" scrolling="no" src="/bigindex">
-
-                </iframe>
-            </div>
-        </div>
+{#        <div class="row">#}
+{##}
+{#            <div class="col-sm-12">#}
+{#                <iframe width="100%" height="1300" frameborder="no" scrolling="no" src="/bigindex">#}
+{##}
+{#                </iframe>#}
+{#            </div>#}
+{#        </div>#}
 
     {% endblock %}
 

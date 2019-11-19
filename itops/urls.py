@@ -53,13 +53,14 @@ urlpatterns = [
     url(r'^ouvalue/', TemplateView.as_view(template_name="ou.html")),
     url(r'^intermediate/', TemplateView.as_view(template_name="intermediate.html")),
     url(r'^monitor1111/', TemplateView.as_view(template_name="monitor.html")),
-    url(r'^bigindex/', TemplateView.as_view(template_name="bigindex.html"))
+    url(r'^home/', TemplateView.as_view(template_name="bigindex.html"))
+    # url(r'^bigindex/', TemplateView.as_view(template_name="bigindex.html"))
 ]
 
 urlpatterns += [
     url(r'^$|^login/$', ops_views.login, name='login'),
     url(r'^logout/$', ops_views.logout, name="logout"),
-    url(r'^home/$', ops_views.home, name="home"),
+    # url(r'^home/$', ops_views.home, name="home"),
     url(r'^searchmailstaus/$', ops_views.searchmailstaus, name="searchmailstaus"),
     url(r'^userlogin/$', ops_views.userlogin, name="userlogin"),
     url(r'^gootokenpng/$', ops_views.gootokenpng, name="gootokenpng"),
