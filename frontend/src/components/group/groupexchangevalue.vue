@@ -1,6 +1,6 @@
 <template>
   <el-col :span="24" v-if="hassmtpvalue">
-  <el-menu class="el-menu-demo" mode="horizontal">
+  <el-menu style="margin-bottom:10px" class="el-menu-demo" mode="horizontal">
     <!-- <el-menu-item @click="addsmtpvalue" index="2">新增smtp地址</el-menu-item> -->
     <el-submenu index="1">
       <template slot="title">邮箱设置</template>

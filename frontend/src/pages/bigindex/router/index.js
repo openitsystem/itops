@@ -18,7 +18,7 @@ routes.push({
   path: `/`,
   name: 'App',
   component: () => import(`../App`),
-  redirect: '/bigindex'
+  redirect: '/index'
 })
 
 export default new Router({

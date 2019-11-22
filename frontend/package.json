@@ -22,6 +22,7 @@
     "moment": "^2.24.0",
     "vue": "^2.5.2",
     "vue-echarts": "^4.0.1",
+    "vue-number-scroll": "^2.0.1",
     "vue-router": "^3.0.1",
     "xlsx": "^0.14.1"
   },

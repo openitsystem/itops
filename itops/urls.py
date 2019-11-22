@@ -60,6 +60,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^$|^login/$', ops_views.login, name='login'),
     url(r'^logout/$', ops_views.logout, name="logout"),
+    url(r'^CheckUserlogin/$', ops_views.CheckUserlogin, name="CheckUserlogin"),
     # url(r'^home/$', ops_views.home, name="home"),
     url(r'^searchmailstaus/$', ops_views.searchmailstaus, name="searchmailstaus"),
     url(r'^userlogin/$', ops_views.userlogin, name="userlogin"),

@@ -1,6 +1,6 @@
 module.exports = [{
   name: '常规',
-  componentName: 'bigindex'
+  componentName: 'index'
 },{
   name: 'LDAP账号管理',
   componentName: 'ldapcord'

@@ -1,6 +1,6 @@
 <template>
   <el-col :span="24" v-show="loadingstopshowall" v-if="hasexchangemailbox" :default-active="activeIndex">
-  <el-menu class="el-menu-demo" mode="horizontal">
+  <el-menu style="margin-bottom:10px" class="el-menu-demo" mode="horizontal">
     <!-- <el-menu-item @click="addsmtpvalue" index="2">新增smtp地址</el-menu-item> -->
     <el-submenu index="3">
       <template slot="title">邮箱设置</template>
@@ -1048,7 +1048,6 @@ export default{
         lock: true
       })
       this.Permissionlistvalue = []
-      // let disNameforurl = this.getQueryVariable('disName')
       axios.get(this.serviceurl() + '/api/GetADPermission/?CountName=' + this.distinguishedName)
         .then(response => {
           loading.close()

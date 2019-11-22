@@ -4,9 +4,18 @@
       <a href="/home/" class="admin-logo" style="text-decoration:none">
         <span style="font-size: 25px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;text-align: center"> 运维平台</span>
       </a>
-      <a href="/logout/" style="float:right">
-        <span> 退出</span>
-      </a>
+      <el-dropdown trigger="click" style="float:right" class="classSpancursorpointer">
+        <span class="el-dropdown-link">
+          {{ userDisplayname }}<i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <span  @click="jumpurl_out()">
+              退出登录
+            </span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </el-header>
     <el-container>
       <el-aside style="height: calc(100vh - 60px);width:220px">
@@ -85,21 +94,40 @@
 </template>
 
 <script>
+import axios from 'axios'
+import serverurlvaluefromjs from '@/config/serverurlvalue'
+axios.defaults.withCredentials = true
 export default {
   data () {
     return {
       classname: {
         classSpancursorpointer: 'classSpancursorpointer'
       },
-      srcurl: ''
+      srcurl: '',
+      userDisplayname: ''
     }
   },
   created () {
-    this.srcurl = window.location.protocol + "//" + window.location.host + "/docs/"
+    this.srcurl = window.location.protocol + "//" + window.location.host
+    this.checkUserLogin()
   },
   methods: {
+    checkUserLogin () {
+      axios
+        .get(serverurlvaluefromjs.serverurl + '/CheckUserlogin')
+        .then(response => {
+          if (response.data.username === null) {
+            this.jumpurl_out()
+          } else {
+            this.userDisplayname = response.data.displayname
+          }
+        })
+    },
     jumpurl () {
-      window.location = this.srcurl
+      window.location = this.srcurl + "/docs/"
+    },
+    jumpurl_out () {
+      window.location = this.srcurl + "/logout/"
     }
   }
 }

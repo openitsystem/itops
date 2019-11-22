@@ -1,12 +1,31 @@
 <template>
   <el-col :span="24">
-  <el-button
-    size="mini"
-    @click="addGroup">添加群组</el-button>
+  <el-menu style="margin-bottom:10px;height:60px" class="el-menu-demo" mode="horizontal">
+    <!-- <el-menu-item> -->
+        <el-button
+          type="primary"
+          style="margin-top:15px;margin-left:15px"
+          size="small"
+          @click="addGroup">添加群组</el-button>
+        <el-button
+          type="info"
+          style="margin-top:15px;margin-left:15px"
+          size="small"
+          @click="exportExcel">导出列表</el-button>
+        <el-button
+          size="small"
+          v-if="tableData3.length"
+          type="danger"
+          @click="removemoregroupfromuser">退出选中群组</el-button>
+        <el-button
+          type="text"
+          style="margin-top:15px;margin-right:15px;cursor:default;float:right"
+          @click="passfunction">总计：{{ tableData3.length }}</el-button>
+  </el-menu>
+
   <!-- <el-button
     size="mini"
-    v-if="tableData3.length"
-    @click="Deleteallgroup">清空群组</el-button> -->
+    @click="addGroup">添加群组</el-button>
   <el-button
     size="mini"
     v-if="tableData3.length"
@@ -18,7 +37,7 @@
     size="mini"
     v-if="tableData3.length"
     type="danger"
-    @click="removemoregroupfromuser">退出选中群组</el-button>
+    @click="removemoregroupfromuser">退出选中群组</el-button> -->
   <el-table id="selectusermemberoftable" @selection-change="selectionchangedvalue" height='500' :data="tableData3.filter(data => !search || data.date.toLowerCase().includes(search.toLowerCase()))" @row-dblclick="dataBackFillGoods" style="width: 100%" v-cloak>
     <el-table-column type="selection" v-if="tableData3.length">
     </el-table-column>
@@ -122,6 +141,7 @@ export default{
     this.findgroupmembers()
   },
   methods: {
+    passfunction () {},
     removemoregroupfromuser () {
       let disNameforurl = this.getQueryVariable('disName')
       if ((this.multipleSelection).length === 0) {

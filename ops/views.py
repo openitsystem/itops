@@ -134,6 +134,14 @@ def logout(request):
     request.session.flush()
     return HttpResponseRedirect('/login/', request)
 
+def CheckUserlogin(request):
+    username = request.session.get("username")
+    displayname = request.session.get("displayname")
+    result = {'username': username, "displayname": displayname}
+    response = HttpResponse()
+    response['Content-Type'] = "text/javascript"
+    response.write(json.dumps(result))
+    return response
 
 
 def changadminpwd(request):
@@ -520,7 +528,7 @@ def userlogin(request):
                                 if not returnbackurl or returnbackurl == r'/' or returnbackurl == r'/login/':
                                     returnbackurl = r'/home/'
                                 request.session['username'] = username
-                                request.session['displayname'] = loginvalue['message']['name']
+                                request.session['displayname'] = loginvalue['message']['displayname']
                                 request.session['returnbackurl'] = ''
                                 # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
                                 result = {'code': 4, 'backurl': returnbackurl}
