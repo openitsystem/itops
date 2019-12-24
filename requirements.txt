@@ -13,7 +13,7 @@ django-api-docs==1.1.1
 django-cors-headers==2.4.0
 django-filter==2.0.0.dev1
 django-pipeline==1.6.13
-djangorestframework==3.7.7
+djangorestframework==3.9.1
 djangorestframework-jwt==1.11.0
 futures==3.1.1
 ipaddress==1.0.17
