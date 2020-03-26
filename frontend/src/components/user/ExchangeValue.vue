@@ -25,31 +25,31 @@
   <el-table :data="tableData3"  style="width: 100%" :show-header="false" v-cloak>
     <el-table-column>
       <template slot-scope="scope">
-        <span v-if="IssueWarningQuota === 'unlimited'">警告容量使用（总容量：无限制）</span>
+        <span v-if="IssueWarningQuota.toLowerCase() === 'unlimited'">警告容量使用（总容量：无限制）</span>
         <span v-else>警告容量使用（总容量： <span v-text="IssueWarningQuota.split(' (')[0]"></span>）</span>
       </template>
     </el-table-column>
     <el-table-column>
       <template slot-scope="scope">
-        <span v-if="ProhibitSendQuota === 'unlimited'">禁止外发容量使用（总容量：无限制）</span>
+        <span v-if="ProhibitSendQuota.toLowerCase() === 'unlimited'">禁止外发容量使用（总容量：无限制）</span>
         <span v-else>禁止外发容量使用（总容量：<span v-text="ProhibitSendQuota.split(' (')[0]"></span>）</span>
       </template>
     </el-table-column>
     <el-table-column>
       <template slot-scope="scope">
-        <span v-if="ProhibitSendReceiveQuota === 'unlimited'">禁止收发容量使用（总容量：无限制）</span>
+        <span v-if="ProhibitSendReceiveQuota.toLowerCase() === 'unlimited'">禁止收发容量使用（总容量：无限制）</span>
         <span v-else>禁止收发容量使用（总容量：<span v-text="ProhibitSendReceiveQuota.split(' (')[0]"></span>）</span>
       </template>
     </el-table-column>
     <el-table-column v-if="ArchiveDatabase !== null">
       <template slot-scope="scope">
-        <span v-if="ArchiveWarningQuota === 'unlimited'">存档警告容量使用（总容量：无限制）</span>
-        <span>存档警告容量使用（总容量：<span v-text="ArchiveWarningQuota.split(' (')[0]"></span>）</span>
+        <span v-if="ArchiveWarningQuota.toLowerCase() === 'unlimited'">存档警告容量使用（总容量：无限制）</span>
+        <span v-else>存档警告容量使用（总容量：<span v-text="ArchiveWarningQuota.split(' (')[0]"></span>）</span>
       </template>
     </el-table-column>
     <el-table-column v-if="ArchiveDatabase !== null">
       <template slot-scope="scope">
-        <span v-if="ArchiveQuota === 'unlimited'">存档容量使用（总容量：无限制）</span>
+        <span v-if="ArchiveQuota.toLowerCase() === 'unlimited'">存档容量使用（总容量：无限制）</span>
         <span>存档容量使用（总容量：<span v-text="ArchiveQuota.split(' (')[0]"></span>）</span>
       </template>
     </el-table-column>
@@ -58,31 +58,31 @@
     <el-table-column>
       <template slot-scope="scope">
         <span v-text="TotalItemSize.split(' (')[0]"></span>
-        <el-progress :percentage="percentageIssueWarningQuota" style='white-space:nowrap'></el-progress>
+        <el-progress :percentage="parseFloat(percentageIssueWarningQuota)" style='white-space:nowrap'></el-progress>
       </template>
     </el-table-column>
     <el-table-column>
       <template slot-scope="scope">
         <span v-text="TotalItemSize.split(' (')[0]"></span>
-        <el-progress :percentage="percentageProhibitSendQuota" style='white-space:nowrap'></el-progress>
+        <el-progress :percentage="parseFloat(percentageProhibitSendQuota)" style='white-space:nowrap'></el-progress>
       </template>
     </el-table-column>
     <el-table-column>
       <template slot-scope="scope">
         <span v-text="TotalItemSize.split(' (')[0]"></span>
-        <el-progress :percentage="percentageProhibitSendReceiveQuota" style='white-space:nowrap'></el-progress>
+        <el-progress :percentage="parseFloat(percentageProhibitSendReceiveQuota)" style='white-space:nowrap'></el-progress>
       </template>
     </el-table-column>
     <el-table-column v-if="ArchiveDatabase !== null">
       <template slot-scope="scope">
         <span v-text="ArTotalItemSize.split(' (')[0]"></span>
-        <el-progress :percentage="percentageArchiveWarningQuota" style='white-space:nowrap'></el-progress>
+        <el-progress :percentage="parseFloat(percentageArchiveWarningQuota)" style='white-space:nowrap'></el-progress>
       </template>
     </el-table-column>
     <el-table-column v-if="ArchiveDatabase !== null">
       <template slot-scope="scope">
         <span v-text="ArTotalItemSize.split(' (')[0]"></span>
-        <el-progress :percentage="percentageArchiveQuota" style='white-space:nowrap'></el-progress>
+        <el-progress :percentage="parseFloat(percentageArchiveQuota)" style='white-space:nowrap'></el-progress>
       </template>
     </el-table-column>
   </el-table>
@@ -125,7 +125,7 @@
     <el-table-column>
       <template slot-scope="scope">
         <div v-if="changespanshow.changeRecipientLimitsshow">
-          <div v-if="RecipientLimits === 'unlimited'" >
+          <div v-if="RecipientLimits.toLowerCase() === 'unlimited'" >
             <span v-pre>没个人限制</span>
           </div>
           <div v-else >
@@ -1417,21 +1417,21 @@ export default{
       } else {
         this.mailboxsettingcheck = false
         // 默认显示发出警告配额信息
-        if (this.IssueWarningQuota === 'unlimited') {
+        if (this.IssueWarningQuota.toLowerCase() === 'unlimited') {
           this.changeVisiblecapacity.changeisIssueWarningQuotacheckvalue = false
         } else {
           this.changeVisiblecapacity.changeisIssueWarningQuotacheckvalue = true
           this.changeisIssueWarningQuotainputvalue = Math.round(parseInt(this.IssueWarningQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) / 1024 / 1024)
         }
         // 默认显示禁止发送配额信息
-        if (this.ProhibitSendQuota === 'unlimited') {
+        if (this.ProhibitSendQuota.toLowerCase() === 'unlimited') {
           this.changeVisiblecapacity.changeisProhibitSendQuotacheckvalue = false
         } else {
           this.changeVisiblecapacity.changeisProhibitSendQuotacheckvalue = true
           this.changeisProhibitSendQuotainputvalue = Math.round(parseInt(this.ProhibitSendQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) / 1024 / 1024)
         }
         // 默认显示禁止发送接收配额信息
-        if (this.ProhibitSendReceiveQuota === 'unlimited') {
+        if (this.ProhibitSendReceiveQuota.toLowerCase() === 'unlimited') {
           this.changeVisiblecapacity.changeisProhibitSendReceiveQuotacheckvalue = false
         } else {
           this.changeVisiblecapacity.changeisProhibitSendReceiveQuotacheckvalue = true
@@ -1447,7 +1447,7 @@ export default{
       this.changearchiveisProhibitSendReceiveQuotainputvalue = Math.round(parseInt(this.ArchiveQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) / 1024 / 1024)
       // this.changearchiveisIssueWarningQuotainputvalue = Math.round(parseInt(this.ArchiveWarningQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) / 1024 / 1024)
       // 默认显示归档禁止发送接收配额信息
-      if (this.ArchiveWarningQuota === 'unlimited') {
+      if (this.ArchiveWarningQuota.toLowerCase() === 'unlimited') {
         this.changeVisiblecapacity.changearchiveisIssueWarningQuotacheckvalue = false
       } else {
         this.changeVisiblecapacity.changearchiveisIssueWarningQuotacheckvalue = true
@@ -1715,6 +1715,7 @@ export default{
       }).then()
     },
     async searchmailboxvalue () {
+      let that = this
       this.loadingstopshowall = false
       const loading = this.$loading({
         lock: true
@@ -1737,8 +1738,10 @@ export default{
               loading.close()
               if (response.data.isSuccess) {
                 this.UseDatabaseQuotaDefaults = response.data.message.UseDatabaseQuotaDefaults.toString()
-                this.Database = response.data.message.Database
-                this.Databasechangevalue = response.data.message.Database
+                typeof response.data.message.Database === typeof '1'?this.Database = response.data.message.Database:this.Database = response.data.message.Database.Name
+                typeof response.data.message.Database === typeof '1'?this.Databasechangevalue = response.data.message.Database:this.Databasechangevalue = response.data.message.Database.Name
+                // this.Database = response.data.message.Database
+                // this.Databasechangevalue = response.data.message.Database
                 this.Alias = response.data.message.Alias
                 this.EmailAddressPolicyEnabled = response.data.message.EmailAddressPolicyEnabled.toString().toLowerCase()
                 this.MailboxMoveStatus = response.data.message.MailboxMoveStatus
@@ -1752,27 +1755,32 @@ export default{
                 this.RulesQuota = response.data.message.RulesQuota
                 this.RulesQuotaselectfirstvalue = response.data.message.RulesQuota
                 this.RecipientLimits = response.data.message.RecipientLimits
-                this.RecipientLimitsaselectfirstvalue = response.data.message.RecipientLimits
-                if (!response.data.message['TotalItemSize']) {
+                this.RecipientLimitsaselectfirstvalue = response.data.message.RecipientLimits.toLowerCase()
+                let responseDataMessageTotalItemSize = ''
+                typeof response.data.message['TotalItemSize'] === typeof '1'?responseDataMessageTotalItemSize = response.data.message['TotalItemSize']:responseDataMessageTotalItemSize = response.data.message['TotalItemSize']['Value']
+                if (!responseDataMessageTotalItemSize) {
+                // if (!response.data.message['TotalItemSize']['Value']) {
                   this.intTotalItemSize = 1
                   this.TotalItemSize = '0 KB (0 bytes)'
                 } else {
-                  this.TotalItemSize = response.data.message.TotalItemSize
-                  this.intTotalItemSize = parseInt((((response.data.message.TotalItemSize).split(' (')[1]).split(' bytes)')[0]).replace(/,/g, ''))
+                  typeof response.data.message.TotalItemSize === typeof '1'?this.TotalItemSize = response.data.message.TotalItemSize:this.TotalItemSize = response.data.message['TotalItemSize']['Value']
+                  // this.TotalItemSize = response.data.message.TotalItemSize
+                  // this.intTotalItemSize = parseInt((((response.data.message.TotalItemSize).split(' (')[1]).split(' bytes)')[0]).replace(/,/g, ''))
+                  this.intTotalItemSize = parseInt((((this.TotalItemSize).split(' (')[1]).split(' bytes)')[0]).replace(/,/g, ''))
                 }
                 if (response.data.message.UseDatabaseQuotaDefaults === 'False' || response.data.message.UseDatabaseQuotaDefaults === false ) {
                   this.IssueWarningQuota = response.data.message.IssueWarningQuota
-                  if (response.data.message.IssueWarningQuota === 'unlimited') {
+                  if (response.data.message.IssueWarningQuota.toLowerCase() === 'unlimited') {
                     this.percentageIssueWarningQuota = 0
                   } else {
                     this.percentageIssueWarningQuota = (this.intTotalItemSize / parseInt(response.data.message.IssueWarningQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
                   }
-                  if (response.data.message.ProhibitSendQuota === 'unlimited') {
+                  if (response.data.message.ProhibitSendQuota.toLowerCase() === 'unlimited') {
                     this.percentageProhibitSendQuota = 0
                   } else {
                     this.percentageProhibitSendQuota = (this.intTotalItemSize / parseInt(response.data.message.ProhibitSendQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
                   }
-                  if (response.data.message.ProhibitSendReceiveQuota === 'unlimited') {
+                  if (response.data.message.ProhibitSendReceiveQuota.toLowerCase() === 'unlimited') {
                     this.percentageProhibitSendReceiveQuota = 0
                   } else {
                     this.percentageProhibitSendReceiveQuota = (this.intTotalItemSize / parseInt(response.data.message.ProhibitSendReceiveQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
@@ -1781,17 +1789,17 @@ export default{
                   this.ProhibitSendReceiveQuota = response.data.message.ProhibitSendReceiveQuota
                 } else {
                   this.IssueWarningQuota = response.data.message.DBIssueWarningQuota
-                  if (response.data.message.IssueWarningQuota === 'unlimited') {
+                  if (response.data.message.IssueWarningQuota.toLowerCase() === 'unlimited') {
                     this.percentageIssueWarningQuota = 0
                   } else {
                     this.percentageIssueWarningQuota = (this.intTotalItemSize / parseInt(response.data.message.DBIssueWarningQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
                   }
-                  if (response.data.message.ProhibitSendQuota === 'unlimited') {
+                  if (response.data.message.ProhibitSendQuota.toLowerCase() === 'unlimited') {
                     this.percentageProhibitSendQuota = 0
                   } else {
                     this.percentageProhibitSendQuota = (this.intTotalItemSize / parseInt(response.data.message.DBProhibitSendQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
                   }
-                  if (response.data.message.ProhibitSendReceiveQuota === 'unlimited') {
+                  if (response.data.message.ProhibitSendReceiveQuota.toLowerCase() === 'unlimited') {
                     this.percentageProhibitSendReceiveQuota = 0
                   } else {
                     this.percentageProhibitSendReceiveQuota = (this.intTotalItemSize / parseInt(response.data.message.DBProhibitSendReceiveQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)
@@ -1799,21 +1807,24 @@ export default{
                   this.ProhibitSendQuota = response.data.message.DBProhibitSendQuota
                   this.ProhibitSendReceiveQuota = response.data.message.DBProhibitSendReceiveQuota
                 }
-                this.ArTotalItemSize = response.data.message.ArTotalItemSize
-                if (!response.data.message['ArTotalItemSize']) {
+                let ArTotalItemSizeValue = ''
+                typeof response.data.message['ArTotalItemSize'] === typeof '1'?ArTotalItemSizeValue = response.data.message['ArTotalItemSize']:ArTotalItemSizeValue = response.data.message['ArTotalItemSize']['Value']
+                // this.ArTotalItemSize = response.data.message.ArTotalItemSize
+                // if (!response.data.message['ArTotalItemSize']) {
+                if (!ArTotalItemSizeValue) {
                   this.ArTotalItemSize = '0 KB (0 bytes)'
                   this.intArTotalItemSize = 0
                 } else {
-                  this.ArTotalItemSize = response.data.message.ArTotalItemSize
-                  this.intArTotalItemSize = parseInt((((response.data.message.ArTotalItemSize).split(' (')[1]).split(' bytes)')[0]).replace(/,/g, ''))
+                  this.ArTotalItemSize = ArTotalItemSizeValue
+                  this.intArTotalItemSize = parseInt((((ArTotalItemSizeValue).split(' (')[1]).split(' bytes)')[0]).replace(/,/g, ''))
                 }
                 if (this.ArchiveDatabase !== null) {
-                  if (response.data.message.ArchiveWarningQuota === 'unlimited') {
+                  if (response.data.message.ArchiveWarningQuota.toLowerCase() === 'unlimited') {
                     this.percentageArchiveWarningQuota = 0
                   } else {
                     this.percentageArchiveWarningQuota = (this.intArTotalItemSize / parseInt(response.data.message.ArchiveWarningQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, ''))*100).toFixed(1)
                   }
-                  if (response.data.message.ArchiveQuota === 'unlimited') {
+                  if (response.data.message.ArchiveQuota.toLowerCase() === 'unlimited') {
                     this.percentageArchiveQuota = 0
                   } else {
                     this.percentageArchiveQuota = (this.intArTotalItemSize / parseInt(response.data.message.ArchiveQuota.split(' (')[1].split(' bytes)')[0].replace(/,/g, '')) * 100).toFixed(1)

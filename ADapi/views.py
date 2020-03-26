@@ -1653,6 +1653,7 @@ class GetMailMessage(View):
                         mailuser['ArTotalItemSize']=archivemail['message']
                         result = {'isSuccess': True, "message": dict(mailbox, **mailuser)}
                     else:
+                        mailuser['ArTotalItemSize'] = {'Value':False}
                         result = {'isSuccess': True, "message": dict(mailbox, **mailuser)}
                 else:
                     mailbox = retumessage['message']
