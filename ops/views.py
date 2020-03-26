@@ -532,6 +532,15 @@ def userlogin(request):
                                 request.session['returnbackurl'] = ''
                                 # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
                                 result = {'code': 4, 'backurl': returnbackurl}
+                        else:
+                            returnbackurl = request.session.get("returnbackurl")
+                            if not returnbackurl or returnbackurl == r'/' or returnbackurl == r'/login/':
+                                returnbackurl = r'/home/'
+                            request.session['username'] = username
+                            request.session['displayname'] = loginvalue['message']['displayname']
+                            request.session['returnbackurl'] = ''
+                            # result = {'isSuccess': True, "message": '验证成功', 'backurl': returnbackurl}
+                            result = {'code': 4, 'backurl': returnbackurl}
                         if result['code'] != 4:
                             gotken = seargooled(username.lower())
                             if gotken:
