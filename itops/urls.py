@@ -183,6 +183,15 @@ urlpatterns += [
 urlpatterns += [
     url(r'^findmail/$', exchange_views.findmail, name="findmail"),
     url(r'^mailvlafind/$', exchange_views.mailvlafind, name="mailvlafind"),
+    url(r'^exchange/searchmailboxmessage/$', exchange_views.searchMailboxMessage, name="searchMailboxMessage"),
+    url(r'^exchange/searchmailboxvalue/$', exchange_views.searchmailboxvalue, name="searchmailboxvalue"),
+    url(r'^exchange/searchmailboxconfig/$', exchange_views.searchmailboxconfig, name="searchmailboxconfig"),
+    url(r'^exchange/savemailboxconfig/$', exchange_views.savemailboxconfig, name="savemailboxconfig"),
+    url(r'^exchange/getmailboxaccounttrend/$', exchange_views.getmailboxaccounttrend, name="getmailboxaccounttrend"),
+    url(r'^exchange/getmailboxStatusMessage/$', exchange_views.getmailboxStatusMessage, name="getmailboxStatusMessage"),
+    url(r'^exchange/moveDatabaseActiveOperation/$', exchange_views.moveDatabaseActiveOperation, name="moveDatabaseActiveOperation"),
+    url(r'^exchange/getmailboxSizelimitMessage/$', exchange_views.getmailboxSizelimitMessage, name="getmailboxSizelimitMessage"),
+    url(r'^exchange/savemailboxSizelimit/$', exchange_views.savemailboxSizelimit, name="savemailboxSizelimit"),
 ]
 
 #Api 权限配置页面

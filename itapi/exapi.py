@@ -414,3 +414,40 @@ def SetDistributionGroup(identity,script = False,**kwargs):
         return  exchange.returnfuction()
     except Exception as e:
         return  {'isSuccess': False, 'count': 0, 'msg': str(e), 'code': 201, 'message': ''}
+
+# Get-MailboxDatabaseCopyStatus
+#官方url：https://docs.microsoft.com/en-us/powershell/module/exchange/mailbox-databases-and-servers/Get-MailboxDatabase?view=exchange-ps
+# 获取所有数据库副本信息
+def GetMailboxDatabaseCopyStatus(identity,**kwargs):
+    try:
+        exchange = exapi()
+        exchange.connection('Get-MailboxDatabaseCopyStatus',identity=identity,**kwargs)
+        exchange.Serializationmessage()
+        return  exchange.returnfuction()
+    except Exception as e:
+        return  {'isSuccess': False, 'count': 0, 'msg': str(e), 'code': 201, 'message': ''}
+
+# Move-ActiveMailboxDatabase
+# 官方url：https://docs.microsoft.com/en-us/powershell/module/exchange/database-availability-groups/move-activemailboxdatabase?view=exchange-ps
+# 迁移激活邮箱数据库
+# identity 数据库名
+def MoveActiveMailboxDatabase(identity,**kwargs):
+    try:
+        exchange = exapi()
+        exchange.connection('Move-ActiveMailboxDatabase',identity=identity,**kwargs)
+        return  exchange.returnfuction()
+    except Exception as e:
+        return  {'isSuccess': False, 'count': 0, 'msg': str(e), 'code': 201, 'message': ''}
+
+
+# set-mailboxdatabase
+#官方url：https://docs.microsoft.com/en-us/powershell/module/exchange/mailbox-databases-and-servers/set-mailboxdatabase?view=exchange-ps
+# 修改数据库信息
+def SetMailboxdatabase(**kwargs):
+    try:
+        exchange = exapi()
+        exchange.connection('set-mailboxdatabase',**kwargs)
+        return  exchange.returnfuction()
+    except Exception as e:
+        return  {'isSuccess': False, 'count': 0, 'msg': str(e), 'code': 201, 'message': ''}
+

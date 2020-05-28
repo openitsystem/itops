@@ -194,8 +194,12 @@
                                         <div class="input-group">
                                             <input type="text" id="adaccount" placeholder="可搜索账号，工号或GUID" class="form-control">
                                             <input type="text" style="display: none" value="leavesearc" id="idtype" class="form-control">
+                                              <span class="input-group-btn" style="margin-left: 10px">
+                                                <a class="btn btn-default btn-border"  onclick="openpshell()"><i class="fa fa-plus"></i>   高级选项</a>
+{#                                                <a href="javascript: void(0);" class="btn btn-default btn-border"><i class="fa fa-plus"></i>高级搜索</a>#}
+                                            </span>
                                             <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" onclick="searchmessage()">搜索</button>
+                                                <button style="margin-left: 10px"  type="button" class="btn btn-primary btn-border" onclick="searchmessage()">搜索</button>
                                             </span>
                                         </div>
                                     </div>
@@ -207,9 +211,9 @@
                                         <h5 >对象类型为用户/计算机/组:<select ><option>用户</option><option>计算机</option><option>组</option></select>  <i class="fa fa-times-circle" onclick="remospanx(this)"></i></h5>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-top: 30px">
-                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px"><a class="btn btn-primary btn-border"  onclick="openpshell()">添加标准</a></label>
-                                </div>
+{#                                <div class="form-group" style="margin-top: 30px">#}
+{#                                    <label class="col-sm-2 col-sm-offset-1 control-label" style="margin-top: 5px"><a class="btn btn-primary btn-border"  onclick="openpshell()">添加标准</a></label>#}
+{#                                </div>#}
                             </div>
                         </div>
                     </div>

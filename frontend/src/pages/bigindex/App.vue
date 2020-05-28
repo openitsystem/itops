@@ -47,7 +47,7 @@
               <span>邮箱</span>
             </template>
             <el-menu-item index="findmail">邮件流查询</el-menu-item>
-            <!-- <el-menu-item index="mailboxmessage">邮箱数据库</el-menu-item> -->
+            <el-menu-item index="mailboxmessage">邮箱数据库</el-menu-item>
           </el-submenu>
           <el-submenu index="4">
             <template slot="title">

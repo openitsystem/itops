@@ -21,13 +21,23 @@
 * 运行程序
 * 系统配置并开始使用
 
+
+## Docker部署
+```powershell
+# 容器镜像下载
+docker pull openitsystem/itops:1.0.1
+
+# 启动容器
+docker run -d -p 8080:8080 openitsystem/itops:1.0.1
+```
+
 ## 1.系统要求：
 
 ### 基础环境
 * Active directory 2008R2
 * DC 2008R2
 * PowerShell 版本 4.0 以上
-* Exchange 2010
+* Exchange 2010 & 2016
 * 在Exchange服务器上执行以下操作
   * 在链接邮箱服务器右键已管理员身份运行powershell，输入以下命令，按Y确认：
   ```powershell
@@ -56,7 +66,7 @@ yum update
 
 yum groupinstall 'Development Tools' -y
 
-yum install zlib-devel openssl-devel ncurese-devel bzip2-devel \
+yum install zlib-devel openssl-devel ncurses-devel bzip2-devel \
 
 expat-devel gdbm-devel readline-devel sqlite-devel -y
 ```
@@ -87,9 +97,9 @@ make install
 ### 2.5.检查python环境
 
 ```
-[root ~]# python
-Python 2.7.5 (default, Nov  6 2016, 00:28:07) 
-[GCC 4.8.5 20150623 (Red Hat 4.8.5-11)] on linux2
+[root ~]# /usr/python35/bin/python3.5
+Python 3.5.2 (default, May 27 2020, 16:58:18) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-39)] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> exit()
 [root ~]# 
@@ -131,7 +141,7 @@ cffi                    1.12.3
 ```
 cd /usr/local/itops/
 ```
-> 确认目录中有package.txt文件（此文件中放了所必须的包名）
+> 确认目录中有requirements.txt文件（此文件中放了所必须的包名）
 
 ```
 ls

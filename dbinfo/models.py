@@ -150,6 +150,7 @@ def selectldapdb():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 #创建ldap表
 def crearldapdb():
     conn = dbinfo()
@@ -209,6 +210,7 @@ def selectiisex():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 
 #创建操作表
@@ -476,6 +478,7 @@ def selectgotken():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 
 #exchange不配做写入信息

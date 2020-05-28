@@ -18,6 +18,7 @@ def savemessa(title, tab, name,username):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 
 #保存内容
@@ -34,6 +35,7 @@ def saveearromessa(title, userper,affect,inpendtimeid, tab,name, username):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 def upsaves(texid, title, tab,name):
     conn = dbinfo()
@@ -47,6 +49,7 @@ def upsaves(texid, title, tab,name):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 def upsaveerr(title, userper,affect,inpendtimeid, tab,name, username,texid):
     conn = dbinfo()
@@ -61,6 +64,7 @@ def upsaveerr(title, userper,affect,inpendtimeid, tab,name, username,texid):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 # 验证ldaprecord表是否存在
 def selectldaprecord():
@@ -75,6 +79,7 @@ def selectldaprecord():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 # 创建ldaprecord表
 def crear_record_ldap():
@@ -117,6 +122,7 @@ def selectdnsrecord():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 # 创建dnsrecord表
 def crear_record_dns():
@@ -158,6 +164,7 @@ def selectdb(dbname,Status):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 # 验证indexmessage表是否存在
 def selectindexmessagesrecord():
@@ -172,6 +179,7 @@ def selectindexmessagesrecord():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 #查询数据库
 def selectindexmessagedb():
@@ -186,6 +194,7 @@ def selectindexmessagedb():
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 #插入indexmessage数据库
 def insert_indexmessagedb(allusercountvalue, alldisableusercountvalue, allexpiredpasswordusercountvalue, alllockusercountvalue, nologoinusercountvalue, allgroupcountvalue, allgrouptalkgroupcountvalue,allgroupsavegroupcpuntvalue,allgroupnomembercountvalue,allgrouphasmailcountvalue,allcomputercountvalue,allcomputernologoincountvalue,allcomputernodisablecpuntvalue,allcomputerdisablecountvalue,allexchangeusercountvalue,allnoexchangeusercountvalue,allexchangehasarchivecpuntvalue,allexchangenodizhicountvalue,allexchangenoarchivecountvalue): #写入数据
@@ -200,6 +209,7 @@ def insert_indexmessagedb(allusercountvalue, alldisableusercountvalue, allexpire
         return aa
     except Exception as e:
         print(e)
+        return False
 
 #插入ldap数据库
 def insert_ldapdb(account, apps, applicant, application_division, manager, permission, Application_Date,end,link_server,Status): #写入数据
@@ -213,6 +223,7 @@ def insert_ldapdb(account, apps, applicant, application_division, manager, permi
         return aa
     except Exception as e:
         print(e)
+        return False
 
 #更新LDAP数据库
 def upadte_ldapdb(ID,account, apps, applicant, application_division, manager, permission, Application_Date,end,link_server):
@@ -226,6 +237,7 @@ def upadte_ldapdb(ID,account, apps, applicant, application_division, manager, pe
         return aa #返回1或者0 1成功 0失败
     except Exception as e:
         print(e)
+        return False
 
 #删除LDAP数据
 def delete_ldapdb(ID,Status):  #
@@ -239,6 +251,7 @@ def delete_ldapdb(ID,Status):  #
         return aa
     except Exception as e:
         print(e)
+        return False
 
 #插入DNS数据库
 def insert_dnsdb(domain_name, apps, applicant, application_division, ops, type, Applicant_time,Status): #写入数据
@@ -252,6 +265,7 @@ def insert_dnsdb(domain_name, apps, applicant, application_division, ops, type, 
         return aa
     except Exception as e:
         print(e)
+        return False
 
 #更新DNS数据库
 def upadte_dnsdb(ID,domain_name, apps, applicant, application_division, ops, type, Applicant_time):
@@ -265,6 +279,7 @@ def upadte_dnsdb(ID,domain_name, apps, applicant, application_division, ops, typ
         return aa #返回1或者0 1成功 0失败
     except Exception as e:
         print(e)
+        return False
 
 #删除DNS数据
 def delete_dnsdb(ID,Status):  #
@@ -278,6 +293,7 @@ def delete_dnsdb(ID,Status):  #
         return aa
     except Exception as e:
         print(e)
+        return False
 
 #根据id 获取dns数据
 def get_dnsdbvaule(ID):  #
@@ -489,6 +505,7 @@ def onefindadmintable(table, text, field1, field1value):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 
 
@@ -532,6 +549,7 @@ def searmessid(textid):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 #id查询内容
 def searmesserrid(textid):
@@ -546,6 +564,7 @@ def searmesserrid(textid):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 #判断是否使用使用谷歌二次验证
 def goostatus():
@@ -644,6 +663,7 @@ def insert_tokenb(username, token): #写入数据
         return aa
     except Exception as e:
         print(e)
+        return False
 
 def onedeltable(id):
     conn = dbinfo()
@@ -657,6 +677,7 @@ def onedeltable(id):
         return histroycounts
     except Exception as e:
         print (e)
+        return False
 def derroltable(id):
     conn = dbinfo()
     try:
@@ -669,6 +690,7 @@ def derroltable(id):
         return histroycounts
     except Exception as e:
         print (e)
+        return False
 
 # 单条件加查询不过滤text
 # 表明，需要查询的字段，依据字段名，依据字段值，
@@ -687,6 +709,7 @@ def onefindadmintablenoreplace(table, text, field1, field1value):
         return histroycounts
     except Exception as e:
         print(e)
+        return False
 
 # 查找api 普通权限
 def select_apipermissions(apiname, username):
@@ -905,3 +928,354 @@ def update_attributeslevel(attributes,id):
         return True
     except Exception as e:
         return False
+
+
+
+#查询当天获取数据库信息是否执行
+def getexchangedbexmailboxsize(datatimevalue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM exmailboxsize Where messageDatetime = %s ORDER BY databaseSizeInt DESC "
+        conncur.execute(connsql,(datatimevalue))
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+#查询当天获取数据库信息是否执行
+def getexchangedbexmailboxsizeValue(datatimevalue,databaseIdentity,typeValue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        if typeValue == 'true':
+            connsql = "SELECT databaseGuid,databaseIdentity FROM exmailboxsize Where messageDatetime = %s and databaseIdentity like %s"
+        else:
+            connsql = "SELECT * FROM exmailboxsize Where messageDatetime = %s and databaseIdentity like %s"
+        conncur.execute(connsql,(datatimevalue,"%"+databaseIdentity+"%"))
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+
+#查询当天获取数据库信息是否执行
+def getMailboxMessagebyGuidAndDays(mailboxGuid,datatimeValuetoday,datatimeValuestartday):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM exmailboxsize where databaseGuid = %s and messageDatetime <= %s and  messageDatetime >= %s"
+        conncur.execute(connsql,(mailboxGuid,datatimeValuetoday,datatimeValuestartday))
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+
+
+# 验证exchangedbmessage表是否存在
+def selectexchangedbmessage():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'exchangedbmessage'"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+
+# 创建exchangedbmessage表
+def crear_exchangedbmessage():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = '''CREATE TABLE `exchangedbmessage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `datatimes` datetime DEFAULT NULL COMMENT '插入时间',
+  `mailboxname` varchar(255) DEFAULT NULL COMMENT '数据库名称',
+  `mailboxsite` bigint(20) DEFAULT '0' COMMENT '数据库大小',
+  `increaseday` bigint(20) DEFAULT '0' COMMENT '较昨日增加',
+  `increaseweek` bigint(20) DEFAULT '0' COMMENT '较前7天平均每天增加',
+  `estimateday` bigint(20) DEFAULT '0' COMMENT '明日mailbox数据库大小预估',
+  `estimateweek` bigint(20) DEFAULT '0' COMMENT '7天后mailbox大小预估',
+  `memberaccount` int(11) DEFAULT '0' COMMENT '数据库成员',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;'''
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+def getexchangedbmessage(datatimevalue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM exchangedbmessage Where DATE_FORMAT(datatimes, '%%Y-%%m-%%d' )  = %s"
+        conncur.execute(connsql,(datatimevalue))
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+
+def getexchangedblastdaymessage(dbname,datatimevalue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM exchangedbmessage Where DATE_FORMAT(datatimes, '%%Y-%%m-%%d' )  = %s and mailboxname = %s"
+        conncur.execute(connsql,(datatimevalue,dbname))
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+#验证成功插入密钥
+def insert_exchangedbmessage(mailboxname, mailboxsite,increaseday,increaseweek,estimateday,estimateweek,memberaccount): #写入数据
+    conn = dbinfo()
+    try:
+        createtime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        conncur = conn.cursor()
+        connsql = "INSERT INTO exchangedbmessage (mailboxname, mailboxsite,datatimes,increaseday,increaseweek,estimateday,estimateweek,memberaccount) VALUE (%s,%s,%s,%s,%s,%s,%s,%s)"
+        aa=conncur.execute(connsql, (mailboxname, mailboxsite,createtime,increaseday,increaseweek,estimateday,estimateweek,memberaccount))
+        conn.commit()
+        conn.close()
+        return aa
+    except Exception as e:
+        return False
+
+# 验证exchangedbmessage表是否存在
+def selectexchangedbisStartMailboxMessageHas():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'isStartMailboxMessageHas'"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+
+# 创建isStartMailboxMessageHas表
+def create_isStartMailboxMessageHas():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = '''CREATE TABLE `isStartMailboxMessageHas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `datetimeValue` datetime DEFAULT NULL COMMENT '数据库信息获取执行时间',
+  `isStart` int(11) DEFAULT NULL COMMENT '当前时间是否执行，1（执行），0（未执行）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;'''
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+
+#查询当天获取数据库信息是否执行
+def getexchangedbisStartMailboxMessageHas(datatimevalue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM isStartMailboxMessageHas Where DATE_FORMAT(datetimeValue, '%%Y-%%m-%%d' )  = %s and isStart = 1 ORDER BY datetimeValue ASC"
+        conncur.execute(connsql,(datatimevalue))
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+
+
+#插入当天信息获取执行记录
+def insert_isStartMailboxMessageHas(datatimevalue): #写入数据
+    conn = dbinfo()
+    try:
+        createtime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        conncur = conn.cursor()
+        connsql = "INSERT INTO isStartMailboxMessageHas (datetimeValue, isStart) VALUE (%s,1)"
+        aa=conncur.execute(connsql, (datatimevalue))
+        conn.commit()
+        conn.close()
+        return aa
+    except Exception as e:
+        return False
+
+
+
+# 验证exchangedbmessage表是否存在
+def selectexmailboxsizeHas():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'exmailboxsize'"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+# 创建isStartMailboxMessageHas表
+def create_exmailboxsize():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = '''DROP TABLE IF EXISTS `exmailboxsize`;
+CREATE TABLE `exmailboxsize` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `databaseIdentity` varchar(255) DEFAULT NULL COMMENT '数据库名称',
+  `databaseGuid` varchar(255) DEFAULT NULL COMMENT '数据库guid（唯一标识）',
+  `databaseSizeStr` varchar(255) DEFAULT NULL COMMENT '数据库大小（显示）',
+  `databaseSizeInt` bigint(255) DEFAULT NULL COMMENT '数据库实际大小（单位：b）',
+  `databaseSpaceStr` varchar(255) DEFAULT NULL COMMENT '数据库空白空间大小（显示）',
+  `databaseSpaceInt` bigint(255) DEFAULT NULL COMMENT '数据库空白空间大小(单位：b）',
+  `databaseMailboxNumber` int(11) DEFAULT NULL COMMENT 'DB内数据库数量',
+  `databaseSpaceProportion` int(11) DEFAULT NULL COMMENT '空白空间占比',
+  `messageDatetime` datetime DEFAULT NULL COMMENT '数据时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;'''
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+
+
+#插入indexmessage数据库
+def insert_exmailboxsizedb(databaseIdentity,databaseGuid, databaseSizeStr, databaseSizeInt, databaseSpaceStr, databaseSpaceInt, databaseMailboxNumber, databaseSpaceProportion,messageDatetime): #写入数据
+    conn = dbinfo()
+    try:
+        createtime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        conncur = conn.cursor()
+        connsql = "INSERT INTO exmailboxsize (databaseIdentity,databaseGuid, databaseSizeStr, databaseSizeInt, databaseSpaceStr, databaseSpaceInt, databaseMailboxNumber, databaseSpaceProportion,messageDatetime) VALUE (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        aa=conncur.execute(connsql, (databaseIdentity,str(databaseGuid), databaseSizeStr, int(databaseSizeInt), databaseSpaceStr, int(databaseSpaceInt), int(databaseMailboxNumber), int(databaseSpaceProportion),messageDatetime))
+        conn.commit()
+        conn.close()
+        return aa
+    except Exception as e:
+        return False
+
+#查询当天获取数据库信息是否执行
+def getexchangedbisStartMailboxMessageHas_Nodate():
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM isStartMailboxMessageHas Where isStart = 1 ORDER BY datetimeValue desc"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+# 验证exchangedbmessage表是否存在
+def selectMailboxConfigMessageHas():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = "show tables like 'mailboxmessageconfig'"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+# 创建isStartMailboxMessageHas表
+def create_mailboxMessageConfigHas():
+    conn = dbinfo()
+    try:
+        conncur = conn.cursor()
+        connsql = '''CREATE TABLE `mailboxmessageconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mailboxSizeThresholdIntValue` int(11) DEFAULT NULL COMMENT '数据库大小阈值数字显示值',
+  `mailboxSizeThresholdCompanyValue` varchar(255) DEFAULT NULL COMMENT '数据库大小阈值展示单位',
+  `mailboxSizeThresholdInt` bigint(20) DEFAULT NULL COMMENT 'mailbox大小阈值',
+  `mailboxNumThresholdIntValue` int(11) DEFAULT NULL COMMENT '数据库mailbox数量阈值',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+INSERT INTO `mailboxmessageconfig` VALUES ('1', '2', 'TB', '2199023255552','2000');
+'''
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchall()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return False
+
+
+#查询数据库配置
+def getMailboxMessageConfigHas():
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "SELECT * FROM mailboxmessageconfig"
+        conncur.execute(connsql)
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+
+#查询当天获取数据库信息是否执行
+def updateMailboxMessageConfigDB(id,mailboxSizeThresholdIntValue,mailboxSizeThresholdCompanyValue,mailboxSizeThresholdInt):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "UPDATE mailboxmessageconfig SET mailboxSizeThresholdIntValue=%s , mailboxSizeThresholdCompanyValue=%s , mailboxSizeThresholdInt=%s WHERE id=%s"
+        conncur.execute(connsql,(int(mailboxSizeThresholdIntValue),mailboxSizeThresholdCompanyValue,int(mailboxSizeThresholdInt),id))
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
+#查询当天获取数据库信息是否执行
+def updateMailboxMessageConfigDBMailboxNum(id,mailboxNumThresholdIntValue):
+    try:
+        conn = dbinfo()
+        conncur = conn.cursor()
+        connsql = "UPDATE mailboxmessageconfig SET mailboxNumThresholdIntValue=%s WHERE id=%s"
+        conncur.execute(connsql,(int(mailboxNumThresholdIntValue),id))
+        histroycounts = conncur.fetchone()
+        conn.commit()
+        conn.close()
+        return histroycounts
+    except Exception as e:
+        return None
+
