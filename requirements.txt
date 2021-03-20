@@ -20,7 +20,7 @@ ipaddress==1.0.17
 IPy==0.83
 isodate==0.5.4
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 ldap3==2.6
 lxml==3.8.0
 Markdown==3.1
