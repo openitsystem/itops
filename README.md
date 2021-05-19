@@ -177,7 +177,7 @@ cd /usr/local/itops/dbinfo/ \
 > 运行下列命令启动平台服务
 
 ```
-/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/itops/ --plugin python --wsgi-file /usr/local/itops/itops/wsgi.py --master --static-map /static=/usr/local/itops/static/ --static-map /static=/usr/local/itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 8 --threads 8 --static-gzip-dir=/usr/local/itops/frontend/
+/usr/python35/bin/uwsgi --http-socket 0.0.0.0:8080 --chdir /usr/local/itops/ --plugin python --wsgi-file /usr/local/itops/itops/wsgi.py --master --static-map /static=/usr/local/itops/static/ --static-map /static=/usr/local/itops/frontend/dist/static/ --static-map /static=/usr/python35/lib/python3.5/site-packages/rest_framework/static/ --processes 2 --threads 2 --static-gzip-dir=/usr/local/itops/frontend/
 ```
 > 关闭uwsgi
 
