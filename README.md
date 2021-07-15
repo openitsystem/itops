@@ -57,6 +57,7 @@ docker run -d -p 8080:8080 openitsystem/itops:1.0.1
 
 ```
 systemctl  stop firewalld  (停用防火墙）
+systemctl  disable firewalld
 ```
 
 ### 2.2.安装依赖关系：(更新下yum)
