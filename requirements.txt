@@ -29,7 +29,7 @@ ntlm-auth==1.3.0
 pyasn1==0.1.9
 pycparser==2.19
 pycrypto==2.6.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pymssql==2.1.4
 PyMySQL==0.7.9
 pyotp==2.2.7
